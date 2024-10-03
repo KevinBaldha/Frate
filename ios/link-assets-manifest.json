@@ -1,0 +1,117 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/AntDesign.ttf",
+      "sha1": "4e77868439280fb434d4697c7b911271406c81f3"
+    },
+    {
+      "path": "assets/fonts/Entypo.ttf",
+      "sha1": "47870a67dd50871765f799caa97da87219ee47c5"
+    },
+    {
+      "path": "assets/fonts/EvilIcons.ttf",
+      "sha1": "91d377ea3cf47490b256c2ed081704a7dabdae0c"
+    },
+    {
+      "path": "assets/fonts/Feather.ttf",
+      "sha1": "526e03ea68a61c4a67a70b01d7b345eab349767d"
+    },
+    {
+      "path": "assets/fonts/FontAwesome.ttf",
+      "sha1": "13b1eab65a983c7a73bc7997c479d66943f7c6cb"
+    },
+    {
+      "path": "assets/fonts/FontAwesome5_Brands.ttf",
+      "sha1": "66c86edfd13e63e0e981ce853335c28bc2d20cec"
+    },
+    {
+      "path": "assets/fonts/FontAwesome5_Regular.ttf",
+      "sha1": "00f569f7d8ac2497a43b25dc4d3b32213bcea31b"
+    },
+    {
+      "path": "assets/fonts/FontAwesome5_Solid.ttf",
+      "sha1": "ff8f37dfad105796bd924d0db0d37a4ff252618c"
+    },
+    {
+      "path": "assets/fonts/Fontisto.ttf",
+      "sha1": "c090a3ec96a3f1bb9b615c2f3f204ce0dcdcdbc3"
+    },
+    {
+      "path": "assets/fonts/Foundation.ttf",
+      "sha1": "4b2bce6c792493a4a5716b6fec2dbefe89492c3f"
+    },
+    {
+      "path": "assets/fonts/Ionicons.ttf",
+      "sha1": "b5281fbfa43129abc3e412dd938cfcf0b77de999"
+    },
+    {
+      "path": "assets/fonts/MaterialCommunityIcons.ttf",
+      "sha1": "80a431d6d49861d655009e9491409282d2559591"
+    },
+    {
+      "path": "assets/fonts/MaterialIcons.ttf",
+      "sha1": "1943803d652750c8ec60415f1e57401c70e72d25"
+    },
+    {
+      "path": "assets/fonts/Mukta-Bold.ttf",
+      "sha1": "ad26543e3f695c6b4aeb84fe0d0e3983195da58d"
+    },
+    {
+      "path": "assets/fonts/Mukta-Medium.ttf",
+      "sha1": "263e304176a6c45a8145d7b53eae8f5f8e7c5822"
+    },
+    {
+      "path": "assets/fonts/Mukta-Regular.ttf",
+      "sha1": "1adc6d0ff2cc3c45a50ecc03956c162c46c3bd31"
+    },
+    {
+      "path": "assets/fonts/Mukta-SemiBold.ttf",
+      "sha1": "4aa3fa92be9dae2c029cc0fc739faff14484f62c"
+    },
+    {
+      "path": "assets/fonts/MuktaVaani-ExtraBold.ttf",
+      "sha1": "8a4b04e357a302ec0442a6ec67c5776adce8c733"
+    },
+    {
+      "path": "assets/fonts/MuktaVaani-Light.ttf",
+      "sha1": "c736f11bc51dcd5c6cf25c6d3c4658c49b369df3"
+    },
+    {
+      "path": "assets/fonts/MuktaVaani-SemiBold.ttf",
+      "sha1": "54a45cb6a32ecc434d55d2d1241a71e9d0a1996d"
+    },
+    {
+      "path": "assets/fonts/Octicons.ttf",
+      "sha1": "28875874413503bcc0810ea2a44dc1b8312c665a"
+    },
+    {
+      "path": "assets/fonts/Roboto-Bold.ttf",
+      "sha1": "013f1bbcbbd80991a5f00fca52a90d0d7ab8b81f"
+    },
+    {
+      "path": "assets/fonts/Rubik-Light.ttf",
+      "sha1": "513ab7de6389fd9ad728753e7462b6c47c6c0eba"
+    },
+    {
+      "path": "assets/fonts/Rubik-Medium.ttf",
+      "sha1": "e9a9bb713e6006858063a45bfa7f854c80485112"
+    },
+    {
+      "path": "assets/fonts/Rubik-Regular.ttf",
+      "sha1": "617d6a6120d1e584a9212598421d039cb9b2e7c9"
+    },
+    {
+      "path": "assets/fonts/Rubik-SemiBold.ttf",
+      "sha1": "9d4fd31cf2f584928fd5335aff1b7bc6de83f8d0"
+    },
+    {
+      "path": "assets/fonts/SimpleLineIcons.ttf",
+      "sha1": "9ffb81a5a11112e292f2cc323e98486bad597599"
+    },
+    {
+      "path": "assets/fonts/Zocial.ttf",
+      "sha1": "0bda59c7bcd3d3927de047e091875a4428bfd1ab"
+    }
+  ]
+}

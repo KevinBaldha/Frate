@@ -1,0 +1,70 @@
+{
+  "project_info": {
+    "project_number": "1029252269707",
+    "project_id": "frate-ba694",
+    "storage_bucket": "frate-ba694.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1029252269707:android:3434c823a5c725eb70768e",
+        "android_client_info": {
+          "package_name": "app.frate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1029252269707-dibsj0tcn5o2rvlcj3l7kkn773shlfs7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.frate",
+            "certificate_hash": "5bb137e95774502d40fe5c368acd8624bc117c26"
+          }
+        },
+        {
+          "client_id": "1029252269707-fo2o4ac19bjoj646m9dgshnll4hkt128.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.frate",
+            "certificate_hash": "8a20105278e243758979d0f94c80dfbe382acc12"
+          }
+        },
+        {
+          "client_id": "1029252269707-i0pkesl3t3v594485ud1aopebsl9meu1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.frate",
+            "certificate_hash": "240b160ed0f8e14108c7658c4b547445342d1133"
+          }
+        },
+        {
+          "client_id": "1029252269707-7djm8tkl1eeud3m8li3laaqheo743htf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcNYbsgvLIhflvA7jwQausWsa2suSqSOQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1029252269707-7djm8tkl1eeud3m8li3laaqheo743htf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1029252269707-0fnipq14ouaq836nisi8i81amnijspfq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.frate"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
