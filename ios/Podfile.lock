@@ -1731,7 +1731,7 @@ PODS:
     - React-Core
   - rn-fetch-blob (0.12.0):
     - React-Core
-  - RNAppleAuthentication (2.4.0):
+  - RNAppleAuthentication (2.1.5):
     - React-Core
   - RNAudio (4.3.0):
     - React
@@ -2424,7 +2424,7 @@ SPEC CHECKSUMS:
   ReactCommon: d5e70af52fb05bd546fd7f002c549f57116c59e4
   ReactNativeIncallManager: bfc9c67358cd524882a7c4116dcb311ac2293d4b
   rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
-  RNAppleAuthentication: e00c76acb03351f5544373c78fa7f359bef6d5d3
+  RNAppleAuthentication: 63c2127ace11985b94f852fc480eb84145653712
   RNAudio: cae2991f2dccb75163f260b60da8051717b959fa
   RNAudioRecorderPlayer: 0208ee1f2e19ec027552bea44b1ae682f187ed54
   RNCAsyncStorage: d35c79ffba52c1013013e16b1fc295aec2feabb6
