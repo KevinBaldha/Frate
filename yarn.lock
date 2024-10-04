@@ -3034,20 +3034,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-community/art@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "@react-native-community/art@npm:1.2.0"
-  dependencies:
-    art: ^0.10.3
-    invariant: ^2.2.4
-    prop-types: ^15.7.2
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 7f671d68961bd1bbb81bd4b10819fc398e23df70779ea8d3fb5dc8d0c2a20923b31bbf23f111aa91e29f67cc42fd1420e5f918595506d211f12219224303b324
-  languageName: node
-  linkType: hard
-
 "@react-native-community/cli-clean@npm:14.1.0":
   version: 14.1.0
   resolution: "@react-native-community/cli-clean@npm:14.1.0"
@@ -4469,7 +4455,6 @@ __metadata:
     "@react-native-async-storage/async-storage": ^2.0.0
     "@react-native-camera-roll/camera-roll": ^7.8.3
     "@react-native-clipboard/clipboard": ^1.14.2
-    "@react-native-community/art": ^1.2.0
     "@react-native-community/cli-platform-android": ^14.1.1
     "@react-native-community/netinfo": ^11.4.1
     "@react-native-community/push-notification-ios": ^1.11.0
@@ -4883,13 +4868,6 @@ __metadata:
     is-array-buffer: ^3.0.4
     is-shared-array-buffer: ^1.0.2
   checksum: 352259cba534dcdd969c92ab002efd2ba5025b2e3b9bead3973150edbdf0696c629d7f4b3f061c5931511e8207bdc2306da614703c820b45dabce39e3daf7e3e
-  languageName: node
-  linkType: hard
-
-"art@npm:^0.10.3":
-  version: 0.10.3
-  resolution: "art@npm:0.10.3"
-  checksum: 45f539031a908b2901c3af7841a23ff5c183b1f17106b3d3dda393ef3bae46734209a1c1193057fa5746adf061636f44d65c8a1b6cc56ff82da52c81e6875ddd
   languageName: node
   linkType: hard
 
