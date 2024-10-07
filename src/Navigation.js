@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React, {Component} from 'react';
 import {Platform, View, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
@@ -278,10 +279,10 @@ class Navigation extends Component {
     return (
       <NavigationContainer>
         <Stack.Navigator
-          headerMode="none"
           initialRouteName={this.props.loginStatus ? 'Tabs' : 'Login'}
           screenOptions={{
             gestureResponseDistance: {horizontal: theme.scree},
+            headerShown: false,
           }}>
           <Stack.Screen name="Signup" component={Signup} />
           <Stack.Screen name="Login" component={Login} />
