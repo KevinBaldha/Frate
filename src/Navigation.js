@@ -283,8 +283,8 @@ class Navigation extends Component {
           screenOptions={{
             gestureResponseDistance: {horizontal: theme.scree},
           }}>
-          <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Signup" component={Signup} />
+          <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Signup1" component={Signup1} />
           <Stack.Screen name="Signup4" component={Signup4} />
           <Stack.Screen name="ForgetPassword" component={ForgetPassword} />

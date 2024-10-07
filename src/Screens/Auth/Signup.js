@@ -100,7 +100,7 @@ class Singup extends Component {
     } catch (error) {}
   };
 
-  searchFilterFunction = (text) => {
+  searchFilterFunction = text => {
     if (text) {
       const newData = this.state.fillterCountry.filter(function (item) {
         const itemData = item?.name
@@ -280,7 +280,7 @@ class Singup extends Component {
       [clearType]: '',
     });
   }
-  handleCountry = (item) => {
+  handleCountry = item => {
     this.setState({selectedCountry: item, open: false, countryError: ''});
   };
   handleDropdown = () => {
@@ -338,7 +338,7 @@ class Singup extends Component {
                 <Label title={getLocalText(item?.title)} style={styles.label} />
                 <InputBox
                   value={item?.value}
-                  onChangeText={(text) => this.handleInput(text, item, index)}
+                  onChangeText={text => this.handleInput(text, item, index)}
                   style={styles.input}
                   // maxLength={item?.keyboardType === 'phone-pad' ? 10 : null}
                   keyboardType={item?.keyboardType}
@@ -578,13 +578,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   userInfo: state.UserInfo,
 });
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    userData: (params) => dispatch(userData(params)),
+    userData: params => dispatch(userData(params)),
   };
 };
 

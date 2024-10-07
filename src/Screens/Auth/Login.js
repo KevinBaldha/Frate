@@ -103,14 +103,14 @@ class Login extends Component {
     if (Platform.OS === 'ios') {
       this.setState({device_type: 2});
       this.authCredentialListener = appleAuth.onCredentialRevoked(async () => {
-        this.fetchAndUpdateCredentialState().catch((error) =>
+        this.fetchAndUpdateCredentialState().catch(error =>
           this.setState({credentialStateForUser: `Error: ${error.code}`}),
         );
       });
 
       this.fetchAndUpdateCredentialState()
-        .then((res) => this.setState({credentialStateForUser: res}))
-        .catch((error) =>
+        .then(res => this.setState({credentialStateForUser: res}))
+        .catch(error =>
           this.setState({credentialStateForUser: `Error: ${error.code}`}),
         );
     }
@@ -129,7 +129,7 @@ class Login extends Component {
       }
     }
   };
-  handleAlert = (msg) => {
+  handleAlert = msg => {
     this.setState({errorAlert: !this.state.errorAlert, alertErr: msg});
   };
 
@@ -160,7 +160,7 @@ class Login extends Component {
         googleFormData.append('fcm_token', fcm);
         googleFormData.append('type', 1);
         googleFormData.append('device_type', Platform.OS);
-        await postAPICall(API.login, googleFormData).then((response) => {
+        await postAPICall(API.login, googleFormData).then(response => {
           appAPI.defaults.headers.common.Authorization = `Bearer ${response.data?.accessToken}`;
           AsyncStorage.setItem(
             '@loginToken',
@@ -322,7 +322,7 @@ class Login extends Component {
       googleFormData.append('fcm_token', fcm);
       googleFormData.append('type', userOb.type);
       googleFormData.append('device_type', Platform.OS);
-      await postAPICall(API.login, googleFormData).then((response) => {
+      await postAPICall(API.login, googleFormData).then(response => {
         appAPI.defaults.headers.common.Authorization = `Bearer ${response.data?.accessToken}`;
         AsyncStorage.setItem(
           '@loginToken',
@@ -440,7 +440,7 @@ class Login extends Component {
   fbLogin = async () => {
     await this.setFcmToken();
     LoginManager.logInWithPermissions(['public_profile', 'email']).then(
-      (result) => {
+      result => {
         if (result.isCancelled) {
         } else {
           this.getFBToken();
@@ -554,9 +554,7 @@ class Login extends Component {
               placeholder={getLocalText('LoginSignup.email')}
               autoCapitalize={'none'}
               autoComplete="on"
-              onChangeText={(text) =>
-                this.handleInput(text, 'email', 'emailerr')
-              }
+              onChangeText={text => this.handleInput(text, 'email', 'emailerr')}
               value={email}
               autoCorrect={false}
               returnKeyType="done"
@@ -570,7 +568,7 @@ class Login extends Component {
               secureTextEntry={true}
               value={password}
               autoCapitalize={'none'}
-              onChangeText={(text) =>
+              onChangeText={text =>
                 this.handleInput(text, 'password', 'passworderr')
               }
               passwordIcon
@@ -771,19 +769,19 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   loginstatus: state.AppReducer.loginstatus,
   groupCount: state.UserInfo.joinGroupCount,
 });
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    isLogin: (params) => dispatch(isLogin(params)),
-    userData: (params) => dispatch(userData(params)),
-    userPreferences: (params) => dispatch(userPreferences(params)),
-    totalGroupJoin: (params) => dispatch(getJoinGroupCount(params)),
-    CreatedGroupCount: (params) => dispatch(CreatedGroupCount(params)),
-    setCoverImage: (params) => dispatch(setCoverImage(params)),
+    isLogin: params => dispatch(isLogin(params)),
+    userData: params => dispatch(userData(params)),
+    userPreferences: params => dispatch(userPreferences(params)),
+    totalGroupJoin: params => dispatch(getJoinGroupCount(params)),
+    CreatedGroupCount: params => dispatch(CreatedGroupCount(params)),
+    setCoverImage: params => dispatch(setCoverImage(params)),
   };
 };
 
