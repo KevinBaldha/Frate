@@ -5,7 +5,7 @@ import {G} from 'react-native-svg';
 import {Rect} from 'react-native-svg';
 import FastImage from 'react-native-fast-image';
 import moment from 'moment';
-import Pie from 'react-native-pie';
+// import Pie from 'react-native-pie';
 import {
   ScreenContainer,
   Label,
@@ -220,7 +220,7 @@ export default class Statistics extends Component {
                 title={getLocalText('Post.visitor')}
                 style={{...styles.counter, fontSize: scale(15)}}
               />
-              <Pie
+               {/* <Pie
                 radius={70}
                 sections={[
                   {
@@ -237,7 +237,7 @@ export default class Statistics extends Component {
                   },
                 ]}
                 strokeCap={'butt'}
-              />
+              /> */}
               {otherCount !== 0 && (
                 <View
                   style={[

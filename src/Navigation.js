@@ -11,7 +11,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {firebase} from '@react-native-firebase/dynamic-links';
 import {
-  Login,
   Signup,
   Signup1,
   Signup4,
@@ -49,6 +48,7 @@ import {
   ChatList,
   ResetPassword,
   ReportedContent,
+  Login,
 } from './Screens';
 import {scale, theme} from './Utils';
 import {appAPI} from './Utils/appApi';
@@ -108,10 +108,10 @@ const handleHomeNavigation = () => {
 };
 
 function TabNavigator() {
-  const getNewPostBadge = useSelector((state) => state.UserInfo.newPostBadge);
-  const getNewChatBadge = useSelector((state) => state.UserInfo.newChatBadge);
+  const getNewPostBadge = useSelector(state => state.UserInfo.newPostBadge);
+  const getNewChatBadge = useSelector(state => state.UserInfo.newChatBadge);
   const getNewChatInviteBadge = useSelector(
-    (state) => state.UserInfo.newChatInviteBadge,
+    state => state.UserInfo.newChatInviteBadge,
   );
 
   return (
@@ -335,14 +335,14 @@ class Navigation extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   loginStatus: state.AppReducer.login,
   groupCount: state.UserInfo.joinGroupCount,
   firstTimeInstall: state.AppReducer.firstTimeInstall,
   getNewChatBadge: state.UserInfo.newChatBadge,
   getNewChatInviteBadge: state.UserInfo.newChatInviteBadge,
 });
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
     installApp: () => dispatch(firstTimeInstallApp()),
   };
