@@ -2159,7 +2159,7 @@ class Chat extends Component {
           }>
           <FlatList
             ref={ref => (this.FlatListRef = ref)}
-            inverted={-1}
+            inverted={true}
             style={[
               // styles.list,
               {

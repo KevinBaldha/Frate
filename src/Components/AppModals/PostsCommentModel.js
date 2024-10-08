@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
@@ -326,7 +327,7 @@ const PostsCommentModel = (props) => {
           <FlatList
             keyboardShouldPersistTaps="handled"
             data={comments}
-            inverted={-1}
+            inverted={true}
             extraData={[comments, props]}
             keyExtractor={(_, ind) => ind.toString()}
             renderItem={renderComment}
