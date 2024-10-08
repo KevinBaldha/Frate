@@ -5,7 +5,7 @@ import Icon1 from 'react-native-vector-icons/Ionicons';
 import {getLocalText} from '../Locales/I18n';
 import {theme, scale} from '../Utils';
 
-const PostOptions = (props) => {
+const PostOptions = props => {
   const {
     options,
     indicatorOffset,
@@ -116,6 +116,7 @@ const PostOptions = (props) => {
           </TouchableOpacity>
         );
       })}
+      
       {is_sponsoredHiden || isSponsored === 1 || showStatic ? null : (
         <TouchableOpacity
           style={[

@@ -170,10 +170,24 @@ class Timeline extends PureComponent {
     this._keyboardDidHide = this._keyboardDidHide.bind(this);
   }
 
+  getFcmToken = async () => {
+    let fcm = '';
+    if (this.state.fcmToken === null || !this.state.fcmToken) {
+      fcm = await messaging().getToken();
+    } else {
+      fcm = this.state.fcmToken;
+    }
+    return fcm;
+  };
+
   componentDidMount = async () => {
+    var fcm = await this.getFcmToken();
+    console.log('FCM ->', fcm);
+
     const {userData, getNewPostBadge, navigation} = this.props;
     AppState.addEventListener('change', this.handleAppStateChange);
     let token = await AsyncStorage.getItem('@loginToken');
+    console.log('access_token ->', token);
     if (token !== null) {
       appAPI.defaults.headers.common['Content-Type'] = 'application/json';
       appAPI.defaults.headers.common.Accept = 'application/json';
@@ -218,7 +232,7 @@ class Timeline extends PureComponent {
     this.focusListener();
   }
 
-  handleAppStateChange = (nextAppState) => {
+  handleAppStateChange = nextAppState => {
     if (Platform.OS === 'ios') {
       PushNotificationIOS.setApplicationIconBadgeNumber(0);
     }
@@ -233,7 +247,7 @@ class Timeline extends PureComponent {
       this.handleDynamicLink(url);
     });
 
-    Linking.getInitialURL().then(async (url) => {
+    Linking.getInitialURL().then(async url => {
       const data = JSON.parse(JSON.stringify(url));
       const urlLink = data;
       const id = urlLink.substring(url.lastIndexOf('=') + 1);
@@ -245,7 +259,7 @@ class Timeline extends PureComponent {
     let notificationRouteType = '';
     let notificationMessage = '';
     await PushNotification.configure({
-      onNotification: (notification) => {
+      onNotification: notification => {
         const {foreground, userInteraction} = notification;
         if (foreground && !userInteraction) {
           PushNotification.localNotification(notification);
@@ -280,9 +294,9 @@ class Timeline extends PureComponent {
     });
     await messaging()
       .getInitialNotification()
-      .then(async (response) => {});
+      .then(async response => {});
 
-    messaging().onNotificationOpenedApp(async (remoteMessage) => {
+    messaging().onNotificationOpenedApp(async remoteMessage => {
       if (remoteMessage) {
         await this.loadScreenFromMessage(
           remoteMessage?.data?.type || remoteMessage?.data?.notification_type,
@@ -291,18 +305,18 @@ class Timeline extends PureComponent {
       }
     });
 
-    messaging().onMessage(async (remoteMessage) => {
+    messaging().onMessage(async remoteMessage => {
       if (Platform.OS === 'ios') {
-        PushNotificationIOS.getApplicationIconBadgeNumber((badge) => {
+        PushNotificationIOS.getApplicationIconBadgeNumber(badge => {
           PushNotificationIOS.setApplicationIconBadgeNumber(badge + 1);
         });
       }
       this.showNotification(remoteMessage);
     });
 
-    messaging().setBackgroundMessageHandler(async (remoteMessage) => {
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
       if (Platform.OS === 'ios') {
-        PushNotificationIOS.getApplicationIconBadgeNumber(async (badge) => {
+        PushNotificationIOS.getApplicationIconBadgeNumber(async badge => {
           PushNotificationIOS.setApplicationIconBadgeNumber(badge + 1);
         });
       }
@@ -324,7 +338,7 @@ class Timeline extends PureComponent {
     this.props.navigation.navigate('Chat', paramObj);
   };
 
-  getGroupApi = async (group_id) => {
+  getGroupApi = async group_id => {
     try {
       const response = await getAPICall(API.getSingleGroup + group_id);
       if (response.success) {
@@ -335,7 +349,7 @@ class Timeline extends PureComponent {
     } catch (error) {}
   };
 
-  showNotification = (remoteMessage) => {
+  showNotification = remoteMessage => {
     PushNotification.getChannels(function (channel_ids) {});
     PushNotification.checkPermissions(function (permissions) {});
 
@@ -344,7 +358,7 @@ class Timeline extends PureComponent {
         channelId: remoteMessage?.messageId,
         channelName: 'channel-id1',
       },
-      (created) => {
+      created => {
         if (created) {
           PushNotification.localNotification({
             autoCancel: true,
@@ -475,7 +489,7 @@ class Timeline extends PureComponent {
     }
   };
 
-  handleDynamicLink = async (link) => {
+  handleDynamicLink = async link => {
     if (link) {
       const data = JSON.parse(JSON.stringify(link));
       // const url = data.url;
@@ -489,7 +503,7 @@ class Timeline extends PureComponent {
     }
   };
 
-  getSinglePost = async (id) => {
+  getSinglePost = async id => {
     try {
       this.setState({openLoader: true});
       let success = await getAPICall(API.getSinglePost + id);
@@ -544,7 +558,7 @@ class Timeline extends PureComponent {
 
   _keyboardDidHide() {}
 
-  setEmoji = (emoji) => {
+  setEmoji = emoji => {
     const key = this.state.isEmojiKeyboard ? 'postText' : 'commonText';
     if (this.state.isEmojiKeyboard) {
       this.setState({[key]: this.state[key] + emoji.code});
@@ -567,11 +581,11 @@ class Timeline extends PureComponent {
     }
   };
 
-  searchHandle = (txt) => {
+  searchHandle = txt => {
     this.setState({searchText: txt});
   };
 
-  handlePostTxt = (text) => {
+  handlePostTxt = text => {
     this.setState({postText: text});
   };
 
@@ -588,8 +602,8 @@ class Timeline extends PureComponent {
       mediaType: 'photo',
       cropping: true,
       includeBase64: true,
-    }).then((d) => {
-      d.map((item) => {
+    }).then(d => {
+      d.map(item => {
         if (item?.mime.slice(0, 5) === 'video') {
           let videoName = imageData(
             Platform.OS === 'ios' ? item?.sourceURL : item?.path,
@@ -615,7 +629,7 @@ class Timeline extends PureComponent {
             'PNG',
             100,
             0,
-          ).then((compressedImage) => {
+          ).then(compressedImage => {
             this.setState({
               attachImages: [
                 ...this.state.attachImages,
@@ -642,8 +656,8 @@ class Timeline extends PureComponent {
       multiple: true,
       includeExif: true,
       compressVideoPreset: '640x480',
-    }).then(async (video) => {
-      video.map((item) => {
+    }).then(async video => {
+      video.map(item => {
         if (item?.mime.slice(0, 5) === 'video') {
           let videoName = imageData(
             Platform.OS === 'ios' ? item?.sourceURL : item?.path,
@@ -760,7 +774,7 @@ class Timeline extends PureComponent {
   };
 
   //post save
-  handleSavePost = async (item) => {
+  handleSavePost = async item => {
     const {isPostLike} = this.props;
     let postIndex = this.state.postOptionIndex;
     try {
@@ -779,7 +793,7 @@ class Timeline extends PureComponent {
   };
 
   postOptionClose = () => {
-    this.setState((prevState) => {
+    this.setState(prevState => {
       return {
         ...prevState,
         postOption: '',
@@ -816,7 +830,7 @@ class Timeline extends PureComponent {
     } else if (index === 3) {
       let response = await getAPICall(API.reshare + item);
       if (response.success) {
-        const newUserPostData = this.state.userPost.map((d) => {
+        const newUserPostData = this.state.userPost.map(d => {
           return {
             ...d,
             is_reshared: item === d.id ? !d.is_reshared : d.is_reshared,
@@ -846,7 +860,7 @@ class Timeline extends PureComponent {
     }
   };
 
-  deletepostAction = async (action) => {
+  deletepostAction = async action => {
     this.setState({postDeleteModel: false});
     if (action === 1) {
       try {
@@ -863,7 +877,7 @@ class Timeline extends PureComponent {
     }
   };
 
-  exitGroupAction = async (action) => {
+  exitGroupAction = async action => {
     this.setState({exitGroupModel: false});
     if (action === 1) {
       let groupId = this.state.selectedPost.group.id;
@@ -875,7 +889,7 @@ class Timeline extends PureComponent {
     }
   };
 
-  closePaymentModal = async (type) => {
+  closePaymentModal = async type => {
     const {allData, navigation} = this.props;
     const {selectedPost, sponsorData} = this.state;
     let postId = selectedPost?.id,
@@ -929,7 +943,7 @@ class Timeline extends PureComponent {
           if (response?.data?.user_own_sponser_post) {
             var allPostDetail = allData;
             const postIndex = allPostDetail?.data.findIndex(
-              (d) => d.id === postId,
+              d => d.id === postId,
             );
             allPostDetail.data[postIndex].is_sponsored = 1;
             this.props.getPostLocally(allPostDetail);
@@ -968,7 +982,7 @@ class Timeline extends PureComponent {
     }
   };
 
-  handleSponsorStatus = async (type) => {
+  handleSponsorStatus = async type => {
     const {allData} = this.props;
     const {sponsorAlertList: sponsorAlertList} = this.state;
     try {
@@ -982,7 +996,7 @@ class Timeline extends PureComponent {
       if (!response.error) {
         var allPostDetail = allData;
         const postIndex = allPostDetail?.data.findIndex(
-          (d) => d.id === sponsorAlertList?.post?.id,
+          d => d.id === sponsorAlertList?.post?.id,
         );
         allPostDetail.data[postIndex].is_sponsored = 1;
         this.props.getPostLocally(allPostDetail);
@@ -1009,7 +1023,7 @@ class Timeline extends PureComponent {
     } catch (error) {}
   };
   closePerfectModel = async () => {
-    await this.setState((prevState) => {
+    await this.setState(prevState => {
       return {
         ...prevState,
         perfectModel: !prevState.perfectModel,
@@ -1024,7 +1038,7 @@ class Timeline extends PureComponent {
   };
 
   //post like emoji
-  onPressLikeEmoji = async (value) => {
+  onPressLikeEmoji = async value => {
     this.closeEmojiModal();
     const {postLikeOption, postLikeOptionIndex} = this.state;
     var id = '';
@@ -1151,7 +1165,7 @@ class Timeline extends PureComponent {
       );
       this.props.isPostLoading(false);
       var allPostDetail = allData;
-      const postIndex = allPostDetail?.data.findIndex((d) => d.id === item?.id);
+      const postIndex = allPostDetail?.data.findIndex(d => d.id === item?.id);
       allPostDetail.data[postIndex].comments = [
         commentdata?.data,
         ...allPostDetail?.data[postIndex].comments,
@@ -1213,14 +1227,14 @@ class Timeline extends PureComponent {
     }
   };
 
-  safeEmojiBackspace = (str) => {
+  safeEmojiBackspace = str => {
     let initialRealCount = this.fancyCount(str);
     while (str.length > 0 && this.fancyCount(str) !== initialRealCount - 1) {
       str = str.substring(0, str.length - 1);
     }
     return str;
   };
-  fancyCount = (str) => {
+  fancyCount = str => {
     const joiner = '\u{200D}';
     const split = str.split(joiner);
     let count = 0;
@@ -1233,7 +1247,7 @@ class Timeline extends PureComponent {
     return count / split.length;
   };
 
-  handleGroup = async (group) => {
+  handleGroup = async group => {
     if (group !== '' || group !== 'undefined') {
       setTimeout(() => {
         this.setState({groupShowModel: false, groupName: group});
@@ -1266,7 +1280,7 @@ class Timeline extends PureComponent {
     this.setState({shareOptionsModel: true, shareData: item});
   };
 
-  handleShare = async (item) => {
+  handleShare = async item => {
     const link = DeepLink + `?type=timeline&id=` + item?.item?.id;
     Share.open({url: link});
     try {
@@ -1276,14 +1290,14 @@ class Timeline extends PureComponent {
     }
   };
 
-  handleGroupShare = (ids) => {
+  handleGroupShare = ids => {
     this.setState({shareGroupsModel: false});
     if (ids != null) {
       this.handleShareMultiple(ids);
     }
   };
 
-  handleShareMultiple = async (ids) => {
+  handleShareMultiple = async ids => {
     let pid = this.state.shareData?.item?.id;
     let response = await getAPICall(API.reshared + pid + `/[${ids}]`);
     if (response.success) {
@@ -1379,7 +1393,7 @@ class Timeline extends PureComponent {
           }
         }}
         emojiKeyboard={isEmojiKeyboardC}
-        onChangeText={(text) => this.handleCommentTxt(text, item, index)}
+        onChangeText={text => this.handleCommentTxt(text, item, index)}
         color={item?.commentTxt?.trim().length > 0 ? false : true}
         value={item?.commentTxt}
         onPressSend={this.sendComment}
@@ -1411,7 +1425,7 @@ class Timeline extends PureComponent {
     );
   };
 
-  handleMsgPopUp = async (item) => {
+  handleMsgPopUp = async item => {
     const {userData, navigation} = this.props;
     const userID = item?.user_id;
     if (userID !== userData?.id) {
@@ -1432,7 +1446,7 @@ class Timeline extends PureComponent {
     });
   };
 
-  updateCommentCount = (index) => {
+  updateCommentCount = index => {
     const {allData} = this.props;
     var allPostDetail = allData;
     allPostDetail.data[index].total_comment =
@@ -1461,14 +1475,14 @@ class Timeline extends PureComponent {
     });
   };
 
-  onPressHastag = (tag) => {
+  onPressHastag = tag => {
     this.setState({searchText: tag});
     this.handleSearch(2);
   };
 
   handleImagesView = (item, index, data) => {
     if (item?.post_attachment.length >= 3) {
-      this.setState((prevState) => {
+      this.setState(prevState => {
         return {
           ...prevState,
           imagesView: !prevState.imagesView,
@@ -1476,7 +1490,7 @@ class Timeline extends PureComponent {
         };
       });
     } else {
-      this.setState((prevState) => {
+      this.setState(prevState => {
         return {
           ...prevState,
           viewPost: item,
@@ -1489,7 +1503,7 @@ class Timeline extends PureComponent {
   };
 
   handleEmojiKeboard = () => {
-    this.setState((prevState) => {
+    this.setState(prevState => {
       return {
         ...prevState,
         isEmojiKeyboard: !prevState.isEmojiKeyboard,
@@ -1497,9 +1511,9 @@ class Timeline extends PureComponent {
     });
   };
 
-  handleEmojiKeyboardC = (index) => {
+  handleEmojiKeyboardC = index => {
     Keyboard.dismiss();
-    this.setState((prevState) => {
+    this.setState(prevState => {
       return {
         ...prevState,
         isEmojiKeyboardC: !prevState.isEmojiKeyboardC,
@@ -1524,7 +1538,7 @@ class Timeline extends PureComponent {
     this.getSponsorAlert();
     this.handleGroup();
     const {load, allData} = this.props;
-    this.setState((prevState) => {
+    this.setState(prevState => {
       return {
         ...prevState,
         refreshing: load ? false : !prevState.refreshing,
@@ -1544,7 +1558,7 @@ class Timeline extends PureComponent {
   };
 
   //close search model
-  searchClose = (item) => {
+  searchClose = item => {
     if (item) {
       this.setState({searchModel: false});
       this.redirectToUserDetails(item, item?.id);
@@ -1553,7 +1567,7 @@ class Timeline extends PureComponent {
     }
   };
 
-  handleShareOption = async (data) => {
+  handleShareOption = async data => {
     this.setState({shareOptionsModel: false});
     if (data !== '-1') {
       if (data) {
@@ -1572,7 +1586,7 @@ class Timeline extends PureComponent {
     this.setState({groupShowModel: true});
   };
 
-  handleSearch = async (d) => {
+  handleSearch = async d => {
     await this.setState({selectSearch: d});
     let searchtxt = this.state.searchText;
     let type = this.state.selectSearch;
@@ -1602,7 +1616,7 @@ class Timeline extends PureComponent {
     try {
       if (viewableItems.length !== 0) {
         let frmData = new FormData();
-        viewableItems.forEach((element) => {
+        viewableItems.forEach(element => {
           frmData.append('post_id[]', element?.item?.id);
         });
 
@@ -1611,7 +1625,7 @@ class Timeline extends PureComponent {
     } catch (error) {}
   };
 
-  takeVideoPhoto = async (type) => {
+  takeVideoPhoto = async type => {
     try {
       ImagePicker.openCamera({
         width: 300,
@@ -1619,7 +1633,7 @@ class Timeline extends PureComponent {
         mediaType: type,
         // cropping: true,
         compressImageQuality: 0.3,
-      }).then((image) => {
+      }).then(image => {
         const imageRes = imageData(image.path);
         this.setState({
           attachImages:
@@ -1723,11 +1737,11 @@ class Timeline extends PureComponent {
             }}
             isTabshow
             customSearch
-            category={(d) => {
+            category={d => {
               this.handleSearch(d);
             }}
             searchText={searchText}
-            onSearchText={(txt) => {
+            onSearchText={txt => {
               this.setState({
                 searchText: txt,
                 isEmojiKeyboard: false,
@@ -1767,7 +1781,7 @@ class Timeline extends PureComponent {
 
               <View style={styles.searchPost}>
                 <FlatList
-                  ref={(ref) => (this.FlatListRef = ref)}
+                  ref={ref => (this.FlatListRef = ref)}
                   contentContainerStyle={{
                     paddingBottom: theme.SCREENHEIGHT * 0.1,
                     backgroundColor: theme.colors.transparent,
@@ -1838,7 +1852,7 @@ class Timeline extends PureComponent {
                 }
                 removeImage={this.removeImage}
                 {...this.state}
-                onChangeText={(text) => {
+                onChangeText={text => {
                   this.handlePostTxt(text);
                 }}
                 value={postText}
@@ -1925,7 +1939,7 @@ class Timeline extends PureComponent {
                 </ScrollView>
               ) : (
                 <FlatList
-                  ref={(ref) => (this.FlatListRef = ref)}
+                  ref={ref => (this.FlatListRef = ref)}
                   contentContainerStyle={{
                     paddingBottom: scale(10),
                     backgroundColor: theme.colors.transparent,
@@ -1934,7 +1948,7 @@ class Timeline extends PureComponent {
                   data={userPost || []}
                   extraData={[this.state, this.props]}
                   renderItem={this.renderPost}
-                  onScroll={(e) => {
+                  onScroll={e => {
                     postOption ? this.postOptionClose() : '';
                     this.setState({
                       postLikeOptionIndex: '',
@@ -2033,7 +2047,7 @@ class Timeline extends PureComponent {
           <EmojiBoard
             showBoard={isEmojiKeyboardC || isEmojiKeyboard}
             onClick={this.setEmoji}
-            onEmojiPicked={(e) =>
+            onEmojiPicked={e =>
               this.setState({emojis: this.state.emojis.concat(e)})
             }
             //  onEmojiRemoved={e => this.setState({emojis: this.state.emojis.slice(0, -1)})}
@@ -2132,7 +2146,7 @@ class Timeline extends PureComponent {
         <ContentSponsorModel
           show={isShowSponserAlert}
           closeModal={() => this.setState({isShowSponserAlert: false})}
-          submit={(type) => this.handleSponsorStatus(type)}
+          submit={type => this.handleSponsorStatus(type)}
           sponserData={sponserAlertList}
         />
         <SharePostGroupModel
@@ -2236,7 +2250,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const userData = state.UserInfo.data;
   const allData = state.PostReducer.getData;
   const load = state.PostReducer.load;
