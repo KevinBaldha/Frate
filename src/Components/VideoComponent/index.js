@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import Video from 'react-native-video';
 import Icon from 'react-native-vector-icons/Feather';
-import Slider from 'react-native-slider';
+import Slider from '@react-native-community/slider';
+
 import {images, scale, theme} from '../../Utils';
 import {useState} from 'react';
 

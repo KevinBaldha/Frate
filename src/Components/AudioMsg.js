@@ -6,7 +6,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
 } from 'react-native';
-import Slider from 'react-native-slider';
+import Slider from '@react-native-community/slider';
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Foundation';
 import TrackPlayer, {useProgress} from 'react-native-track-player';
@@ -14,7 +14,7 @@ import {scale, theme, images} from '../Utils';
 import externalStyle from '../Css';
 import {Label} from './index';
 
-const AudioMsg = (props) => {
+const AudioMsg = props => {
   const [play, setPlay] = useState(true);
   const [loadAudio, setLoadAudio] = useState(false);
   const {
@@ -68,12 +68,12 @@ const AudioMsg = (props) => {
     setLoadAudio(false);
   };
 
-  const changeTime = async (seconds) => {
+  const changeTime = async seconds => {
     const reminaTime = duration > 0 ? duration - seconds : 0;
     setvalue(reminaTime);
   };
 
-  const onDropProgress = (time) => {
+  const onDropProgress = time => {
     TrackPlayer.seekTo(time);
   };
   const time = item?.audio_duration?.split(':');
@@ -156,10 +156,10 @@ const AudioMsg = (props) => {
             iconColor ? theme.colors.white : theme.colors.blue
           }
           thumbTouchSize={{width: 10, height: 10}}
-          onSlidingComplete={(data) => {
+          onSlidingComplete={data => {
             onDropProgress(data);
           }}
-          onValueChange={(seconds) => {
+          onValueChange={seconds => {
             changeTime(seconds);
           }}
         />

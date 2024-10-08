@@ -42,7 +42,7 @@ import AudioRecorderPlayer, {
   OutputFormatAndroidType,
 } from 'react-native-audio-recorder-player';
 import {stat} from 'react-native-fs';
-import Slider from 'react-native-slider';
+import Slider from '@react-native-community/slider';
 import Image from 'react-native-image-progress';
 import ProgressBar from 'react-native-progress/Bar';
 import TrackPlayer from 'react-native-track-player';
@@ -210,7 +210,7 @@ class Chat extends Component {
     this.initSoket();
   };
 
-  _handleAppStateChange = (nextAppState) => {
+  _handleAppStateChange = nextAppState => {
     // We need to fix when app in background
     if (!this.state.isMediaOption) {
       if (nextAppState === 'active') {
@@ -448,7 +448,7 @@ class Chat extends Component {
 
     this.socketConnect.on(
       singleChatId === '1' ? 'conversation-user-connected' : 'user-connected',
-      (userBrokeringId) => {
+      userBrokeringId => {
         this.setState({loading: false});
       },
     );
@@ -553,7 +553,7 @@ class Chat extends Component {
     }
   }
 
-  handleOptions = async (index) => {
+  handleOptions = async index => {
     const {singleChatId} = this.state;
     this.setState({menu: !this.state.menu});
     setTimeout(async () => {
@@ -607,7 +607,7 @@ class Chat extends Component {
           roomfrm.append('user_id', this.state.loginUserData?.id);
           await postAPICall(API.roomExit, roomfrm);
           let remainsChatRoomData = this.props.getGroupChatRoomData.data.filter(
-            (d) => d.room_id !== this.props.route.params?.roomId,
+            d => d.room_id !== this.props.route.params?.roomId,
           );
           let newChatObj = {
             ...this.props.getGroupChatRoomData,
@@ -641,7 +641,7 @@ class Chat extends Component {
   }
 
   onPressAnimation = () => {
-    this.setState((state) => ({isPressed: !state.isPressed}));
+    this.setState(state => ({isPressed: !state.isPressed}));
   };
 
   _micButton() {
@@ -709,7 +709,7 @@ class Chat extends Component {
       audioSet,
       meteringEnabled,
     );
-    this.audioRecorderPlayer.addRecordBackListener(async (e) => {
+    this.audioRecorderPlayer.addRecordBackListener(async e => {
       const time = await this.millisToMinutesAndSeconds(e.currentPosition);
       this.setState({
         recordSecs: e.currentPosition,
@@ -720,7 +720,7 @@ class Chat extends Component {
     this._runAnimation();
   };
 
-  millisToMinutesAndSeconds = async (millis) => {
+  millisToMinutesAndSeconds = async millis => {
     var hour = Math.floor(millis / 60000);
     var minutes = Math.floor(millis / 60000);
     var seconds = ((millis % 60000) / 1000).toFixed(0);
@@ -775,7 +775,7 @@ class Chat extends Component {
     const path_file = this.state.newFilePath;
     await this.audioRecorderPlayer.startPlayer(path_file);
     this.audioRecorderPlayer.setVolume(5.0);
-    this.audioRecorderPlayer.addPlayBackListener((e) => {
+    this.audioRecorderPlayer.addPlayBackListener(e => {
       if (e.currentPosition === e.duration) {
         this.audioRecorderPlayer.stopPlayer();
       }
@@ -804,7 +804,7 @@ class Chat extends Component {
     });
   };
 
-  onPausePlay = async (e) => {
+  onPausePlay = async e => {
     const {audioPlayDisableButton} = this.state;
     this.setState({
       audioPlayButton: audioPlayDisableButton
@@ -865,8 +865,8 @@ class Chat extends Component {
       fileSize: statResult.size, // Original file size import RNFetchBlob from 'react-native-fetch-blob'
       // data: RNFetchBlob.wrap(decodeURIComponent(file_path)),
       // Errors
-      onFetchBlobError: (e) => {},
-      onWriteFileError: (e) => {},
+      onFetchBlobError: e => {},
+      onWriteFileError: e => {},
     });
     chunk.digIn(this.upload.bind(this));
   };
@@ -904,7 +904,7 @@ class Chat extends Component {
       compressImageQuality: 0.5,
       compressImageMaxWidth: 500,
     })
-      .then(async (response) => {
+      .then(async response => {
         let imagedata = imageData(response.path);
         var file_path = response.path;
         this.setState({imageChatPath: file_path, isMediaOption: false});
@@ -919,12 +919,12 @@ class Chat extends Component {
           fileName: imagedata.name, // Original file name
           fileSize: response.size, // Original file size
           // Errors
-          onFetchBlobError: (e) => {},
-          onWriteFileError: (e) => {},
+          onFetchBlobError: e => {},
+          onWriteFileError: e => {},
         });
         chunk.digIn(this.upload.bind(this));
       })
-      .catch((error) => {
+      .catch(error => {
         openAttachment = false;
       });
   };
@@ -978,7 +978,7 @@ class Chat extends Component {
             },
           },
         )
-        .then((response) => {
+        .then(response => {
           openAttachment = false;
           switch (response.status) {
             case 200:
@@ -994,7 +994,7 @@ class Chat extends Component {
               break;
           }
         })
-        .catch((error) => {
+        .catch(error => {
           openAttachment = false;
           if (error.response) {
             if ([400, 404, 415, 500, 501].includes(error.response.status)) {
@@ -1065,7 +1065,7 @@ class Chat extends Component {
           },
         },
       )
-      .then((response) => {
+      .then(response => {
         openAttachment = false;
         switch (response.status) {
           case 200:
@@ -1080,7 +1080,7 @@ class Chat extends Component {
             break;
         }
       })
-      .catch((error) => {
+      .catch(error => {
         openAttachment = false;
         if (error.response) {
           if ([400, 404, 415, 500, 501].includes(error.response.status)) {
@@ -1110,9 +1110,9 @@ class Chat extends Component {
       multiple: true,
       includeExif: true,
       compressVideoPreset: '640x480',
-    }).then(async (video) => {
+    }).then(async video => {
       openAttachment = false;
-      video.map((item) => {
+      video.map(item => {
         if (item?.mime.slice(0, 5) === 'video') {
           let videoName = imageData(
             Platform.OS === 'ios' ? item?.sourceURL : item?.path,
@@ -1144,7 +1144,7 @@ class Chat extends Component {
       compressImageMaxHeight: 500,
       compressImageQuality: 1,
       compressImageMaxWidth: 500,
-    }).then((image) => {
+    }).then(image => {
       let imagedata = imageData(image.path);
       var file_path = image.path;
       if (Platform.OS === 'ios') {
@@ -1161,8 +1161,8 @@ class Chat extends Component {
         // fileSize: mbToBytes, // Original file size
         fileSize: image.size, // Original file size
         // Errors
-        onFetchBlobError: (e) => {},
-        onWriteFileError: (e) => {},
+        onFetchBlobError: e => {},
+        onWriteFileError: e => {},
       });
       chunk.digIn(this.upload.bind(this));
     });
@@ -1175,7 +1175,7 @@ class Chat extends Component {
       compressImageQuality: 0.5,
       compressVideoPreset: '640x480',
       compressImageMaxWidth: 300,
-    }).then((image) => {
+    }).then(image => {
       let imagedata = imageData(image.path);
       var file_path = image.path;
       if (Platform.OS === 'ios') {
@@ -1190,23 +1190,23 @@ class Chat extends Component {
         fileName: imagedata.name, // Original file name
         fileSize: image.size, // Original file size
         // Errors
-        onFetchBlobError: (e) => {},
-        onWriteFileError: (e) => {},
+        onFetchBlobError: e => {},
+        onWriteFileError: e => {},
       });
       chunk.digIn(this.upload.bind(this));
     });
   };
 
-  previousindexset = (index) => {
+  previousindexset = index => {
     this.setState({previousIndex: index});
   };
 
-  getFileExtention = (fileUrl) => {
+  getFileExtention = fileUrl => {
     // To get the file extension
     return /[.]/.exec(fileUrl) ? /[^.]+$/.exec(fileUrl) : '';
   };
 
-  checkPermission = async (filePath) => {
+  checkPermission = async filePath => {
     if (Platform.OS === 'ios') {
       this.downloadFile(filePath);
     } else {
@@ -1231,7 +1231,7 @@ class Chat extends Component {
     }
   };
 
-  downloadFile = (filePath) => {
+  downloadFile = filePath => {
     Toast.show('Download start', Toast.SHORT);
     // Get today's date to add the time suffix in filename
     let date = new Date();
@@ -1260,13 +1260,13 @@ class Chat extends Component {
     };
     config(options)
       .fetch('GET', FILE_URL)
-      .then((res) => {
+      .then(res => {
         // Alert after successful downloading
         Toast.show('File Downloaded Successfully.', Toast.SHORT);
       });
   };
 
-  fileDownload = async (item) => {
+  fileDownload = async item => {
     const {documentPath} = this.state;
     var filePath = `file://${documentPath}`;
     const configOptions = {fileCache: true, overwrite: true};
@@ -1284,7 +1284,7 @@ class Chat extends Component {
       if (item?.url) {
         return await RNFetchBlob.config(configOptions)
           .fetch('GET', item?.url)
-          .then(async (resp) => {
+          .then(async resp => {
             let downloadedPath = resp.path();
             await RNFS.copyFile(downloadedPath, documentPath + filename);
             return filePath + filename;
@@ -1900,7 +1900,7 @@ class Chat extends Component {
     }
   };
 
-  closeReport = (item) => {
+  closeReport = item => {
     if (item === null) {
       this.setState({
         reportModel: !this.state.reportModel,
@@ -1960,7 +1960,7 @@ class Chat extends Component {
     this.setState({postPone: false});
   };
 
-  setEmoji = (emoji) => {
+  setEmoji = emoji => {
     this.setState({msg: this.state.msg + emoji.code});
   };
 
@@ -1986,14 +1986,14 @@ class Chat extends Component {
     }
   };
 
-  safeEmojiBackspace = (str) => {
+  safeEmojiBackspace = str => {
     let initialRealCount = this.fancyCount(str);
     while (str.length > 0 && this.fancyCount(str) !== initialRealCount - 1) {
       str = str.substring(0, str.length - 1);
     }
     return str;
   };
-  fancyCount = (str) => {
+  fancyCount = str => {
     const joiner = '\u{200D}';
     const split = str.split(joiner);
     let count = 0;
@@ -2158,7 +2158,7 @@ class Chat extends Component {
               : scale(-25)
           }>
           <FlatList
-            ref={(ref) => (this.FlatListRef = ref)}
+            ref={ref => (this.FlatListRef = ref)}
             inverted={-1}
             style={[
               // styles.list,
@@ -2198,7 +2198,7 @@ class Chat extends Component {
             onScrollBeginDrag={() => {
               this.setState({isEmojiKeyboard: false});
             }}
-            onScroll={(e) => {
+            onScroll={e => {
               this.setState({isEmojiKeyboard: false});
             }}
             // refreshControl={
@@ -2213,7 +2213,7 @@ class Chat extends Component {
           />
 
           <View
-            onLayout={(e) => {
+            onLayout={e => {
               this.setState({viewYposition: e.nativeEvent.layout.y});
             }}
           />
@@ -2243,7 +2243,7 @@ class Chat extends Component {
                   maximumTrackTintColor={theme.colors.grey} // iconColor ? theme.colors.blue1 : theme.colors.grey
                   minimumTrackTintColor={theme.colors.blue}
                   thumbTouchSize={{width: 10, height: 10}}
-                  onSlidingComplete={(data) => {}}
+                  onSlidingComplete={data => {}}
                 />
               </View>
               <View style={[styles.playRowView]}>
@@ -2345,7 +2345,7 @@ class Chat extends Component {
                     value={msg}
                     placeholder={getLocalText('Chat.writemsg')}
                     placeholderTextColor={theme.colors.grey18}
-                    onChangeText={(txt) => {
+                    onChangeText={txt => {
                       // this.FlatListRef.scrollToEnd();
                       this.setState({msg: txt});
                     }}
@@ -2356,7 +2356,7 @@ class Chat extends Component {
                         width: msg ? '78.5%' : '68%',
                       },
                     ]}
-                    ref={(ref) => (this.textinput = ref)}
+                    ref={ref => (this.textinput = ref)}
                     // autoFocus={true}
                   />
 
@@ -2790,7 +2790,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const userData = state.UserInfo.data;
   const video = state.videoReducer;
   const reportReasonList = state.PostReducer.reportReasonList;
