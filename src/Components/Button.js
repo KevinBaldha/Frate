@@ -7,7 +7,7 @@ import {scale, theme} from '../Utils';
 import {Label, PopUpModel} from './index';
 import {getLocalText} from '../Locales/I18n';
 
-const Button = (props) => {
+const Button = props => {
   const {
     onPress,
     style,
@@ -97,7 +97,7 @@ const Button = (props) => {
   );
 };
 
-const CustomButton = (props) => {
+const CustomButton = props => {
   const {title, style, onPress} = props;
   return (
     <TouchableOpacity

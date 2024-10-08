@@ -12,7 +12,7 @@ import {isIphoneX} from 'react-native-iphone-x-helper';
 import Modal from 'react-native-modal';
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Feather';
-import CameraRoll from '@react-native-camera-roll/camera-roll';
+import {CameraRoll} from '@react-native-camera-roll/camera-roll';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {scale, theme, height} from '../../Utils';
 import {Label} from '../index';

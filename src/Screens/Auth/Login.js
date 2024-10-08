@@ -386,56 +386,128 @@ class Login extends Component {
 
   //email,password login
   handleLogin = async () => {
-    var fcm = await this.getFcmToken();
-    await this.setFcmToken();
     try {
+      await this.setFcmToken();
+      const fcm = await this.getFcmToken();
+
       if (this.validateForm()) {
-        let loginFromData = new FormData();
         this.setState({loadding: true});
-        loginFromData.append('email', this.state.email);
-        loginFromData.append('password', this.state.password);
-        loginFromData.append('type', 3);
-        loginFromData.append('fcm_token', fcm);
-        loginFromData.append('device_type', Platform.OS);
-        loginFromData.append(
+
+        // Create FormData for login
+        const loginFormData = new FormData();
+        loginFormData.append('email', this.state.email);
+        loginFormData.append('password', this.state.password);
+        loginFormData.append('type', 3);
+        loginFormData.append('fcm_token', fcm);
+        loginFormData.append('device_type', Platform.OS);
+        loginFormData.append(
           'country_code',
           RNLocalize.getCountry().toLocaleLowerCase(),
         );
-        let success = await postAPICall(API.login, loginFromData);
+
+        console.log('loginFormData ->', loginFormData);
+
+        // API Call
+        const success = await postAPICall(API.login, loginFormData);
+        console.log('login success ->', success);
+
+        // Check if user is blocked
         if (success.data?.is_block) {
+          this.setState({
+            loadding: false,
+            blockContent: success.data,
+            isBlockUser: true,
+          });
+          return;
+        }
+
+        // Update user state and authenticate
+        this.props.totalGroupJoin(success.data?.group_count);
+        this.props.CreatedGroupCount(success.data?.created_group_count);
+        this.props.setCoverImage(success.data?.teams?.background_image);
+
+        if (success.error) {
+          this.handleAlert(getLocalText('LoginSignup.credentials'));
           this.setState({loadding: false});
-          await this.setState({blockContent: success.data});
-          this.setState({isBlockUser: true});
         } else {
-          this.props.totalGroupJoin(success.data?.group_count);
-          this.props.CreatedGroupCount(success.data?.created_group_count);
-          this.props.setCoverImage(success.data?.teams?.background_image);
+          // Set Authorization header and store data
+          appAPI.defaults.headers.common.Authorization = `Bearer ${success.data.accessToken}`;
+          await AsyncStorage.multiSet([
+            ['@loginToken', `Bearer ${success.data.accessToken}`],
+            ['@userTeamData', success.data.teams?.team_image?.original || ''],
+          ]);
 
-          if (success.error) {
-            this.handleAlert(getLocalText('LoginSignup.credentials'));
-
-            this.setState({loadding: false});
-          } else {
-            appAPI.defaults.headers.common.Authorization = `Bearer ${success.data.accessToken}`;
-            await AsyncStorage.multiSet([
-              ['@loginToken', ` Bearer ${success.data.accessToken}`],
-              ['@userTeamData', success.data.teams?.team_image?.original || ''],
-            ]);
-
-            this.props.userData(success.data.user);
-            this.props.userPreferences(success?.data?.user?.user_meta);
-            this.apiService.setToken(success.data.accessToken);
-            this.setState({loadding: false});
-            this.props.isLogin(true);
-            this.props.navigation.replace('Tabs');
-          }
+          this.props.userData(success.data.user);
+          this.props.userPreferences(success?.data?.user?.user_meta);
+          this.apiService.setToken(success.data.accessToken);
+          this.setState({loadding: false});
+          this.props.isLogin(true);
+          this.props.navigation.replace('Tabs');
         }
       }
     } catch (error) {
+      console.error('Login error:', error);
       this.setState({loadding: false});
       this.handleAlert(getLocalText('LoginSignup.credentials'));
     }
   };
+
+  // handleLogin = async () => {
+  //   var fcm = await this.getFcmToken();
+  //   await this.setFcmToken();
+  //   try {
+  //     if (this.validateForm()) {
+  //       this.setState({loadding: true});
+  //       const response = await axios.post(
+  //         'https://frate.eugeniuses.com/api/en/login',
+  //         {
+  //           email: this.state.email,
+  //           type: 3,
+  //           fcm_token: fcm,
+  //           device_type: Platform.OS,
+  //           country_code: RNLocalize.getCountry().toLocaleLowerCase(),
+  //           password: this.state.password,
+  //         },
+  //       );
+  //       console.log('login response ->', response);
+  //       if (response.data?.is_block) {
+  //         this.setState({loadding: false});
+  //         await this.setState({blockContent: response.data});
+  //         this.setState({isBlockUser: true});
+  //       } else {
+  //         this.props.totalGroupJoin(response.data?.group_count);
+  //         this.props.CreatedGroupCount(response.data?.created_group_count);
+  //         this.props.setCoverImage(response.data?.teams?.background_image);
+
+  //         if (response.error) {
+  //           this.handleAlert(getLocalText('LoginSignup.credentials'));
+
+  //           this.setState({loadding: false});
+  //         } else {
+  //           appAPI.defaults.headers.common.Authorization = `Bearer ${response.data.accessToken}`;
+  //           await AsyncStorage.multiSet([
+  //             ['@loginToken', ` Bearer ${response.data.accessToken}`],
+  //             [
+  //               '@userTeamData',
+  //               response.data.teams?.team_image?.original || '',
+  //             ],
+  //           ]);
+
+  //           this.props.userData(response.data.user);
+  //           this.props.userPreferences(response?.data?.user?.user_meta);
+  //           this.apiService.setToken(response.data.accessToken);
+  //           this.setState({loadding: false});
+  //           this.props.isLogin(true);
+  //           this.props.navigation.replace('Tabs');
+  //         }
+  //       }
+  //     }
+  //   } catch (error) {
+  //     this.setState({loadding: false});
+  //     this.handleAlert(getLocalText('LoginSignup.credentials'));
+  //   }
+  // };
+
   //login with facebook
   fbLogin = async () => {
     await this.setFcmToken();

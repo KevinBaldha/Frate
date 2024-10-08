@@ -10,13 +10,45 @@ export const getBaseUrl = () => {
   }
 };
 
+// export const appAPI = axios.create({
+//   baseURL: getBaseUrl(),
+//   headers: {
+//     Accept: 'application/json',
+//     'Content-Type': 'application/x-www-form-urlencoded',
+
+//   },
+// });
+
+// Axios instance creation with configuration
 export const appAPI = axios.create({
   baseURL: getBaseUrl(),
+  timeout: 10000, // 10 seconds timeout
   headers: {
     Accept: 'application/json',
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'multipart/form-data',
   },
 });
+
+// Example interceptor for handling request logging or auth token injection
+appAPI.interceptors.request.use(
+  config => {
+    // Modify config before sending the request (e.g., add auth token)
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  },
+);
+
+// Interceptor to handle response and logging
+appAPI.interceptors.response.use(
+  response => {
+    return response;
+  },
+  error => {
+    return Promise.reject(error);
+  },
+);
 
 export const baseUrlForShare = 'https://Frate.com/post?=';
 export const GOOGLEWEBCLIENTID =
@@ -126,75 +158,45 @@ export const API = {
   removeProfile: 'user-remove-profile',
 };
 
-export const getAPICall = (url, startOffset, size = 5, isDiscount) => {
-  return appAPI
-    .get(url, {params: {offset: startOffset, size, discounted: isDiscount}})
-    .then((res) => {
-      return handleResponse(res);
-    })
-    .catch((e) => {
-      if (e.response) {
-        return handleError(e.response.data);
-      }
-      // else if (e?.status === undefined) {
-      //   return null;
-      // }
-      return handleError(e.message);
+export const getAPICall = async (
+  url,
+  startOffset,
+  size = 5,
+  isDiscount = false,
+) => {
+  try {
+    const res = await appAPI.get(url, {
+      params: {offset: startOffset, size, discounted: isDiscount},
     });
+    return handleResponse(res);
+  } catch (e) {
+    return handleError(e.response ? e.response.data : e.message);
+  }
 };
 
-export const postAPICall = (url, requestData) => {
-  return appAPI
-    .post(url, requestData)
-    .then((res) => {
-      return handleResponse(res);
-    })
-    .catch((e) => {
-      if (e.response) {
-        // if (e.response.data && e.response.data.errors.email) {
-        //   return handleError(e.response.data.errors.email);
-        // }
-        return handleError(e.response.data.message);
-        // } else if (e?.status === undefined) {
-        //   return null;
-      } else {
-        return handleError(e.message);
-      }
-    });
+export const postAPICall = async (url, requestData) => {
+  try {
+    const res = await appAPI.post(url, requestData);
+    return handleResponse(res);
+  } catch (e) {
+    return handleError(e.response ? e.response.data : e.message);
+  }
 };
-export const putAPICall = (url, requestData) => {
-  return appAPI
-    .put(url, requestData)
-    .then((res) => {
-      return handleResponse(res);
-    })
-    .catch((e) => {
-      if (e.response) {
-        return handleError(e.response.data.message);
-      }
-      // else if (e?.status === undefined) {
-      //   return null;
-      // }
-      else {
-        return handleError(e.message);
-      }
-    });
+
+export const putAPICall = async (url, requestData) => {
+  try {
+    const res = await appAPI.put(url, requestData);
+    return handleResponse(res);
+  } catch (e) {
+    return handleError(e.response ? e.response.data : e.message);
+  }
 };
-export const deleteAPICall = (url) => {
-  return appAPI
-    .delete(url)
-    .then((res) => {
-      return handleResponse(res);
-    })
-    .catch((e) => {
-      if (e.response) {
-        return handleError(e.response.data.message);
-      }
-      // else if (e?.status === undefined) {
-      //   return null;
-      // }
-      else {
-        return handleError(e.message);
-      }
-    });
+
+export const deleteAPICall = async url => {
+  try {
+    const res = await appAPI.delete(url);
+    return handleResponse(res);
+  } catch (e) {
+    return handleError(e.response ? e.response.data : e.message);
+  }
 };

@@ -7,7 +7,7 @@ import {scale, theme, height} from '../../Utils';
 import {getLocalText} from '../../Locales/I18n';
 import {Button} from '../index';
 
-const ChooseCityPopup = (props) => {
+const ChooseCityPopup = props => {
   const {
     isVisible,
     mainContainer,
@@ -53,7 +53,7 @@ const ChooseCityPopup = (props) => {
           <Button
             onPress={onPressCancel}
             title={getLocalText('Information.cancelbtn')}
-            style={styles.btn1}
+            style={[styles.btn, {backgroundColor: theme.colors.red}]}
             titleStyle={[{color: theme.colors.blue}, styles.txt]}
           />
         </View>
@@ -72,6 +72,8 @@ const styles = StyleSheet.create({
     borderRadius: scale(10),
     justifyContent: 'center',
     marginHorizontal: 10,
+    width: '100%',
+    overflow: 'hidden',
   },
   mainView: {
     flexDirection: 'row',
@@ -97,15 +99,9 @@ const styles = StyleSheet.create({
   btn: {
     borderRadius: scale(50),
     marginTop: scale(15),
-    marginBottom: scale(0),
+    marginBottom: 0,
     width: '45%',
-  },
-  btn1: {
-    borderRadius: scale(50),
-    backgroundColor: theme.colors.red,
-    marginTop: scale(15),
-    marginBottom: scale(0),
-    width: '45%',
+    marginHorizontal: 0,
   },
   txt: {color: theme.colors.white, textAlign: 'center'},
   buttonView: {

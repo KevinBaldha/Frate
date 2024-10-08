@@ -59,21 +59,31 @@ index 5db3793..7962e7f 100644
    },
  
 diff --git a/node_modules/react-native-scrollable-tab-view/index.js b/node_modules/react-native-scrollable-tab-view/index.js
-index 82e53c5..866dca2 100644
+index 82e53c5..5b5a8e7 100644
 --- a/node_modules/react-native-scrollable-tab-view/index.js
 +++ b/node_modules/react-native-scrollable-tab-view/index.js
-@@ -1,8 +1,9 @@
+@@ -1,8 +1,10 @@
  const React = require('react');
  const { Component } = React;
 -const { ViewPropTypes } = ReactNative = require('react-native');
 +import { ViewPropTypes } from 'deprecated-react-native-prop-types';
++import PagerView from 'react-native-pager-view';
  const createReactClass = require('create-react-class');
  const PropTypes = require('prop-types');
 +const ReactNative = require('react-native');
  const {
    Dimensions,
    View,
-@@ -40,12 +41,12 @@ const ScrollableTabView = createReactClass({
+@@ -22,7 +24,7 @@ const DefaultTabBar = require('./DefaultTabBar');
+ const ScrollableTabBar = require('./ScrollableTabBar');
+ 
+ const AnimatedViewPagerAndroid = Platform.OS === 'android' ?
+-  Animated.createAnimatedComponent(ViewPager) :
++  Animated.createAnimatedComponent(PagerView) :
+   undefined;
+ 
+ const ScrollableTabView = createReactClass({
+@@ -40,12 +42,12 @@ const ScrollableTabView = createReactClass({
      onChangeTab: PropTypes.func,
      onScroll: PropTypes.func,
      renderTabBar: PropTypes.any,

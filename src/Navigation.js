@@ -63,7 +63,7 @@ const GroupScreenNavigation = () => {
     <Stack.Navigator
       screenOptions={({navigation}) => {
         return {
-          gestureResponseDistance: {horizontal: theme.SCREENWIDTH * 0.5},
+          // gestureResponseDistance: {horizontal: theme.SCREENWIDTH * 0.5},
           detachPreviousScreen: !navigation.isFocused(),
           headerShown: false,
         };
@@ -80,7 +80,7 @@ const handleUserNavigation = () => {
     <Stack.Navigator
       screenOptions={({navigation}) => {
         return {
-          gestureResponseDistance: {horizontal: theme.SCREENWIDTH * 0.5},
+          // gestureResponseDistance: {horizontal: theme.SCREENWIDTH * 0.5},
           detachPreviousScreen: !navigation.isFocused(),
           headerShown: false,
         };
@@ -97,7 +97,7 @@ const handleHomeNavigation = () => {
     <Stack.Navigator
       screenOptions={({navigation}) => {
         return {
-          gestureResponseDistance: {horizontal: theme.SCREENWIDTH * 0.5},
+          // gestureResponseDistance: {horizontal: theme.SCREENWIDTH * 0.5},
           detachPreviousScreen: !navigation.isFocused(),
           headerShown: false,
         };
@@ -118,8 +118,8 @@ function TabNavigator() {
   return (
     <Tab.Navigator
       initialRouteName={'Timeline'}
-      tabBarOptions={{
-        showLabel: false,
+      screenOptions={{
+        tabBarShowLabel: false,
         tabStyle: {
           borderRadius: scale(70) / 2,
           marginTop: scale(10),
@@ -130,6 +130,7 @@ function TabNavigator() {
           height: isIphoneX() ? scale(90) : scale(80),
           paddingHorizontal: scale(10),
         },
+        headerShown: false,
       }}>
       <Tab.Screen
         options={({route, navigation}) => {
@@ -281,7 +282,7 @@ class Navigation extends Component {
         <Stack.Navigator
           initialRouteName={this.props.loginStatus ? 'Tabs' : 'Login'}
           screenOptions={{
-            gestureResponseDistance: {horizontal: theme.scree},
+            // gestureResponseDistance: {horizontal: theme.scree},
             headerShown: false,
           }}>
           <Stack.Screen name="Signup" component={Signup} />

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, AppState} from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
@@ -13,16 +14,16 @@ import {changeNetStatus} from '../../Redux/Actions';
 // create a component
 const OfflineModel = () => {
   const dispatch = useDispatch();
-  const netStatus = useSelector((state) => state.NetinfoReducer);
+  const netStatus = useSelector(state => state.NetinfoReducer);
   const [netInfo, setNetInfo] = useState(netStatus?.isNetConnected || false);
   const [appState, setAppState] = useState(AppState.currentState);
 
   useEffect(() => {
     // Add event listener and cleanup function
-    const handleAppStateChange = (nextAppState) => {
+    const handleAppStateChange = nextAppState => {
       if (appState.match(/inactive|background/) && nextAppState === 'active') {
         // Device screen turned on
-        const unsubscribe1 = NetInfo.addEventListener((state) => {
+        const unsubscribe1 = NetInfo.addEventListener(state => {
           if (state.isConnected !== netInfo) {
             dispatch(changeNetStatus(state.isConnected || state.isWifiEnabled));
             setNetInfo(state.isConnected || state.isWifiEnabled);
@@ -32,15 +33,19 @@ const OfflineModel = () => {
       }
       setAppState(nextAppState);
     };
-    AppState.addEventListener('change', handleAppStateChange);
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    );
     return () => {
-      AppState.removeEventListener('change', handleAppStateChange);
+      // AppState.removeEventListener('change', handleAppStateChange);
+      subscription.remove();
     };
   }, [appState]);
 
   useFocusEffect(
     React.useCallback(() => {
-      const unsubscribe = NetInfo.addEventListener((state) => {
+      const unsubscribe = NetInfo.addEventListener(state => {
         if (state.isConnected !== netInfo) {
           dispatch(changeNetStatus(state.isConnected || state.isWifiEnabled));
           setNetInfo(state.isConnected || state.isWifiEnabled);

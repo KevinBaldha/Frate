@@ -83,7 +83,7 @@ class Signup4 extends Component {
     this.setState({fcmToken: fcm});
   };
 
-  getTeams = async (id) => {
+  getTeams = async id => {
     try {
       this.setState({loadding: true});
       let response = await getAPICall(API.apiteam + id);
@@ -114,7 +114,7 @@ class Signup4 extends Component {
     }
   };
 
-  getCountry = async (id) => {
+  getCountry = async id => {
     try {
       this.setState({loadding: true});
       let response = await getAPICall(API.getCountries + id);
@@ -129,7 +129,7 @@ class Signup4 extends Component {
     }
   };
 
-  getCities = async (id) => {
+  getCities = async id => {
     try {
       this.setState({loadding: true});
       let response = await getAPICall(API.getCities + id);
@@ -178,12 +178,12 @@ class Signup4 extends Component {
     }
   };
 
-  handleAlert = (msg) => {
+  handleAlert = msg => {
     this.setState({errorAlert: !this.state.errorAlert, alertErr: msg});
   };
 
   //team selection
-  handleClick = async (item) => {
+  handleClick = async item => {
     this.setState({selectedId: item});
   };
 
@@ -227,6 +227,8 @@ class Signup4 extends Component {
           userFormData.append('country_code', RNLocalize.getCountry());
 
           let response = await this.postAPICall(API.signUp, userFormData);
+          console.log('SIGNUP RESPONSE ->', response);
+
           if (response.message) {
             if (this.state.loadding) {
               this.setState({loadding: false});
@@ -332,7 +334,7 @@ class Signup4 extends Component {
       this.handleAlert(getLocalText('ErrorMsgs.team'));
     }
   };
-  animate = (index) => {
+  animate = index => {
     this.setState({
       activeItem: index,
     });
@@ -391,10 +393,10 @@ class Signup4 extends Component {
   postAPICall = (url, requestData) => {
     return appAPI
       .post(url, requestData)
-      .then((res) => {
+      .then(res => {
         return handleResponse(res);
       })
-      .catch((e) => {
+      .catch(e => {
         if (e.response) {
           if (e.response.data && e.response.data.errors.email) {
             return handleError(e.response.data.errors.email);
@@ -449,7 +451,7 @@ class Signup4 extends Component {
           placeholder={getLocalText('LoginSignup.chooseContinent')}
           selectedTextStyle={styles.selectedTextStyle}
           data={getContinentData}
-          onChange={(item) => {
+          onChange={item => {
             this.setState({getSelectedContinet: item, countryDisable: false});
             this.getCountry(item?.value);
           }}
@@ -474,7 +476,7 @@ class Signup4 extends Component {
           placeholder={getLocalText('LoginSignup.chooseCountry')}
           selectedTextStyle={styles.selectedTextStyle}
           data={getCountryData}
-          onChange={(item) => {
+          onChange={item => {
             this.setState({getSelectedCountry: item, cityDisable: false});
             this.getCities(item?.value);
           }}
@@ -500,7 +502,7 @@ class Signup4 extends Component {
           placeholder={getLocalText('LoginSignup.chooseCity')}
           selectedTextStyle={styles.selectedTextStyle}
           data={getCityData}
-          onChange={(item) => {
+          onChange={item => {
             this.setState({getSelectedCities: item});
             this.getTeams(item?.value);
           }}
@@ -521,7 +523,7 @@ class Signup4 extends Component {
           showsVerticalScrollIndicator={false}
           numColumns={2}
           extraData={this.state}
-          keyExtractor={(item) => {
+          keyExtractor={item => {
             return item?.id;
           }}
           renderItem={this.renderItem}
@@ -648,19 +650,19 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   loginstatus: state.AppReducer.loginstatus,
   userInfo: state.UserInfo,
 });
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = dispatch => {
   return {
-    isLogin: (params) => dispatch(isLogin(params)),
-    userData: (params) => dispatch(userData(params)),
-    userPreferences: (params) => dispatch(userPreferences(params)),
-    totalGroupJoin: (params) => dispatch(getJoinGroupCount(params)),
-    CreatedGroupCount: (params) => dispatch(CreatedGroupCount(params)),
-    setCoverImage: (params) => dispatch(setCoverImage(params)),
+    isLogin: params => dispatch(isLogin(params)),
+    userData: params => dispatch(userData(params)),
+    userPreferences: params => dispatch(userPreferences(params)),
+    totalGroupJoin: params => dispatch(getJoinGroupCount(params)),
+    CreatedGroupCount: params => dispatch(CreatedGroupCount(params)),
+    setCoverImage: params => dispatch(setCoverImage(params)),
   };
 };
 
