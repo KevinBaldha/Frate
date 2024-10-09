@@ -38,6 +38,22 @@
           }
         },
         {
+          "client_id": "1029252269707-k76et5il94r2dm6vdeqj1sa9k56cqjvr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.frate",
+            "certificate_hash": "7c354f827dd3c89e5223a644e57ac5e08808a348"
+          }
+        },
+        {
+          "client_id": "1029252269707-ofj0ppqpm2s9pnap20lnjk12df4gbt8b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.frate",
+            "certificate_hash": "4d0b9320fc242df554217424bf258bb288e732e5"
+          }
+        },
+        {
           "client_id": "1029252269707-7djm8tkl1eeud3m8li3laaqheo743htf.apps.googleusercontent.com",
           "client_type": 3
         }
