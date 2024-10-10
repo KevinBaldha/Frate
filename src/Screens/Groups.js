@@ -138,7 +138,7 @@ class Groups extends Component {
       grouping,
       item?.category?.id,
       this.state.page,
-      false,
+      item?.showOnlyFriendGroups,
     );
 
     this.setState({
