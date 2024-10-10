@@ -1,5 +1,7 @@
+import {Platform} from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
+import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 import moment from 'moment';
 const LanguageDetect = require('languagedetect');
 const lngDetector = new LanguageDetect();
@@ -27,7 +29,7 @@ export const getDynamicLink = async (screenType, item) => {
   return link;
 };
 
-const imageData = (uri) => {
+const imageData = uri => {
   let nameofImageArr = uri.split('/');
   let nameofImage = nameofImageArr[nameofImageArr.length - 1];
   let extofImageArr = uri.split('.');
@@ -64,7 +66,7 @@ const mixOptions = {
   },
 };
 
-const getTimeWithDay = (value) => {
+const getTimeWithDay = value => {
   var date, hour, minutes, fullTime;
   date = new Date(value);
   // Getting current hour from Date object.
@@ -92,7 +94,7 @@ const getTimeWithDay = (value) => {
   return fullTime;
 };
 
-const getWeekDay = (day) => {
+const getWeekDay = day => {
   if (day === 'Mon') {
     return getLocalText('WeekDays.mon').slice(0, 3);
   } else if (day === 'Tue') {
@@ -118,7 +120,7 @@ const amPmTime = () => {
   return moment().format('h:mm A');
 };
 
-const getDuration = (type) => {
+const getDuration = type => {
   var hrs = type / 3600;
   var mins = (type % 3600) / 60;
   var secs = type % 60;
@@ -131,7 +133,7 @@ const getDuration = (type) => {
   return ret;
 };
 
-export const checkValidUrl = (url) => {
+export const checkValidUrl = url => {
   if (url !== undefined && url !== null) {
     //define some image formats
     var types = [
@@ -161,14 +163,14 @@ export const checkValidUrl = (url) => {
   }
 };
 
-export const handleResponse = async (res) => {
+export const handleResponse = async res => {
   if ((res.status === 200 || res.status === 201 || res.status === 204) && res) {
     return res.data;
   }
   return handleError(res);
 };
 
-export const handleError = async (errorMsg) => {
+export const handleError = async errorMsg => {
   try {
     const state = await NetInfo.fetch();
     if (state.isConnected) {
@@ -192,11 +194,11 @@ export const handleError = async (errorMsg) => {
   }
 };
 
-const LanguageIs = (item) => {
+const LanguageIs = item => {
   return lngDetector.detect(item, 1);
 };
 
-const ConvertInFranch = async (item) => {
+const ConvertInFranch = async item => {
   const bar = await translate(item, {to: 'en', from: 'fr'});
   return bar;
   // const result = await translate(item, {
@@ -220,6 +222,26 @@ const Con = async () => {
   //     //Do something with the translated text which would be in French
   //   });
 };
+
+class NotificationsPermissions {
+  static async requestPermissionsNotifications() {
+    if (Platform.OS === 'android' && Platform.Version >= 33) {
+      try {
+        const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
+        // Handling the result of the permit request
+        if (result === RESULTS.GRANTED) {
+          console.log('Permissions granted');
+        } else {
+          console.log('Permissions not granted');
+        }
+      } catch (error) {
+        // Error handling during permission request
+        console.error(error);
+      }
+    }
+  }
+}
+
 export {
   imageData,
   imagesOptions,
@@ -232,4 +254,5 @@ export {
   LanguageIs,
   ConvertInFranch,
   Con,
+  NotificationsPermissions,
 };

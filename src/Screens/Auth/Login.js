@@ -149,8 +149,15 @@ class Login extends Component {
   //google login
   signIn = async () => {
     var fcm = await this.getFcmToken();
+    console.log('FCM_____>', fcm);
+
     try {
       await GoogleSignin.hasPlayServices();
+      console.log(
+        'GoogleSignin.hasPlayServices()_____>',
+        await GoogleSignin.hasPlayServices(),
+      );
+      console.log('userInfo_____>', await GoogleSignin.signIn());
       const userInfo = await GoogleSignin.signIn();
       try {
         let googleFormData = new FormData();
@@ -160,12 +167,15 @@ class Login extends Component {
         googleFormData.append('fcm_token', fcm);
         googleFormData.append('type', 1);
         googleFormData.append('device_type', Platform.OS);
+        console.log('googleFormData_____>', googleFormData);
         await postAPICall(API.login, googleFormData).then(response => {
           appAPI.defaults.headers.common.Authorization = `Bearer ${response.data?.accessToken}`;
           AsyncStorage.setItem(
             '@loginToken',
             ` Bearer ${response.data?.accessToken}`,
           );
+          console.log('googleFormData_____response_____>', response);
+
           if (
             response?.data.user.profile_complete === null ||
             response?.data.user.profile_complete === 0
@@ -196,10 +206,13 @@ class Login extends Component {
           }
         });
       } catch (error) {
+        console.log('googleFormData_____error_____>', error);
         this.setState({loadding: false});
       }
     } catch (error) {
       this.setState({loadding: false});
+      console.log('googleFormData_____catch_____error_____>', error);
+
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
       } else if (error.code === statusCodes.IN_PROGRESS) {
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
@@ -404,8 +417,6 @@ class Login extends Component {
           'country_code',
           RNLocalize.getCountry().toLocaleLowerCase(),
         );
-
-        console.log('loginFormData ->', loginFormData);
 
         // API Call
         const success = await postAPICall(API.login, loginFormData);

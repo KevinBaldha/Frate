@@ -7,7 +7,7 @@ import {scale, theme} from '../../Utils';
 import {getLocalText} from '../../Locales/I18n';
 import {getWeekDay} from '../../Utils/helper';
 
-const PostHeader = (props) => {
+const PostHeader = props => {
   const {
     handleOptions,
     item,
@@ -81,7 +81,7 @@ const PostHeader = (props) => {
         {showOption ? (
           <TouchableOpacity
             style={styles.verticleView}
-            onPress={(evt) => handleOptions(evt, item)}>
+            onPress={evt => handleOptions(evt, item)}>
             <Icon
               name="more-vertical"
               color={

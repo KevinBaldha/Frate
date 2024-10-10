@@ -10,7 +10,7 @@ export const getGroups = (
   page,
   show_only_friend_groups,
 ) => {
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       let groupingFilter = grouping ? '?grouping=' + grouping : 'new';
       let categoryFilter = category ? '&category_id=' + category : '';
@@ -35,10 +35,10 @@ export const getGroups = (
   };
 };
 
-export const categoryFilterGroups = (payload) => {
+export const categoryFilterGroups = payload => {
   let categoryFillter =
     payload !== undefined ? '?category_id=' + payload : null;
-  return async (dispatch) => {
+  return async dispatch => {
     try {
       let success = await getAPICall(API.groupCreate + categoryFillter);
       if (success.error) {
@@ -51,8 +51,8 @@ export const categoryFilterGroups = (payload) => {
   };
 };
 //exit from group
-export const exitGroup = (payload) => {
-  return async (dispatch) => {
+export const exitGroup = payload => {
+  return async dispatch => {
     try {
       let formdata = new FormData();
       formdata.append('group_id', payload);
@@ -74,8 +74,8 @@ export const exitGroup = (payload) => {
 };
 
 //Manage group notification
-export const manageNotification = (payload) => {
-  return async (dispatch) => {
+export const manageNotification = payload => {
+  return async dispatch => {
     try {
       let formdata = new FormData();
       formdata.append('group_id', payload);
@@ -93,8 +93,8 @@ export const manageNotification = (payload) => {
 };
 
 //get joined groups
-export const getJoinedGroups = (payload) => {
-  return async (dispatch) => {
+export const getJoinedGroups = payload => {
+  return async dispatch => {
     try {
       let success = await getAPICall(API.getJoinGroups + '?page=' + payload);
       if (success.error) {
@@ -109,8 +109,8 @@ export const getJoinedGroups = (payload) => {
 };
 
 //report group
-export const reportGroup = (payload) => {
-  return async (dispatch) => {
+export const reportGroup = payload => {
+  return async dispatch => {
     let groupReport = await postAPICall(API.reportGroup, payload);
     if (groupReport.success) {
       dispatch({type: types.REPORT_GROUP, payload: groupReport});
@@ -122,8 +122,8 @@ export const reportGroup = (payload) => {
 };
 
 //report one to one chat
-export const reportChat = (payload) => {
-  return async (dispatch) => {
+export const reportChat = payload => {
+  return async dispatch => {
     let chatReport = await postAPICall(API.chatReportUser, payload);
     if (chatReport.success) {
       dispatch({type: types.REPORT_CHAT, payload: chatReport});
@@ -136,8 +136,8 @@ export const reportChat = (payload) => {
 
 // unused code
 //stop group notification
-export const stopNotification = (payload) => {
-  return async (dispatch) => {
+export const stopNotification = payload => {
+  return async dispatch => {
     let stopNotificationForm = new FormData();
     stopNotificationForm.append('group_id', payload);
     let notificationResponse = await getAPICall(
@@ -160,8 +160,8 @@ export const stopNotification = (payload) => {
 };
 
 // suspoend room notifications
-export const suspendRoomNotication = (payload) => {
-  return async (dispatch) => {
+export const suspendRoomNotication = payload => {
+  return async dispatch => {
     try {
       let success = await getAPICall(API.stopRoomNotications + payload);
 

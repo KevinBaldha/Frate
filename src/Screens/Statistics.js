@@ -5,7 +5,7 @@ import {G} from 'react-native-svg';
 import {Rect} from 'react-native-svg';
 import FastImage from 'react-native-fast-image';
 import moment from 'moment';
-// import Pie from 'react-native-pie';
+import PieChart from 'react-native-pie-chart';
 import {
   ScreenContainer,
   Label,
@@ -61,14 +61,15 @@ export default class Statistics extends Component {
           icon: images.likeEmoji,
         },
       ];
-      let lastElement =
-        dataValue.total_views_of_post_per_day[
-          dataValue.total_views_of_post_per_day.length - 1
-        ];
+      // let lastElement =
+      //   dataValue.total_views_of_post_per_day[
+      //     dataValue.total_views_of_post_per_day.length - 1
+      //   ];
+
       this.setState({
         staticsData: dataValue,
         options: countData,
-        totalViewPerPost: lastElement.count,
+        totalViewPerPost: dataValue?.total_views_of_last_seven_days,
       });
       const VisitorArray = [...this.state.visitor];
       VisitorArray[0].count = dataValue?.post_men_views_count;
@@ -78,7 +79,7 @@ export default class Statistics extends Component {
       let stackedData = [];
       let xAxisList = [];
 
-      dataValue.total_views_of_post_per_day.map((value) => {
+      dataValue.total_views_of_post_per_day.map(value => {
         stackedData.push({
           date: moment(value.date).format('DD/MM'),
           count: value.count,
@@ -118,6 +119,10 @@ export default class Statistics extends Component {
       visitor[1]?.count === 0 ? 0 : (100 / totalCount) * visitor[1]?.count;
     const otherCount =
       visitor[2]?.count === 0 ? 0 : (100 / totalCount) * visitor[2]?.count;
+
+    const malePercentage = (maleCount / totalCount) * 100;
+    const femalePercentage = (femaleCount / totalCount) * 100;
+    const otherPercentage = (otherCount / totalCount) * 100;
     return (
       <ScreenContainer>
         <BackgroundChunk style={styles.topImage} />
@@ -165,20 +170,20 @@ export default class Statistics extends Component {
             />
             <View style={styles.chartView}>
               <YAxis
-                data={stackedData.map((d) => d.count)}
+                data={stackedData.map(d => d.count)}
                 contentInset={{top: 20, bottom: 20}}
                 svg={{
                   fill: theme.colors.grey10,
                   fontSize: scale(12),
                 }}
                 numberOfTicks={
-                  Math.max(...stackedData.map((d) => d.count)) < 4
-                    ? Math.max(...stackedData.map((d) => d.count))
+                  Math.max(...stackedData.map(d => d.count)) < 4
+                    ? Math.max(...stackedData.map(d => d.count))
                     : 5
                 }
-                formatLabel={(value) => `${value}`}
-                min={Math.min(...stackedData.map((d) => d.count))}
-                max={Math.max(...stackedData.map((d) => d.count))}
+                formatLabel={value => `${value}`}
+                min={Math.min(...stackedData.map(d => d.count))}
+                max={Math.max(...stackedData.map(d => d.count))}
               />
               <View style={styles.chartMain}>
                 <StackedBarChart
@@ -186,8 +191,8 @@ export default class Statistics extends Component {
                   keys={['count']}
                   colors={[theme.colors.blue]}
                   data={stackedData}
-                  yMin={Math.min(...stackedData.map((d) => d.count))}
-                  yMax={Math.max(...stackedData.map((d) => d.count))}
+                  yMin={Math.min(...stackedData.map(d => d.count))}
+                  yMax={Math.max(...stackedData.map(d => d.count))}
                   spacingInner={0.22}
                   spacingOuter={0.22}
                   curve={55}
@@ -220,24 +225,15 @@ export default class Statistics extends Component {
                 title={getLocalText('Post.visitor')}
                 style={{...styles.counter, fontSize: scale(15)}}
               />
-               {/* <Pie
-                radius={70}
-                sections={[
-                  {
-                    percentage: maleCount,
-                    color: theme.colors.blue,
-                  },
-                  {
-                    percentage: femaleCount,
-                    color: theme.colors.blue2,
-                  },
-                  {
-                    percentage: otherCount,
-                    color: theme.colors.blue3,
-                  },
+              <PieChart
+                widthAndHeight={scale(140)}
+                series={[malePercentage, femalePercentage, otherPercentage]}
+                sliceColor={[
+                  theme.colors.blue,
+                  theme.colors.blue2,
+                  theme.colors.blue3,
                 ]}
-                strokeCap={'butt'}
-              /> */}
+              />
               {otherCount !== 0 && (
                 <View
                   style={[
@@ -427,6 +423,6 @@ const styles = StyleSheet.create({
   positionFemaleCountView: {
     position: 'absolute',
     bottom: scale(28),
-    right: theme.SCREENWIDTH * 0.36,
+    right: theme.SCREENWIDTH * 0.50,
   },
 });

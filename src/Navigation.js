@@ -54,6 +54,7 @@ import {
 import {scale, theme} from './Utils';
 import {appAPI} from './Utils/appApi';
 import {firstTimeInstallApp} from './Redux/Actions';
+import {NotificationsPermissions} from './Utils/helper';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -242,6 +243,8 @@ class Navigation extends Component {
     const enabled = await messaging().hasPermission();
     if (Platform.OS === 'ios') {
       await PushNotificationIOS.requestPermissions();
+    } else {
+      NotificationsPermissions.requestPermissionsNotifications();
     }
     if (enabled === 1 || enabled === 2) {
       await this.getFcmToken();

@@ -21,7 +21,7 @@ import {getJoinedGroups} from '../../Redux/Actions';
 
 let loadMoreData = false;
 
-const GroupsJoinedModel = (props) => {
+const GroupsJoinedModel = props => {
   const {isShow, handleGroup, groups, attachLength, groupStyle} = props;
   const [groupsList, setgroupsList] = useState(groups);
   const [group, setGroup] = useState('');
@@ -30,20 +30,24 @@ const GroupsJoinedModel = (props) => {
   const [activeItem, setactiveItem] = useState(null);
   const [refreshing, setrefreshing] = useState(false);
   const totalPage = useSelector(
-    (state) => state.groupsReducer.joinGroupTotalPage,
+    state => state.groupsReducer.joinGroupTotalPage,
   );
   const getJoinedGroupsList = useSelector(
-    (state) => state.groupsReducer.joinGroup_list,
+    state => state.groupsReducer.joinGroup_list,
   );
 
   useEffect(() => {
-    setPage(1);
-  }, [isShow]);
+    // Update the groupsList state whenever getJoinedGroupsList changes
+    if (isShow) {
+      setgroupsList(getJoinedGroupsList);
+      setPage(1);
+    }
+  }, [isShow, getJoinedGroupsList]);
 
   let dispatch = useDispatch();
   let animateValue = new Animated.Value(0);
 
-  const animate = (index) => {
+  const animate = index => {
     setactiveItem(index);
     Animated.sequence([
       Animated.spring(animateValue, {
@@ -206,7 +210,7 @@ const GroupsJoinedModel = (props) => {
           <FlatList
             keyboardShouldPersistTaps={'handled'}
             data={groupsList?.length > 0 ? groupsList : groups}
-            extraData={[props, groupsList]}
+            extraData={[props, groupsList, groups, getJoinedGroupsList]}
             keyExtractor={(_, index) => index.toString()}
             renderItem={renderGroups}
             refreshControl={

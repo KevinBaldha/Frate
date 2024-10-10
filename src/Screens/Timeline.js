@@ -206,6 +206,9 @@ class Timeline extends PureComponent {
     if (getNewPostBadge === true) {
       this.props.setNewPostBadge(false);
     }
+    this.focusListener = this.props.navigation.addListener('focus', () => {
+      this.props.getJoinedGroups(1);
+    });
 
     this.props.getJoinedGroups(1);
     this.focusListener = await navigation.addListener('focus', async () => {
@@ -224,6 +227,10 @@ class Timeline extends PureComponent {
     AppState.removeEventListener('change', this.handleAppStateChange);
 
     clearInterval(this.Clock);
+
+    if (this.focusListener) {
+      this.focusListener();
+    }
 
     if (this.dynamicLinkSubscriber) {
       this.dynamicLinkSubscriber();
@@ -2090,7 +2097,7 @@ class Timeline extends PureComponent {
           <GroupsJoinedModel
             isShow={groupShowModel}
             handleGroup={this.handleGroup}
-            groups={getJoinedGroupsList}
+            groups={this.props.getJoinedGroupsList}
             attachLength={attachImages.length}
             groupStyle={{
               marginTop:

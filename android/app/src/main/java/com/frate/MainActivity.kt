@@ -16,8 +16,8 @@ class MainActivity : ReactActivity() {
    */
   override fun getMainComponentName(): String = "Frate"
   override fun onCreate(savedInstanceState: Bundle?) {
-        SplashScreen.show(this)
-        super.onCreate(savedInstanceState)
+      SplashScreen.show(this)
+      super.onCreate(savedInstanceState)
   }
 
   /**

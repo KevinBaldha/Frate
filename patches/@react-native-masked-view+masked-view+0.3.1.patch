@@ -1,0 +1,46 @@
+diff --git a/node_modules/@react-native-masked-view/masked-view/android/.project b/node_modules/@react-native-masked-view/masked-view/android/.project
+new file mode 100644
+index 0000000..65590b4
+--- /dev/null
++++ b/node_modules/@react-native-masked-view/masked-view/android/.project
+@@ -0,0 +1,28 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<projectDescription>
++	<name>react-native-masked-view_masked-view</name>
++	<comment>Project react-native-masked-view_masked-view created by Buildship.</comment>
++	<projects>
++	</projects>
++	<buildSpec>
++		<buildCommand>
++			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
++			<arguments>
++			</arguments>
++		</buildCommand>
++	</buildSpec>
++	<natures>
++		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
++	</natures>
++	<filteredResources>
++		<filter>
++			<id>1728031167516</id>
++			<name></name>
++			<type>30</type>
++			<matcher>
++				<id>org.eclipse.core.resources.regexFilterMatcher</id>
++				<arguments>node_modules|\.git|__CREATED_BY_JAVA_LANGUAGE_SERVER__</arguments>
++			</matcher>
++		</filter>
++	</filteredResources>
++</projectDescription>
+diff --git a/node_modules/@react-native-masked-view/masked-view/android/src/main/java/org/reactnative/maskedview/RNCMaskedView.java b/node_modules/@react-native-masked-view/masked-view/android/src/main/java/org/reactnative/maskedview/RNCMaskedView.java
+index 2ea0c5e..e8877e0 100644
+--- a/node_modules/@react-native-masked-view/masked-view/android/src/main/java/org/reactnative/maskedview/RNCMaskedView.java
++++ b/node_modules/@react-native-masked-view/masked-view/android/src/main/java/org/reactnative/maskedview/RNCMaskedView.java
+@@ -41,6 +41,7 @@ public class RNCMaskedView extends ReactViewGroup {
+ 
+     // draw the mask
+     if (mBitmapMask != null) {
++      setLayerType(LAYER_TYPE_HARDWARE, mPaint);
+       mPaint.setXfermode(mPorterDuffXferMode);
+       canvas.drawBitmap(mBitmapMask, 0, 0, mPaint);
+       mPaint.setXfermode(null);
