@@ -81,6 +81,7 @@ let openAttachment = false;
 class Chat extends Component {
   constructor(props) {
     super(props);
+    this.appState = React.createRef(AppState.currentState);
     this.state = {
       Kheight: Dimensions.get('window').height,
       menu: false,
@@ -206,16 +207,18 @@ class Chat extends Component {
 
   callInitialize = () => {
     this.createDirectory();
-    this.permission();
+    // this.permission();
     this.initSoket();
   };
 
   _handleAppStateChange = nextAppState => {
     // We need to fix when app in background
-    if (!this.state.isMediaOption) {
+    if (!this.state.isMediaOption && nextAppState !== this.appState.current) {
       if (nextAppState === 'active') {
+        this.appState.current = AppState.currentState;
         this.callInitialize();
       } else if (nextAppState === 'background') {
+        this.appState.current = AppState.currentState;
         this.clearData();
         this.setState({lastessageId: 0});
       }
@@ -530,6 +533,23 @@ class Chat extends Component {
   async permission() {
     if (Platform.OS === 'android') {
       try {
+        // const requiredPermissions = [
+        //   PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        //   PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        //   PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        // ];
+        // const permissionStatuses = {};
+        // for (const permission of requiredPermissions) {
+        //   const isGranted = await PermissionsAndroid.check(permission);
+        //   console.log('isGranted', isGranted);
+        //   permissionStatuses[permission] = isGranted ? 'granted' : 'denied';
+        // }
+
+        // // Filter out permissions that are not granted
+        // const permissionsToRequest = requiredPermissions.filter(
+        //   permission => permissionStatuses[permission] !== 'granted',
+        // );
+        // console.log('requiredPermissions', permissionsToRequest);
         const grants = await PermissionsAndroid.requestMultiple([
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
           PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
