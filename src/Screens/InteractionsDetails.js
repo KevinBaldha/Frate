@@ -13,7 +13,7 @@ import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Feather';
 import Icon1 from 'react-native-vector-icons/Entypo';
 import Share from 'react-native-share';
-import EmojiBoard from './EmojiBoard';
+// import EmojiBoard from './EmojiBoard';
 import {
   ScreenContainer,
   SearchBar1,
@@ -31,6 +31,7 @@ import {
 import {Config, scale, theme, images} from '../Utils';
 import {API, baseUrlForShare, getAPICall} from '../Utils/appApi';
 import {SCREEN_TYPE} from '../Utils/StaticData';
+import EmojiPicker from 'rn-emoji-keyboard';
 
 class InteractionsDetails extends Component {
   constructor(props) {
@@ -143,25 +144,25 @@ class InteractionsDetails extends Component {
       this.setState({loadding: false});
     }
   };
-  handleCommentTxt = (text) => {
+  handleCommentTxt = text => {
     this.setState({commenttxt: text});
   };
 
-  setEmoji = (emoji) => {
-    this.setState({commenttxt: this.state.commenttxt + emoji.code});
+  setEmoji = emoji => {
+    this.setState({commenttxt: this.state.commenttxt + emoji.emoji});
   };
   handleEmojiKeboard = () => {
     this.setState({isEmojiKeyboard: !this.state.isEmojiKeyboard});
   };
 
-  safeEmojiBackspace = (str) => {
+  safeEmojiBackspace = str => {
     let initialRealCount = this.fancyCount(str);
     while (str.length > 0 && this.fancyCount(str) !== initialRealCount - 1) {
       str = str.substring(0, str.length - 1);
     }
     return str;
   };
-  fancyCount = (str) => {
+  fancyCount = str => {
     const joiner = '\u{200D}';
     const split = str.split(joiner);
     let count = 0;
@@ -173,7 +174,7 @@ class InteractionsDetails extends Component {
     //assuming the joiners are used appropriately
     return count / split.length;
   };
-  redirectToUserDetails = async (item) => {
+  redirectToUserDetails = async item => {
     this.props.navigation.navigate('UserDataSpecific', {
       data: item,
       id: item,
@@ -225,7 +226,7 @@ class InteractionsDetails extends Component {
               style={styles.input}
               placeholder={getLocalText('Post.writehere')}
               placeholderTextColor={theme.colors.grey7}
-              onChangeText={(text) => {
+              onChangeText={text => {
                 this.handleCommentTxt(text);
               }}
               value={this.state.commenttxt}
@@ -268,11 +269,11 @@ class InteractionsDetails extends Component {
   notificationPress = async () => {
     this.props.navigation.navigate('Notification');
   };
-  onPressProfile = (item) => {
+  onPressProfile = item => {
     this.redirectToUserDetails(item);
   };
 
-  onPressGroup = (item) => {
+  onPressGroup = item => {
     const {navigation} = this.props;
     navigation.navigate('GroupDetails', {
       item: {groupData: item?.group, joined: true},
@@ -291,10 +292,10 @@ class InteractionsDetails extends Component {
             this.notificationPress();
           }}
           searchText={this.state.searchText}
-          onSearchText={(txt) => this.setState({searchText: txt})}
+          onSearchText={txt => this.setState({searchText: txt})}
         />
         <FlatList
-          ref={(ref) => (this.FlatListRef = ref)}
+          ref={ref => (this.FlatListRef = ref)}
           contentContainerStyle={{
             paddingVertical: scale(10),
             paddingTop: scale(30),
@@ -304,7 +305,7 @@ class InteractionsDetails extends Component {
           data={interactionDetail}
           extraData={[this.state, this.props]}
           renderItem={this.renderPost}
-          onScroll={(e) => {
+          onScroll={e => {
             this.setState({scrollFlat: e.nativeEvent.contentOffset.y});
             this.setState({isEmojiKeyboard: false});
           }}
@@ -321,7 +322,12 @@ class InteractionsDetails extends Component {
           )}
         />
         {this.state.loadding && <Loader loading={this.state.loadding} />}
-        <EmojiBoard
+        <EmojiPicker
+          onEmojiSelected={this.setEmoji}
+          open={this.state.isEmojiKeyboard}
+          onClose={() => this.setState({isEmojiKeyboard: false})}
+        />
+        {/* <EmojiBoard
           showBoard={this.state.isEmojiKeyboard}
           onClick={this.setEmoji}
           onRemove={() => {
@@ -329,7 +335,7 @@ class InteractionsDetails extends Component {
             this.setState({commenttxt: newText});
           }}
           onClose={() => this.setState({isEmojiKeyboard: false})}
-        />
+        /> */}
         <OfflineModel />
       </ScreenContainer>
     );
@@ -395,7 +401,7 @@ const styles = StyleSheet.create({
     width: theme.SCREENWIDTH,
   },
 });
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const userData = state.UserInfo.data;
   const isPostLike = state.PostReducer.postLike;
   return {userData, isPostLike};

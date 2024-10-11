@@ -57,7 +57,7 @@ const CategoryView = ({
   // Emoji count per page
   const perPage = numRows * numCols;
   const emojiWidth = (width - 20) / numRows;
-  const clickEmoji = (emoji) => {
+  const clickEmoji = emoji => {
     setToggleSkinBox({
       showSkinBox: false,
       emoji: null,
@@ -65,7 +65,7 @@ const CategoryView = ({
     onClick(emoji);
   };
 
-  const longPressEmoji = (emoji) => {
+  const longPressEmoji = emoji => {
     if (emoji.skins) {
       setToggleSkinBox({
         showSkinBox: true,

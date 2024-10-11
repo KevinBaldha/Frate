@@ -103,6 +103,7 @@
     "redux": "^4.1.0",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
+    "rn-emoji-keyboard": "^1.7.0",
     "rn-fetch-blob": "^0.12.0",
     "socket.io-client": "^4.4.1",
     "socket.io-file-client": "^2.0.2",

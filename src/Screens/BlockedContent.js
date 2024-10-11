@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import Share from 'react-native-share';
-import EmojiBoard from './EmojiBoard';
+// import EmojiBoard from './EmojiBoard';
 import {connect} from 'react-redux';
 import {
   PostCard,
@@ -25,6 +25,7 @@ import {
   commentLike,
 } from '../Redux/Actions';
 import {getLocalText} from '../Locales/I18n';
+import EmojiPicker from 'rn-emoji-keyboard';
 
 let loadMoreData = false;
 class BlockedContent extends Component {
@@ -103,7 +104,7 @@ class BlockedContent extends Component {
     }
   };
 
-  safeEmojiBackspace = (str) => {
+  safeEmojiBackspace = str => {
     let initialRealCount = this.fancyCount(str);
     while (str.length > 0 && this.fancyCount(str) !== initialRealCount - 1) {
       str = str.substring(0, str.length - 1);
@@ -111,7 +112,7 @@ class BlockedContent extends Component {
     return str;
   };
 
-  fancyCount = (str) => {
+  fancyCount = str => {
     const joiner = '\u{200D}';
     const split = str.split(joiner);
     let count = 0;
@@ -139,8 +140,8 @@ class BlockedContent extends Component {
       handleOption: !this.state.handleOption,
     });
   };
-  setEmoji = (emoji) => {
-    this.setState({commenttxt: this.state.commenttxt + emoji.code});
+  setEmoji = emoji => {
+    this.setState({commenttxt: this.state.commenttxt + emoji.emoji});
   };
   // like post
   onLikePress = (item, index) => {
@@ -234,7 +235,7 @@ class BlockedContent extends Component {
     return (
       <View
         style={{paddingVertical: scale(10)}}
-        onStartShouldSetResponder={(event) => {
+        onStartShouldSetResponder={event => {
           this.handleOptions();
         }}>
         <PostCard
@@ -244,7 +245,7 @@ class BlockedContent extends Component {
           onLikePress={this.onLikePress}
           onCommentPress={this.onCommentPress}
           onPressSend={this.sendComment}
-          onChangeText={(text) => {
+          onChangeText={text => {
             this.handleCommentTxt(text, item);
           }}
           onPressEmoji={this.handleEmojiKeboard}
@@ -275,7 +276,7 @@ class BlockedContent extends Component {
       </View>
     );
   };
-  updateCommentCount = (index) => {
+  updateCommentCount = index => {
     this.state.blockPost[index].total_comment =
       this.state.blockPost[index].total_comment + 1;
     this.setState({blockPost: this.state.blockPost});
@@ -340,7 +341,7 @@ class BlockedContent extends Component {
     return (
       <View
         style={styles.flex}
-        onStartShouldSetResponder={(event) => {
+        onStartShouldSetResponder={event => {
           this.handleOptions();
         }}>
         <SearchBar1
@@ -350,10 +351,10 @@ class BlockedContent extends Component {
             this.notificationPress();
           }}
           searchText={this.state.searchText}
-          onSearchText={(txt) => this.setState({searchText: txt})}
+          onSearchText={txt => this.setState({searchText: txt})}
         />
         <FlatList
-          ref={(ref) => (this.FlatListRef = ref)}
+          ref={ref => (this.FlatListRef = ref)}
           contentContainerStyle={{
             paddingVertical: scale(10),
             paddingTop: scale(30),
@@ -363,7 +364,7 @@ class BlockedContent extends Component {
           data={blockPost}
           extraData={[this.state, this.props]}
           renderItem={this.renderPost}
-          onScroll={(e) => {
+          onScroll={e => {
             this.setState({
               scrollFlat: e.nativeEvent.contentOffset.y,
               isEmojiKeyboard: false,
@@ -401,7 +402,12 @@ class BlockedContent extends Component {
             singleOption={true}
           />
         ) : null}
-        <EmojiBoard
+        <EmojiPicker
+          onEmojiSelected={this.setEmoji}
+          open={this.state.isEmojiKeyboard}
+          onClose={() => this.setState({isEmojiKeyboard: false})}
+        />
+        {/* <EmojiBoard
           showBoard={this.state.isEmojiKeyboard}
           onClick={this.setEmoji}
           onRemove={() => {
@@ -409,7 +415,7 @@ class BlockedContent extends Component {
             this.setState({commenttxt: newText});
           }}
           onClose={() => this.setState({isEmojiKeyboard: false})}
-        />
+        /> */}
         <Loader loading={loadding} />
         <OfflineModel />
       </View>
@@ -427,7 +433,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const userData = state.UserInfo.data;
   const isPostLike = state.PostReducer.postLike;
   return {userData, isPostLike};

@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import Share from 'react-native-share';
 import Icon from 'react-native-vector-icons/Feather';
-import EmojiBoard from './EmojiBoard';
+// import EmojiBoard from './EmojiBoard';
 import ImagePicker from 'react-native-image-crop-picker';
 import DocumentPicker from 'react-native-document-picker';
 import FastImage from 'react-native-fast-image';
@@ -75,6 +75,7 @@ import {
 import {API, deleteAPICall, getAPICall, postAPICall} from '../Utils/appApi';
 import {BLOCKTYPES, DeepLink, SCREEN_TYPE} from '../Utils/StaticData';
 import CameraVideoPhoto from '../Components/CameraVideoPhoto';
+import EmojiPicker from 'rn-emoji-keyboard';
 let loadMoreData = false;
 let loadRoomData = false;
 let loadAudioData = false;
@@ -466,11 +467,11 @@ class GroupDetails extends Component {
     this.getAudioRooms(true);
   };
 
-  handlePopUpModel = (id) => {
+  handlePopUpModel = id => {
     this.setState({popUpModel: !this.state.popUpModel, tabId: id});
   };
 
-  handleMenus = (index) => {
+  handleMenus = index => {
     const {groupDetailsData} = this.state;
     this.setState({menu: !this.state.menu});
     setTimeout(() => {
@@ -499,7 +500,7 @@ class GroupDetails extends Component {
   };
 
   //delete group
-  deleteGroup = async (data) => {
+  deleteGroup = async data => {
     const {groupDetailsData} = this.state;
     this.setState({deleteModel: false});
     if (data == 1) {
@@ -531,7 +532,7 @@ class GroupDetails extends Component {
     } catch (error) {}
   };
 
-  handlePostTxt = (text) => {
+  handlePostTxt = text => {
     this.setState({postText: text});
   };
 
@@ -593,8 +594,8 @@ class GroupDetails extends Component {
     ImagePicker.openPicker({
       imagesOptions,
       multiple: true,
-    }).then((response) => {
-      response.map((item) => {
+    }).then(response => {
+      response.map(item => {
         if (item?.mime.slice(0, 5) === 'video') {
           let videoName = imageData(
             Platform.OS === 'ios' ? item?.sourceURL : item?.path,
@@ -620,7 +621,7 @@ class GroupDetails extends Component {
             'PNG',
             80,
             0,
-          ).then((compressedImage) => {
+          ).then(compressedImage => {
             this.setState({
               attachImages: [
                 ...this.state.attachImages,
@@ -652,10 +653,10 @@ class GroupDetails extends Component {
   }
 
   _keyboardDidHide() {}
-  setEmoji = (emoji) => {
+  setEmoji = emoji => {
     const key = this.state.isEmojiKeyboard ? 'postText' : 'commenttxt';
 
-    this.setState({[key]: this.state[key] + emoji.code});
+    this.setState({[key]: this.state[key] + emoji.emoji});
   };
   removeImage = (item, index) => {
     this.state.attachImages.splice(index, 1);
@@ -664,12 +665,12 @@ class GroupDetails extends Component {
     });
   };
 
-  onPressHastag = (tag) => {
+  onPressHastag = tag => {
     this.setState({searchText: tag});
     this.handleSearch(2);
   };
 
-  updateCommentCount = (index) => {
+  updateCommentCount = index => {
     this.state.groupPosts[index].total_comment =
       this.state.groupPosts[index].total_comment + 1;
     this.setState({groupPosts: this.state.groupPosts});
@@ -741,8 +742,8 @@ class GroupDetails extends Component {
       mediaType: 'video',
       multiple: true,
       includeExif: true,
-    }).then((video) => {
-      video.map((item) => {
+    }).then(video => {
+      video.map(item => {
         if (item?.mime.slice(0, 5) === 'video') {
           let videoName = imageData(
             Platform.OS === 'ios' ? item?.sourceURL : item?.path,
@@ -840,7 +841,7 @@ class GroupDetails extends Component {
     }
   };
 
-  handlePostModal = (item) => {
+  handlePostModal = item => {
     this.setState({postOption: item?.id});
   };
 
@@ -876,7 +877,7 @@ class GroupDetails extends Component {
     );
   };
 
-  closePaymentModal = async (type) => {
+  closePaymentModal = async type => {
     const {selectedPost, sponsorData} = this.state;
     let postId = selectedPost?.id,
       persons = sponsorData?.people,
@@ -926,7 +927,7 @@ class GroupDetails extends Component {
         } else {
           if (response.data.user_own_sponser_post) {
             const postIndex = this.state.groupPosts.findIndex(
-              (d) => d.id === postId,
+              d => d.id === postId,
             );
             this.state.groupPosts[postIndex].is_sponsored = 1;
             this.setState({
@@ -954,14 +955,14 @@ class GroupDetails extends Component {
     this.props.navigation.navigate('Sponsor');
   };
 
-  takeVideoPhoto = async (type) => {
+  takeVideoPhoto = async type => {
     try {
       ImagePicker.openCamera({
         width: 300,
         height: 400,
         mediaType: type,
         compressImageQuality: 0.3,
-      }).then((image) => {
+      }).then(image => {
         const imageRes = imageData(image.path);
         this.setState({
           attachImages:
@@ -1012,7 +1013,7 @@ class GroupDetails extends Component {
     else if (index === 3) {
       let response = await getAPICall(API.reshare + item);
       if (response.success) {
-        var findPost = this.state.groupPosts.findIndex((d) => d.id === item);
+        var findPost = this.state.groupPosts.findIndex(d => d.id === item);
         this.state.groupPosts[findPost].is_reshared =
           !this.state.groupPosts[findPost].is_reshared;
         this.setState({groupPosts: this.state.groupPosts});
@@ -1030,11 +1031,11 @@ class GroupDetails extends Component {
   postOptionClose = () => {
     this.setState({postOption: ''});
   };
-  handleCategory = (data) => {
+  handleCategory = data => {
     this.setState({category: data});
     this.scrollUp();
   };
-  closeReport = (item) => {
+  closeReport = item => {
     if (item === null) {
       this.setState({
         reportModel: !this.state.reportModel,
@@ -1115,14 +1116,14 @@ class GroupDetails extends Component {
     });
   };
 
-  safeEmojiBackspace = (str) => {
+  safeEmojiBackspace = str => {
     let initialRealCount = this.fancyCount(str);
     while (str.length > 0 && this.fancyCount(str) !== initialRealCount - 1) {
       str = str.substring(0, str.length - 1);
     }
     return str;
   };
-  fancyCount = (str) => {
+  fancyCount = str => {
     const joiner = '\u{200D}';
     const split = str.split(joiner);
     let count = 0;
@@ -1141,7 +1142,7 @@ class GroupDetails extends Component {
   };
 
   //close search model
-  searchClose = (item) => {
+  searchClose = item => {
     if (item) {
       this.setState({searchModel: false});
       this.props.navigation.navigate('UserDataSpecific', {
@@ -1202,7 +1203,7 @@ class GroupDetails extends Component {
     } catch (error) {}
   };
 
-  handleSearch = async (d) => {
+  handleSearch = async d => {
     await this.setState({selectSearch: d});
     let searchtxt = this.state.searchText;
     let type = this.state.selectSearch;
@@ -1222,7 +1223,7 @@ class GroupDetails extends Component {
       } catch (error) {}
     }
   };
-  handleShare = async (item) => {
+  handleShare = async item => {
     const link = DeepLink + `?type=timeline&id=` + item?.item?.id;
     Share.open({url: link});
     try {
@@ -1232,7 +1233,7 @@ class GroupDetails extends Component {
     }
   };
 
-  handleShareOption = async (data) => {
+  handleShareOption = async data => {
     this.setState({shareOptionsModel: false});
     if (data !== '-1') {
       if (data) {
@@ -1247,7 +1248,7 @@ class GroupDetails extends Component {
     }
   };
 
-  handleGroupShare = (ids) => {
+  handleGroupShare = ids => {
     this.setState({shareGroupsModel: false}, () => {
       if (ids != null) {
         this.handleShareMultiple(ids);
@@ -1255,7 +1256,7 @@ class GroupDetails extends Component {
     });
   };
 
-  handleShareMultiple = async (ids) => {
+  handleShareMultiple = async ids => {
     let pid = this.state.shareData?.item?.id;
     let response = await getAPICall(API.reshared + pid + `/[${ids}]`);
     if (response.success) {
@@ -1263,7 +1264,7 @@ class GroupDetails extends Component {
     }
   };
 
-  handleMsgPopUp = async (item) => {
+  handleMsgPopUp = async item => {
     const userID = item?.user_id;
 
     if (userID !== this.props.userData?.id) {
@@ -1285,7 +1286,7 @@ class GroupDetails extends Component {
     });
   };
 
-  onPressLikeEmoji = async (value) => {
+  onPressLikeEmoji = async value => {
     this.closeEmojiModal();
     const {postLikeOption} = this.state;
     var id = '';
@@ -1314,7 +1315,7 @@ class GroupDetails extends Component {
     });
   };
 
-  deletepostAction = async (action) => {
+  deletepostAction = async action => {
     this.setState({postDeleteModel: false});
     if (action === 1) {
       try {
@@ -1340,7 +1341,7 @@ class GroupDetails extends Component {
     this.setState({postCommentView: false});
   };
 
-  exitGroupAction = async (action) => {
+  exitGroupAction = async action => {
     const {groupDetailsData} = this.state;
     this.setState({exitGroupModel: false});
     if (action === 1) {
@@ -1350,7 +1351,7 @@ class GroupDetails extends Component {
     }
   };
 
-  renderFooter = (item) => {
+  renderFooter = item => {
     if (!this.state.loadmore) {
       return null;
     } else {
@@ -1437,7 +1438,7 @@ class GroupDetails extends Component {
         onLikePress={this.onLikePress}
         onCommentPress={this.onCommentPress}
         onPressSend={() => {}} // In this screen post comment is not handle from footer
-        onChangeText={(text) => {
+        onChangeText={text => {
           this.handleCommentTxt(text, item);
         }}
         value={this.state.commenttxt}
@@ -1545,10 +1546,10 @@ class GroupDetails extends Component {
             }}
             onSearchPress={() => this.setState({searchText: ''})}
             customSearch
-            category={(d) => {
+            category={d => {
               this.handleSearch(d);
             }}
-            onSearchText={(txt) => {
+            onSearchText={txt => {
               this.setState({searchText: txt});
               this.handleSearch(selectSearch);
             }}
@@ -1616,7 +1617,7 @@ class GroupDetails extends Component {
                 }
                 removeImage={this.removeImage}
                 {...this.state}
-                onChangeText={(text) => {
+                onChangeText={text => {
                   this.handlePostTxt(text);
                 }}
                 value={postText}
@@ -1733,7 +1734,7 @@ class GroupDetails extends Component {
               <>
                 <View style={styles.searchPost}>
                   <FlatList
-                    ref={(ref) => (this.FlatListRef = ref)}
+                    ref={ref => (this.FlatListRef = ref)}
                     contentContainerStyle={{
                       paddingBottom: theme.SCREENHEIGHT * 0.1,
                       backgroundColor: theme.colors.transparent,
@@ -1823,7 +1824,7 @@ class GroupDetails extends Component {
             {category === 1 ? (
               <>
                 <FlatList
-                  ref={(ref) => (this.FlatListRef = ref)}
+                  ref={ref => (this.FlatListRef = ref)}
                   contentContainerStyle={{
                     paddingBottom: joined ? scale(10) : scale(75),
                   }}
@@ -1831,7 +1832,7 @@ class GroupDetails extends Component {
                   data={groupPosts}
                   extraData={[this.state, this.props]}
                   renderItem={this.renderPost}
-                  onScroll={(e) => {
+                  onScroll={e => {
                     this.setState({
                       scrollFlat: e.nativeEvent.contentOffset.y,
                       postLikeOptionIndex: '',
@@ -1885,7 +1886,7 @@ class GroupDetails extends Component {
               </>
             ) : category === 2 ? (
               <FlatList
-                ref={(ref) => (this.FlatListRef = ref)}
+                ref={ref => (this.FlatListRef = ref)}
                 contentContainerStyle={{paddingBottom: scale(75)}}
                 keyExtractor={(_, index) => index.toString()}
                 data={roomList}
@@ -1910,7 +1911,7 @@ class GroupDetails extends Component {
               />
             ) : (
               <FlatList
-                ref={(ref) => (this.FlatListRef = ref)}
+                ref={ref => (this.FlatListRef = ref)}
                 contentContainerStyle={{paddingBottom: scale(75)}}
                 keyExtractor={(_, index) => index.toString()}
                 data={audioDiscussionList}
@@ -1934,7 +1935,14 @@ class GroupDetails extends Component {
                 onEndReached={this.LoadMoreAudioRooms}
               />
             )}
-            <EmojiBoard
+            <EmojiPicker
+              onEmojiSelected={this.setEmoji}
+              open={isEmojiKeyboardC || isEmojiKeyboard}
+              onClose={() =>
+                this.setState({isEmojiKeyboard: false, isEmojiKeyboardC: false})
+              }
+            />
+            {/* <EmojiBoard
               showBoard={isEmojiKeyboardC || isEmojiKeyboard}
               onClick={this.setEmoji}
               onRemove={() => {
@@ -1950,7 +1958,7 @@ class GroupDetails extends Component {
               }}
               hideBackSpace={false}
               onClose={() => this.setState({isEmojiKeyboard: false})}
-            />
+            /> */}
             <View>
               {category === 1 ? (
                 !joined ? (
@@ -2082,7 +2090,7 @@ class GroupDetails extends Component {
         <ConfirmationModel
           isVisible={exitGroupModel || postDeleteModel}
           type={exitGroupModel ? 'groupexit' : 'post'}
-          close={(action) =>
+          close={action =>
             exitGroupModel
               ? this.exitGroupAction(action)
               : this.deletepostAction(action)
@@ -2249,7 +2257,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const userData = state.UserInfo.data;
   const allPost = state.PostReducer.getData;
   const load = state.PostReducer.load;

@@ -29,12 +29,13 @@ import {
   HeaderView,
 } from '../index';
 import {API, getAPICall} from '../../Utils/appApi';
-import EmojiBoard from '../../Screens/EmojiBoard';
+// import EmojiBoard from '../../Screens/EmojiBoard';
 import {getLocalText} from '../../Locales/I18n';
 import {commentLike, postCommentSend} from '../../Redux/Actions';
+import EmojiPicker from 'rn-emoji-keyboard';
 let loadMoreData = false;
 
-const PostsCommentModel = (props) => {
+const PostsCommentModel = props => {
   const {
     isVisible,
     close,
@@ -63,7 +64,7 @@ const PostsCommentModel = (props) => {
   const dispatch = useDispatch();
   const [previousIndexClick, setPreviousIndexClick] = useState(-1);
 
-  const {getData} = useSelector((state) => state.PostReducer);
+  const {getData} = useSelector(state => state.PostReducer);
   useEffect(() => {
     if (isVisible) {
       setLoadding(true);
@@ -88,7 +89,7 @@ const PostsCommentModel = (props) => {
   //comment like
   const onPressCommentLike = async (item, comment_index) => {
     try {
-      var commentsIndex = comments.findIndex((d) => d.id === item?.id);
+      var commentsIndex = comments.findIndex(d => d.id === item?.id);
       comments[commentsIndex].is_like = !comments[commentsIndex].is_like;
       setCommens(comments);
       dispatch(commentLike(item?.id));
@@ -96,7 +97,7 @@ const PostsCommentModel = (props) => {
       // update post list in timeline
       if (timeline) {
         const postData = getData;
-        const postIndex = postData.data.findIndex((d) => d.id === data.id);
+        const postIndex = postData.data.findIndex(d => d.id === data.id);
         postData.data[postIndex].comments = comments;
         this.props.getPostLocally(postData);
       }
@@ -109,7 +110,7 @@ const PostsCommentModel = (props) => {
   };
 
   //delete post
-  const handleDelete = async (action) => {
+  const handleDelete = async action => {
     setConfrim(false);
     if (action === 1) {
       setSwipClose(true);
@@ -127,7 +128,7 @@ const PostsCommentModel = (props) => {
           // update redux post data list
           if (timeline) {
             const postData = getData;
-            const postIndex = postData.data.findIndex((d) => d.id === data.id);
+            const postIndex = postData.data.findIndex(d => d.id === data.id);
             postData.data[postIndex].comments = newCommentsData;
             postData.data[postIndex].total_comment =
               postData.data[postIndex].comments.length;
@@ -155,8 +156,8 @@ const PostsCommentModel = (props) => {
     setEmoji(false);
   };
 
-  const setEmojiBord = (emoji) => {
-    setCommentText(commentText + emoji.code);
+  const setEmojiBord = emoji => {
+    setCommentText(commentText + emoji.emoji);
   };
 
   //load next  posts commnents
@@ -188,7 +189,7 @@ const PostsCommentModel = (props) => {
   const updatePostsList = (postId, commentdata) => {
     // update redux post list
     const postData = getData;
-    const postIndex = postData.data.findIndex((d) => d.id === postId);
+    const postIndex = postData.data.findIndex(d => d.id === postId);
     postData.data[postIndex].comments = [
       commentdata,
       ...postData.data[postIndex].comments,
@@ -223,7 +224,7 @@ const PostsCommentModel = (props) => {
     }
   };
 
-  const safeEmojiBackspace = (str) => {
+  const safeEmojiBackspace = str => {
     let initialRealCount = fancyCount(str);
     while (str.length > 0 && fancyCount(str) !== initialRealCount - 1) {
       str = str.substring(0, str.length - 1);
@@ -231,7 +232,7 @@ const PostsCommentModel = (props) => {
     return str;
   };
 
-  const fancyCount = (str) => {
+  const fancyCount = str => {
     const joiner = '\u{200D}';
     const split = str.split(joiner);
     let count = 0;
@@ -289,7 +290,7 @@ const PostsCommentModel = (props) => {
           updateCom={handleRefresh}
           reportReasonList={reportReasonList}
           onClose={true}
-          setPreviosIndexClick={(i) => setPreviousIndexClick(i)}
+          setPreviosIndexClick={i => setPreviousIndexClick(i)}
           previousIndexClick={previousIndexClick}
         />
       </Swipeout>
@@ -356,7 +357,7 @@ const PostsCommentModel = (props) => {
                 onRefresh={() => handleRefresh()}
               />
             }
-            onScroll={(e) => {
+            onScroll={e => {
               setEmoji(false);
             }}
             onScrollBeginDrag={() => {
@@ -383,7 +384,7 @@ const PostsCommentModel = (props) => {
                   placeholder={getLocalText('Post.writehere')}
                   placeholderTextColor={theme.colors.grey7}
                   value={commentText}
-                  onChangeText={(txt) => {
+                  onChangeText={txt => {
                     setCommentText(txt);
                   }}
                   returnKeyType="send"
@@ -430,7 +431,13 @@ const PostsCommentModel = (props) => {
           </View>
         </KeyboardAvoidingView>
       </View>
-      <EmojiBoard
+      <EmojiPicker
+        onEmojiSelected={setEmojiBord}
+        open={emjoi}
+        onClose={() => setEmoji(false)}
+      />
+
+      {/* <EmojiBoard
         showBoard={emjoi}
         onClick={setEmojiBord}
         onRemove={() => {
@@ -439,7 +446,7 @@ const PostsCommentModel = (props) => {
         }}
         hideBackSpace={false}
         onClose={() => setEmoji(false)}
-      />
+      /> */}
       <ConfirmationModel
         isVisible={confrim}
         close={handleDelete}

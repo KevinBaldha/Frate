@@ -25,7 +25,7 @@ import PushNotification from 'react-native-push-notification';
 import messaging from '@react-native-firebase/messaging';
 import LinearGradient from 'react-native-linear-gradient';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
-import EmojiBoard from './EmojiBoard';
+// import EmojiBoard from './EmojiBoard';
 import {
   getPost,
   getPostLocally,
@@ -82,6 +82,7 @@ import externalStyles from '../Css';
 import {getDynamicLink} from '../Utils/helper';
 import {DeepLink, SCREEN_TYPE, notificationTypes} from '../Utils/StaticData';
 import CameraVideoPhoto from '../Components/CameraVideoPhoto';
+import EmojiPicker from 'rn-emoji-keyboard';
 
 var loadMoreData = false;
 class Timeline extends PureComponent {
@@ -566,23 +567,24 @@ class Timeline extends PureComponent {
   _keyboardDidHide() {}
 
   setEmoji = emoji => {
+    console.log('emoji', emoji);
     const key = this.state.isEmojiKeyboard ? 'postText' : 'commonText';
     if (this.state.isEmojiKeyboard) {
-      this.setState({[key]: this.state[key] + emoji.code});
+      this.setState({[key]: this.state[key] + emoji.emoji});
     } else {
       if (this.state.searchText) {
         let commentItem =
           this.state.searchData.posts[this.state?.commentedIndex];
         commentItem.commentTxt =
           commentItem != null && commentItem?.commentTxt
-            ? commentItem.commentTxt + emoji.code
-            : emoji.code;
+            ? commentItem.commentTxt + emoji.emoji
+            : emoji.emoji;
         this.setState({searchData: this.state.searchData});
       } else {
         let commentItem = this.state.userPost[this.state?.commentedIndex];
         commentItem.commentTxt = commentItem?.commentTxt
-          ? commentItem.commentTxt + emoji.code
-          : emoji.code;
+          ? commentItem.commentTxt + emoji.emoji
+          : emoji.emoji;
         this.setState({userPost: this.state.userPost});
       }
     }
@@ -2051,7 +2053,14 @@ class Timeline extends PureComponent {
             close={this.closePostpone}
             postData={selectedPost}
           />
-          <EmojiBoard
+          <EmojiPicker
+            onEmojiSelected={this.setEmoji}
+            open={isEmojiKeyboardC || isEmojiKeyboard}
+            onClose={() =>
+              this.setState({isEmojiKeyboard: false, isEmojiKeyboardC: false})
+            }
+          />
+          {/* <EmojiBoard
             showBoard={isEmojiKeyboardC || isEmojiKeyboard}
             onClick={this.setEmoji}
             onEmojiPicked={e =>
@@ -2092,7 +2101,7 @@ class Timeline extends PureComponent {
                 isEmojiKeyboardC: false,
               })
             }
-          />
+          /> */}
 
           <GroupsJoinedModel
             isShow={groupShowModel}
