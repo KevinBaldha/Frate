@@ -18,6 +18,7 @@ import {
   AppState,
   ActivityIndicator,
 } from 'react-native';
+import EmojiPicker from 'rn-emoji-keyboard';
 import io from 'socket.io-client';
 import RNFS from 'react-native-fs';
 import SocketIOFileClient from 'socket.io-file-client';
@@ -49,7 +50,7 @@ import TrackPlayer from 'react-native-track-player';
 import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 import Toast from 'react-native-simple-toast';
-import EmojiBoard from './EmojiBoard';
+// import EmojiBoard from 'react-native-emoji-board';
 import {
   ScreenContainer,
   Label,
@@ -1981,7 +1982,7 @@ class Chat extends Component {
   };
 
   setEmoji = emoji => {
-    this.setState({msg: this.state.msg + emoji.code});
+    this.setState({msg: this.state.msg + emoji.emoji});
   };
 
   onPressKeybord() {
@@ -2482,7 +2483,12 @@ class Chat extends Component {
           close={this.closePostpone}
           id={this.state.singleChatId}
         />
-        <EmojiBoard
+        <EmojiPicker
+          onEmojiSelected={this.setEmoji}
+          open={this.state.isEmojiKeyboard}
+          onClose={() => this.setState({isEmojiKeyboard: false})}
+        />
+        {/* <EmojiBoard
           showBoard={this.state.isEmojiKeyboard}
           onClick={this.setEmoji}
           onRemove={() => {
@@ -2496,7 +2502,7 @@ class Chat extends Component {
           //   width: scale(360),
           // }}
           // tabBarPosition="scroll"
-        />
+        /> */}
         <Loader loading={this.state.loading} />
 
         <ChatMediaOption

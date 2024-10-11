@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Share from 'react-native-share';
 import {connect} from 'react-redux';
-import EmojiBoard from './EmojiBoard';
+// import EmojiBoard from './EmojiBoard';
 import {
   ScreenContainer,
   PostCard,
@@ -28,6 +28,7 @@ import {
   commentLike,
 } from '../Redux/Actions';
 import {getLocalText} from '../Locales/I18n';
+import EmojiPicker from 'rn-emoji-keyboard';
 
 let loadMoreData = false;
 class SavePost extends Component {
@@ -138,14 +139,14 @@ class SavePost extends Component {
     this.setState({imagesView: false});
   };
 
-  safeEmojiBackspace = (str) => {
+  safeEmojiBackspace = str => {
     let initialRealCount = this.fancyCount(str);
     while (str.length > 0 && this.fancyCount(str) !== initialRealCount - 1) {
       str = str.substring(0, str.length - 1);
     }
     return str;
   };
-  fancyCount = (str) => {
+  fancyCount = str => {
     const joiner = '\u{200D}';
     const split = str.split(joiner);
     let count = 0;
@@ -199,7 +200,7 @@ class SavePost extends Component {
     this.setState({isEmojiKeyboard: !this.state.isEmojiKeyboard});
   };
   //handle save post
-  handleSave = async (item) => {
+  handleSave = async item => {
     try {
       let postIndex = this.state.postOptionIndex;
       await this.props.postLikeShareSave(item, 'save');
@@ -212,7 +213,7 @@ class SavePost extends Component {
     this.props.navigation.navigate('Notification');
   };
 
-  handleMsgPopUp = async (item) => {
+  handleMsgPopUp = async item => {
     const {userData, navigation} = this.props;
     const userID = item?.user_id;
     if (userID !== userData?.id) {
@@ -244,7 +245,7 @@ class SavePost extends Component {
           onPressSend={this.sendComment}
           onPressEmoji={this.handleEmojiKeboard}
           onPressKeyboard={() => this.setState({isEmojiKeyboard: false})}
-          onChangeText={(text) => {
+          onChangeText={text => {
             this.handleCommentTxt(text, item);
           }}
           optionsIconColor={this.state.handleOption}
@@ -276,13 +277,13 @@ class SavePost extends Component {
     );
   };
 
-  updateCommentCount = (index) => {
+  updateCommentCount = index => {
     this.state.savePost[index].total_comment =
       this.state.savePost[index].total_comment + 1;
     this.setState({savePost: this.state.savePost});
   };
   onPressProfile = () => {};
-  onPressGroup = (item) => {
+  onPressGroup = item => {
     const {navigation} = this.props;
     navigation.navigate('GroupDetails', {
       item: {groupData: item?.group, joined: true},
@@ -305,8 +306,8 @@ class SavePost extends Component {
       handleOption: !this.state.handleOption,
     });
   };
-  setEmoji = (emoji) => {
-    this.setState({commenttxt: this.state.commenttxt + emoji.code});
+  setEmoji = emoji => {
+    this.setState({commenttxt: this.state.commenttxt + emoji.emoji});
   };
   handlePostModal = (item, index, evt) => {
     this.setState({
@@ -379,7 +380,7 @@ class SavePost extends Component {
         <HeaderView {...this.props} title={getLocalText('Settings.savepost')} />
 
         <FlatList
-          ref={(ref) => (this.FlatListRef = ref)}
+          ref={ref => (this.FlatListRef = ref)}
           contentContainerStyle={{
             paddingVertical: scale(10),
             paddingTop: scale(30),
@@ -389,7 +390,7 @@ class SavePost extends Component {
           data={savePost}
           extraData={[this.state, this.props]}
           renderItem={this.renderPost}
-          onScroll={(e) => {
+          onScroll={e => {
             this.setState({scrollFlat: e.nativeEvent.contentOffset.y});
             this.state.postOption ? this.postOptionClose() : '';
             this.setState({
@@ -437,7 +438,12 @@ class SavePost extends Component {
           onPressLike={this.onLikePress}
         />
         {/* unused */}
-        <EmojiBoard
+        <EmojiPicker
+          onEmojiSelected={this.setEmoji}
+          open={this.state.isEmojiKeyboard}
+          onClose={() => this.setState({isEmojiKeyboard: false})}
+        />
+        {/* <EmojiBoard
           showBoard={this.state.isEmojiKeyboard}
           onClick={this.setEmoji}
           onRemove={() => {
@@ -445,7 +451,7 @@ class SavePost extends Component {
             this.setState({commenttxt: newText});
           }}
           onClose={() => this.setState({isEmojiKeyboard: false})}
-        />
+        /> */}
         <Loader loading={loadding} />
         <OfflineModel />
       </ScreenContainer>
@@ -476,7 +482,7 @@ const styles = StyleSheet.create({
   emptyList: {fontSize: 20, color: 'black', alignSelf: 'center'},
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const userData = state.UserInfo.data;
   const isPostLike = state.PostReducer.postLike;
   return {userData, isPostLike};

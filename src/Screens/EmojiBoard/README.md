@@ -80,6 +80,11 @@ const App: () => React$Node = () => {
             <TouchableOpacity onPress={() => setShow(!show)}>
                 <Text>click here</Text>
             </TouchableOpacity>
+            <EmojiPicker
+        onEmojiSelected={setEmojiBord}
+        open={emjoi}
+        onClose={() => setEmoji(false)}
+      />
             <EmojiBoard showBoard={show} onClick={onClick} />
         </>
     );

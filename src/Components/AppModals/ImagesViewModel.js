@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {isIphoneX} from 'react-native-iphone-x-helper';
 import Modal from 'react-native-modal';
-import EmojiBoard from '../../Screens/EmojiBoard';
+// import EmojiBoard from '../../Screens/EmojiBoard';
 import Icon from 'react-native-vector-icons/Feather';
 import Share from 'react-native-share';
 import {useDispatch} from 'react-redux';
@@ -26,8 +26,9 @@ import {
   Label,
 } from '../index';
 import {API, baseUrlForShare, getAPICall} from '../../Utils/appApi';
+import EmojiPicker from 'rn-emoji-keyboard';
 
-const ImagesViewModel = (props) => {
+const ImagesViewModel = props => {
   const {
     isVisible,
     close,
@@ -72,14 +73,14 @@ const ImagesViewModel = (props) => {
     } catch (error) {}
   };
 
-  const safeEmojiBackspace = (str) => {
+  const safeEmojiBackspace = str => {
     let initialRealCount = fancyCount(str);
     while (str.length > 0 && fancyCount(str) !== initialRealCount - 1) {
       str = str.substring(0, str.length - 1);
     }
     return str;
   };
-  const fancyCount = (str) => {
+  const fancyCount = str => {
     const joiner = '\u{200D}';
     const split = str.split(joiner);
     let count = 0;
@@ -113,18 +114,18 @@ const ImagesViewModel = (props) => {
   const onPressEmoji = () => {
     setEmojiKey(!emoji);
   };
-  const handleCommentTxt = (text) => {
+  const handleCommentTxt = text => {
     setCommenttx(text);
   };
 
-  const setEmoji = (emojicode) => {
+  const setEmoji = emojicode => {
     setCommenttx(commenttxt + emojicode.code);
   };
-  const onPressProfileHandle = async (data) => {
+  const onPressProfileHandle = async data => {
     await onPressProfile(data);
     close();
   };
-  const onPressGroupHandle = async (data) => {
+  const onPressGroupHandle = async data => {
     await onPressGroup(data);
     close();
   };
@@ -249,7 +250,7 @@ const ImagesViewModel = (props) => {
               onPressEmoji={onPressEmoji}
               onPressKeyboard={() => setEmojiKey(false)}
               emojiKeyboard={emoji}
-              onChangeText={(text) => {
+              onChangeText={text => {
                 handleCommentTxt(text);
               }}
               value={commenttxt}
@@ -260,7 +261,13 @@ const ImagesViewModel = (props) => {
           )}
         </ScrollView>
 
-        <EmojiBoard
+        <EmojiPicker
+          onEmojiSelected={setEmoji}
+          open={emoji}
+          onClose={() => setEmojiKey(false)}
+        />
+
+        {/* <EmojiBoard
           showBoard={emoji}
           onClick={setEmoji}
           onRemove={() => {
@@ -268,7 +275,7 @@ const ImagesViewModel = (props) => {
             setCommenttx(str);
           }}
           onClose={() => setEmojiKey(false)}
-        />
+        /> */}
 
         <FullImageModel
           isShow={model}

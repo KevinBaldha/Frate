@@ -10,7 +10,7 @@ import {isIphoneX} from 'react-native-iphone-x-helper';
 import Icon from 'react-native-vector-icons/Feather';
 import Share from 'react-native-share';
 import FastImage from 'react-native-fast-image';
-import EmojiBoard from './EmojiBoard';
+// import EmojiBoard from './EmojiBoard';
 import {scale, theme} from '../Utils';
 import {
   PostFooter,
@@ -20,8 +20,9 @@ import {
   Label,
 } from '../Components';
 import {API, baseUrlForShare, getAPICall} from '../Utils/appApi';
+import EmojiPicker from 'rn-emoji-keyboard';
 
-const SignlePost = (props) => {
+const SignlePost = props => {
   const {itemId} = props.route?.params;
   const [comment, setComment] = useState(false);
   const [item, setPostItem] = useState('');
@@ -40,7 +41,7 @@ const SignlePost = (props) => {
     }
   }, [itemId]);
 
-  const getSinglepost = async (id) => {
+  const getSinglepost = async id => {
     try {
       let success = await getAPICall(API.getSinglePost + id);
       if (success.error) {
@@ -71,18 +72,18 @@ const SignlePost = (props) => {
     setEmojiKey(!emoji);
   };
 
-  const setEmoji = (emojicode) => {
+  const setEmoji = emojicode => {
     setCommenttx(commenttxt + emojicode.code);
   };
-  const onPressProfileHandle = async (data) => {
+  const onPressProfileHandle = async data => {
     // await onPressProfile(data);
   };
-  const onPressGroupHandle = async (data) => {
+  const onPressGroupHandle = async data => {
     // await onPressGroup(data);
     // close();
   };
 
-  const safeEmojiBackspace = (str) => {
+  const safeEmojiBackspace = str => {
     let initialRealCount = fancyCount(str);
     while (str.length > 0 && fancyCount(str) !== initialRealCount - 1) {
       str = str.substring(0, str.length - 1);
@@ -90,7 +91,7 @@ const SignlePost = (props) => {
     return str;
   };
 
-  const fancyCount = (str) => {
+  const fancyCount = str => {
     const joiner = '\u{200D}';
     const split = str.split(joiner);
     let count = 0;
@@ -193,7 +194,12 @@ const SignlePost = (props) => {
       </ScrollView>
 
       {/* unused */}
-      <EmojiBoard
+      <EmojiPicker
+        onEmojiSelected={setEmoji}
+        open={emoji}
+        onClose={() => setEmoji(false)}
+      />
+      {/* <EmojiBoard
         showBoard={emoji}
         onClick={setEmoji}
         onRemove={() => {
@@ -201,7 +207,7 @@ const SignlePost = (props) => {
           setCommenttx(newText);
         }}
         onClose={() => setEmoji(false)}
-      />
+      /> */}
       <FullImageModel
         isShow={model}
         index={items}
