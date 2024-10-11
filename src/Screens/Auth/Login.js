@@ -153,17 +153,12 @@ class Login extends Component {
 
     try {
       await GoogleSignin.hasPlayServices();
-      console.log(
-        'GoogleSignin.hasPlayServices()_____>',
-        await GoogleSignin.hasPlayServices(),
-      );
-      console.log('userInfo_____>', await GoogleSignin.signIn());
       const userInfo = await GoogleSignin.signIn();
       try {
         let googleFormData = new FormData();
         this.setState({loadding: true});
-        googleFormData.append('email', userInfo.user.email);
-        googleFormData.append('token', userInfo.user.id);
+        googleFormData.append('email', userInfo.data.user.email);
+        googleFormData.append('token', userInfo.data.user.id);
         googleFormData.append('fcm_token', fcm);
         googleFormData.append('type', 1);
         googleFormData.append('device_type', Platform.OS);
@@ -182,11 +177,11 @@ class Login extends Component {
           ) {
             this.setState({loadding: false});
             let obj = {
-              first_name: userInfo.user.name,
-              last_name: userInfo.user.givenName,
-              email: userInfo.user.email,
+              first_name: userInfo.data.user.name,
+              last_name: userInfo.data.user.givenName,
+              email: userInfo.data.user.email,
               user_pic: null,
-              token: userInfo.user.id,
+              token: userInfo.data.user.id,
               type: 1,
               userId: response?.data?.user.id,
             };
