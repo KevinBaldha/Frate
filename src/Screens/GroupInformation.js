@@ -110,7 +110,7 @@ class GroupInformation extends Component {
     if (this.state.singleChatId === '1') {
       this.getPrivateChatMedia();
     } else if (this.props.route?.params?.mediaPost === '2') {
-      this.setState({mediaItems: this.state.mediaItems.filter((d) => !d.type)});
+      this.setState({mediaItems: this.state.mediaItems.filter(d => !d.type)});
       this.getGroupDetails();
       this.getPostMediaList();
       this.getPostDocList();
@@ -290,7 +290,7 @@ class GroupInformation extends Component {
     }
   };
 
-  handleMenus = (index) => {
+  handleMenus = index => {
     this.setState({menuSelected: index});
     if (index === 1) {
       this.setState({reportModel: true});
@@ -299,7 +299,7 @@ class GroupInformation extends Component {
     }
   };
 
-  exitGroupAction = async (action) => {
+  exitGroupAction = async action => {
     this.setState({exitGroupModel: false});
     if (action === 1) {
       let groupId = this.props.route.params.item?.groupData.id;
@@ -309,7 +309,7 @@ class GroupInformation extends Component {
     }
   };
 
-  handleTab = (index) => {
+  handleTab = index => {
     this.setState({selectedTab: index}, () => {});
   };
 
@@ -321,7 +321,7 @@ class GroupInformation extends Component {
     return <DocumentsFile item={item} index={index} />;
   };
 
-  closeReport = (item) => {
+  closeReport = item => {
     if (item === null) {
       this.setState({
         reportModel: !this.state.reportModel,
@@ -382,7 +382,7 @@ class GroupInformation extends Component {
     );
   };
 
-  getItem = (item) => {
+  getItem = item => {
     this.setState({
       mediaData: {
         uri:
@@ -471,7 +471,7 @@ class GroupInformation extends Component {
   };
 
   //handle NOtification
-  handleNotification = async (item) => {
+  handleNotification = async item => {
     try {
       this.setState({loading: true});
       await this.props.manageNotification(this.state.groupsDetails?.id);
@@ -489,7 +489,7 @@ class GroupInformation extends Component {
   };
 
   //handle menu
-  handleMenu = (menuItem) => {
+  handleMenu = menuItem => {
     this.setState({showOptions: !this.state.showOptions});
     if (this.props.userData.id !== this.state.groupsDetails.created_by) {
       Alert.alert(getLocalText('ErrorMsgs.groupsetup'));
@@ -514,7 +514,7 @@ class GroupInformation extends Component {
     }
   };
 
-  deleteGroup = async (data) => {
+  deleteGroup = async data => {
     this.setState({deleteModel: false});
     if (data === 1) {
       let groupId = this.state.groupsDetails.id;
@@ -637,7 +637,7 @@ class GroupInformation extends Component {
                           <View style={styles.switchContainer}>
                             <Switch
                               value={isSwitchOn}
-                              onValueChange={(items) =>
+                              onValueChange={items =>
                                 this.handleNotification(items)
                               }
                               useNativeDriver={true}
@@ -751,7 +751,7 @@ class GroupInformation extends Component {
                       <SectionList
                         sections={this.state.linksData}
                         key={'_'}
-                        keyExtractor={(item) => '_' + item?.id}
+                        keyExtractor={item => '_' + item?.id}
                         renderItem={this.renderLinksData}
                         renderSectionHeader={this._renderSectionHeader}
                         style={{
@@ -772,7 +772,7 @@ class GroupInformation extends Component {
                       <SectionList
                         sections={this.state.docsObject}
                         key={'*'}
-                        keyExtractor={(item) => '*' + item?.id}
+                        keyExtractor={item => '*' + item?.id}
                         renderItem={this.renderDocument}
                         renderSectionHeader={this._renderSectionHeader}
                         style={{height: theme.SCREENHEIGHT * 0.45}}
@@ -794,7 +794,7 @@ class GroupInformation extends Component {
                     this.state.mediaArray[3]?.data.length > 0 ? (
                       <SectionList
                         key={'#'}
-                        keyExtractor={(item) => '#' + item?.id}
+                        keyExtractor={item => '#' + item?.id}
                         renderItem={this._renderSectionListItem}
                         renderSectionHeader={this._renderSectionHeader}
                         numColumns={3}
@@ -976,7 +976,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const userData = state.UserInfo.data;
   const notification = state.groupsReducer.groupNotication;
   const created_g_count = state.UserInfo.creaetedGroupCount;

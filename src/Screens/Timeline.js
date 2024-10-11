@@ -944,6 +944,7 @@ class Timeline extends PureComponent {
           API.makeSponsorPostNew,
           makeSponsorForm,
         );
+        console.log('closePaymentModal response ->', response);
 
         this.props.isPostLoading(false);
         if (response.error) {

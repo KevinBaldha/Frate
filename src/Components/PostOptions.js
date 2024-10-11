@@ -116,7 +116,7 @@ const PostOptions = props => {
           </TouchableOpacity>
         );
       })}
-      
+
       {is_sponsoredHiden || isSponsored === 1 || showStatic ? null : (
         <TouchableOpacity
           style={[

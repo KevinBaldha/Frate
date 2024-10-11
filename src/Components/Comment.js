@@ -18,7 +18,7 @@ import {images, scale, theme} from '../Utils';
 import {Title, Label} from './index';
 import {API, postAPICall} from '../Utils/appApi';
 
-const Comment = (props) => {
+const Comment = props => {
   const {
     onPressEmoji,
     onPressSend,
@@ -36,7 +36,7 @@ const Comment = (props) => {
     onPressKeyboard,
   } = props;
   const inputRef = useRef(null);
-  const userData = useSelector((state) => state.UserInfo);
+  const userData = useSelector(state => state.UserInfo);
 
   const [options, setOptions] = useState();
   const [optionsView, setCommentView] = useState(false);
@@ -218,7 +218,7 @@ const Comment = (props) => {
                     {edit && cidx === i ? (
                       <TextInput
                         value={editComment}
-                        onChangeText={(txt) => {
+                        onChangeText={txt => {
                           setCommentText(txt);
                         }}
                         style={styles.commentEditView}

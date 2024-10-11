@@ -153,7 +153,16 @@ class Login extends Component {
 
     try {
       await GoogleSignin.hasPlayServices();
+
+      console.log('userInfo_____>', await GoogleSignin.signIn());
+      console.log(
+        'GoogleSignin.hasPlayServices()_____>',
+        await GoogleSignin.hasPlayServices({
+          showPlayServicesUpdateDialog: true,
+        }),
+      );
       const userInfo = await GoogleSignin.signIn();
+      console.log('userInfo_____>', userInfo);
       try {
         let googleFormData = new FormData();
         this.setState({loadding: true});
@@ -415,7 +424,6 @@ class Login extends Component {
 
         // API Call
         const success = await postAPICall(API.login, loginFormData);
-        console.log('login success ->', success);
 
         // Check if user is blocked
         if (success.data?.is_block) {

@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
 import {
   View,
@@ -15,23 +16,31 @@ import externalStyle from '../../Css';
 import {Label, RadioButton, Button, CheckBox} from '../index';
 import {getLocalText} from '../../Locales/I18n';
 
-const FilterGroups = (props) => {
+const FilterGroups = props => {
   const {isVisible, categories, toggleFilterModal, All} = props;
   const [filterBy] = useState([
     {title: 'Groups.moreRecentGroups'},
     {title: 'Groups.olderGroups'},
   ]);
   const [showOnlyFriendGroups, setShowOnlyFriendGroups] = useState(false);
+  const [selectShowAllCategories, setSelectShowAllCategories] = useState(false);
   const [selectedRadioKey, setRadioKey] = useState('');
   const [category, setCategory] = useState('');
   const handleModel = () => {
-    if (selectedRadioKey?.length > 0 || category?.length > 0) {
+    if (selectShowAllCategories) {
+      All();
+    } else if (selectedRadioKey?.length > 0 || category?.length > 0) {
       toggleFilterModal();
     } else {
       toggleFilterModal({selectedRadioKey, category, showOnlyFriendGroups});
       // setCategory('');
       // setRadioKey('');
     }
+  };
+
+  const toggleShowAllCategories = () => {
+    setSelectShowAllCategories(!selectShowAllCategories);
+    setCategory('');
   };
 
   return (
@@ -71,14 +80,18 @@ const FilterGroups = (props) => {
             style={styles.category}
           />
           <TouchableOpacity
-            onPress={() => {
-              All();
-            }}
+            onPress={() => toggleShowAllCategories()}
             style={[
               styles.categoryCard,
               externalStyle.shadow,
               styles.catCard,
-              {shadowRadius: scale(10)},
+              {
+                shadowRadius: scale(10),
+                borderColor: selectShowAllCategories
+                  ? theme.colors.black
+                  : theme.colors.transparent,
+                marginRight: selectShowAllCategories ? scale(0) : '3%',
+              },
             ]}>
             <View style={styles.circle}>
               <Icon name="globe" color={theme.colors.black} size={scale(20)} />
@@ -98,6 +111,7 @@ const FilterGroups = (props) => {
                       setCategory('');
                     } else {
                       setCategory(d);
+                      setSelectShowAllCategories(false);
                     }
                   }}
                   key={i.toString()}

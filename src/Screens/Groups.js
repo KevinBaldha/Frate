@@ -122,7 +122,7 @@ class Groups extends Component {
     });
   };
   //filter group by older& new
-  toggleFilterModal = async (item) => {
+  toggleFilterModal = async item => {
     this.setState({
       isFilterModal: !this.state.isFilterModal,
       refreshing: true,
@@ -149,7 +149,7 @@ class Groups extends Component {
     });
   };
 
-  handleCategory = async (id) => {
+  handleCategory = async id => {
     this.setState({
       groupdataloading: true,
     });
@@ -257,7 +257,7 @@ class Groups extends Component {
       // selectCategory: this.state.selectCategory ? this.state.selectCategory : 0,
     });
   };
-  renderFooter = (item) => {
+  renderFooter = item => {
     if (!this.state.loadmore) {
       return null;
     } else {
@@ -308,7 +308,7 @@ class Groups extends Component {
     />
   );
 
-  handleSearch = async (txt) => {
+  handleSearch = async txt => {
     let searchtxt = txt;
     let searchType = 'group';
 
@@ -376,7 +376,7 @@ class Groups extends Component {
           onSearchPress={() =>
             this.setState({searchModel: !this.state.searchModel})
           }
-          onSearchText={(txt) => {
+          onSearchText={txt => {
             this.setState({searchText: txt});
             this.handleSearch(txt);
           }}
@@ -619,7 +619,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const groupList = state.groupsReducer.group_list;
   const createGroupCount = state.UserInfo.creaetedGroupCount;
   const notification = state.groupsReducer.groupNotication;

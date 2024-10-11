@@ -38,11 +38,11 @@ const paymentType = [
   },
 ];
 
-const PaymentModel = (props) => {
+const PaymentModel = props => {
   const {isVisible, closeModal, cardData} = props;
   const [cardDetailsModal, setCardDetailsModal] = useState(false);
 
-  const handlePaymentType = async (i) => {
+  const handlePaymentType = async i => {
     if (cardData?.length > 0) {
       // Call sponsor api
       closeModal();
@@ -95,12 +95,14 @@ const PaymentModel = (props) => {
                     externalStyle.shadow,
                     {
                       shadowRadius: scale(5),
+                      opacity: i === 0 ? 1 : 0.5,
                       borderWidth: d?.isSelected ? scale(1) : scale(0),
                       borderColor: d?.isSelected
                         ? theme.colors.blue
                         : theme.colors.transparent,
                     },
                   ]}
+                  disabled={i !== 0}
                   key={i.toString()}
                   onPress={() => {
                     if (d.id !== 2) {
@@ -120,9 +122,7 @@ const PaymentModel = (props) => {
               backgroundColor:
                 cardDetailsModal !== '' ? theme.colors.blue : theme.colors.grey,
             }}
-            onPress={() => {
-              handlePaymentType();
-            }}
+            onPress={() => handlePaymentType()}
           />
         </View>
         <CardDetailsModel
@@ -151,12 +151,12 @@ const styles = StyleSheet.create({
   },
   card: {
     flexDirection: 'row',
-    backgroundColor: theme.colors.white,
     height: scale(65),
     borderRadius: scale(12),
     marginVertical: scale(6),
     paddingHorizontal: scale(15),
     alignItems: 'center',
+    backgroundColor: theme.colors.white,
   },
   textCon: {
     flexDirection: 'row',

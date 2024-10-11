@@ -21,7 +21,7 @@ import externalStyle from '../../Css';
 import {API, getAPICall} from '../../Utils/appApi';
 
 var loadMoreD = false;
-const AddConversionsMembersModel = (props) => {
+const AddConversionsMembersModel = props => {
   const {show, closeModal, groupMembers, userData, selectedClose, type} = props;
   const [members, setMembers] = useState([]);
   const [selectedMembers, addMembers] = useState([]);
@@ -92,14 +92,14 @@ const AddConversionsMembersModel = (props) => {
   };
 
   //add member in list
-  const addMemberFunction = async (user) => {
+  const addMemberFunction = async user => {
     let check =
       selectedMembers &&
-      selectedMembers.find((d) => d.member_id === user.member_id);
+      selectedMembers.find(d => d.member_id === user.member_id);
     if (check) {
       //remove user
       const arr = selectedMembers.filter(
-        (item) => item?.member_id !== user.member_id,
+        item => item?.member_id !== user.member_id,
       );
       let tmpMembers = [];
       arr.forEach(myFunction);
@@ -158,7 +158,7 @@ const AddConversionsMembersModel = (props) => {
               styles.memberName,
               {
                 color: selectedMembers.some(
-                  (d) => d.member_id === item?.member_id,
+                  d => d.member_id === item?.member_id,
                 )
                   ? theme.colors.blue
                   : theme.colors.black,
@@ -229,7 +229,7 @@ const AddConversionsMembersModel = (props) => {
               placeholder={'Room Name'}
               style={styles.inputBox}
               value={roomName}
-              onChangeText={(txt) => {
+              onChangeText={txt => {
                 setRoomName(txt);
               }}
             />
