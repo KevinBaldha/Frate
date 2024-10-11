@@ -1135,23 +1135,45 @@ class Chat extends Component {
       openAttachment = false;
       video.map(item => {
         if (item?.mime.slice(0, 5) === 'video') {
-          let videoName = imageData(
-            Platform.OS === 'ios' ? item?.sourceURL : item?.path,
-          );
-          this.setState({
-            attachImages: [
-              ...this.state.attachImages,
-              {
-                video: {
-                  uri: item?.path,
-                  name: videoName.name,
-                  type: item?.mime,
-                },
-              },
-            ],
-            mediaOption: false,
-            isMediaOption: false,
+          let imagedata = imageData(item.path);
+          var file_path = item.path;
+          if (Platform.OS === 'ios') {
+            file_path = item.path.replace('file:///', '');
+          } else {
+            file_path = item.path;
+          }
+          this.setState({isMediaOption: false, mediaOption: false});
+          const chunk = new ChunkUpload({
+            path: file_path, // Path to the file
+            size: item.size, // Chunk size (must be multiples of 3)
+            // size: Platform.OS === 'ios' ? 361728 : 36172885, // Chunk size (must be multiples of 3)
+            fileName: imagedata.name, // Original file name
+            // fileSize: mbToBytes, // Original file size
+            fileSize: item.size, // Original file size
+            // Errors
+            onFetchBlobError: e => {},
+            onWriteFileError: e => {},
           });
+          chunk.digIn(this.upload.bind(this));
+
+          // let videoName = imageData(
+          //   Platform.OS === 'ios' ? item?.sourceURL : item?.path,
+          // );
+          // console.log('videoName', videoName, item);
+          // this.setState({
+          //   attachImages: [
+          //     ...this.state.attachImages,
+          //     {
+          //       video: {
+          //         uri: item?.path,
+          //         name: videoName.name,
+          //         type: item?.mime,
+          //       },
+          //     },
+          //   ],
+          //   mediaOption: false,
+          //   isMediaOption: false,
+          // });
         }
       });
     });
