@@ -154,15 +154,7 @@ class Login extends Component {
     try {
       await GoogleSignin.hasPlayServices();
 
-      console.log('userInfo_____>', await GoogleSignin.signIn());
-      console.log(
-        'GoogleSignin.hasPlayServices()_____>',
-        await GoogleSignin.hasPlayServices({
-          showPlayServicesUpdateDialog: true,
-        }),
-      );
       const userInfo = await GoogleSignin.signIn();
-      console.log('userInfo_____>', userInfo);
       try {
         let googleFormData = new FormData();
         this.setState({loadding: true});
@@ -171,14 +163,12 @@ class Login extends Component {
         googleFormData.append('fcm_token', fcm);
         googleFormData.append('type', 1);
         googleFormData.append('device_type', Platform.OS);
-        console.log('googleFormData_____>', googleFormData);
         await postAPICall(API.login, googleFormData).then(response => {
           appAPI.defaults.headers.common.Authorization = `Bearer ${response.data?.accessToken}`;
           AsyncStorage.setItem(
             '@loginToken',
             ` Bearer ${response.data?.accessToken}`,
           );
-          console.log('googleFormData_____response_____>', response);
 
           if (
             response?.data.user.profile_complete === null ||
@@ -200,6 +190,7 @@ class Login extends Component {
             this.props.totalGroupJoin(response.data?.group_count);
             this.props.CreatedGroupCount(response.data?.created_group_count);
             this.props.setCoverImage(response.data?.teams?.background_image);
+            this.props.userPreferences(response?.data?.user?.user_meta);
 
             this.apiService.setToken(response?.data.accessToken);
             setTimeout(() => {
@@ -210,12 +201,10 @@ class Login extends Component {
           }
         });
       } catch (error) {
-        console.log('googleFormData_____error_____>', error);
         this.setState({loadding: false});
       }
     } catch (error) {
       this.setState({loadding: false});
-      console.log('googleFormData_____catch_____error_____>', error);
 
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
       } else if (error.code === statusCodes.IN_PROGRESS) {

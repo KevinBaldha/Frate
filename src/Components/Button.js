@@ -69,7 +69,9 @@ const Button = props => {
       ) : null}
       <Text style={[styles.buttontxt, titleStyle]}>{title}</Text>
       {isHelpIcon && (
-        <TouchableOpacity onPress={handlePopUpModel} style={{marginLeft: 10}}>
+        <TouchableOpacity
+          onPress={handlePopUpModel}
+          style={{marginLeft: scale(10), marginTop: scale(2)}}>
           <Icon1
             name={'help-circle'}
             size={scale(18)}

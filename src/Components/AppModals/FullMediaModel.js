@@ -74,9 +74,14 @@ const FullMediaModel = (props) => {
                 <FastImage
                   style={styles.imageCon}
                   source={
-                    postImages.image || {
-                      uri: postImages.uri?.original || postImages.uri,
-                    }
+                    postImages?.image
+                      ? postImages?.image
+                      : {
+                          uri:
+                            postImages?.uri?.optimize ||
+                            postImages.uri?.original ||
+                            postImages?.uri,
+                        }
                   }
                   resizeMode={FastImage.resizeMode.contain}
                 />

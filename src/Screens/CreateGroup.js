@@ -176,6 +176,7 @@ class CreateGroup extends Component {
     }
     if (!Validation.validateEmpty(this.state.groupDetails)) {
       this.setState({groupDetailsErr: Validation.MSG_VALID.groupDetailsErr});
+      error = false;
     }
     // if (!Validation.validateEmpty(this.state.selectedTeam.toString())) {
     //   this.setState({cityErrorMsg: Validation.MSG_VALID.chooseCity});
