@@ -18,7 +18,7 @@ const VideoShow = (props) => {
           source={
             url.video?.original ||
             url.video?.uri || {
-              uri: convertToProxyURL(
+              uri: convertToProxyURL?.(
                 url?.optimize !== undefined ? url?.optimize : url?.original,
               ),
             }

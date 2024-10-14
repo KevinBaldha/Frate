@@ -35,7 +35,7 @@ import {
   blockAction,
   exitGroup,
 } from '../Redux/Actions';
-import {BLOCKTYPES, DeepLink} from '../Utils/StaticData';
+import {BLOCKTYPES, DeepLink, SCREEN_TYPE} from '../Utils/StaticData';
 
 let loadMoreData = false;
 class ActiveSponsorPost extends Component {
@@ -346,8 +346,25 @@ class ActiveSponsorPost extends Component {
     }
   };
 
-  onPressGroup = () => {};
-  onPressProfile = () => {};
+  onPressGroup = item => {
+    const {navigation} = this.props;
+    navigation.navigate('GroupDetails', {
+      item: {groupData: item?.group, joined: false},
+    });
+  };
+
+  redirectToUserDetails = async (item, userId) => {
+    const {navigation} = this.props;
+    navigation.navigate('UserDataSpecific', {
+      data: item?.user_id ? item?.user_id : item,
+      id: userId,
+      screenName: SCREEN_TYPE.NEW_USER,
+    });
+  };
+
+  onPressProfile = async (item, index) => {
+    this.redirectToUserDetails(item, item?.user_id);
+  };
 
   //repot post >>>
   closeReport = type => {

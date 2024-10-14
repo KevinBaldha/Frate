@@ -724,13 +724,16 @@ class GroupInformation extends Component {
                 )}
                 {singleChatId !== '1' && (
                   <View style={[styles.description, {marginTop: scale(0)}]}>
-                    <Label title={'Group Rules'} style={styles.title} />
                     <Label
                       title={
                         this.state.groupsDetails?.rules
-                          ? this.state.groupsDetails?.rules
-                          : 'No Rules'
+                          ? 'Group Rules'
+                          : 'No rules'
                       }
+                      style={styles.title}
+                    />
+                    <Label
+                      title={this.state.groupsDetails?.rules}
                       style={styles.descText}
                     />
                   </View>

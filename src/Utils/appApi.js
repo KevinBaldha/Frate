@@ -50,7 +50,8 @@ appAPI.interceptors.response.use(
   },
 );
 
-export const baseUrlForShare = 'https://Frate.com/post?=';
+export const baseUrlForShare = 'https://frate.eugeniuses.com/post?=';
+// export const baseUrlForShare = 'https://Frate.com/post?=';
 export const GOOGLEWEBCLIENTID =
   '1029252269707-7djm8tkl1eeud3m8li3laaqheo743htf.apps.googleusercontent.com';
 export const baseUrl_chat = 'https://frate.eugeniuses.com:3030/data/';
