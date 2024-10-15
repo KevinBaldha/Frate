@@ -1,10 +1,20 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in /usr/local/Cellar/android-sdk/24.3.3/tools/proguard/proguard-android.txt
-# You can edit the include path and order by changing the proguardFiles
-# directive in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# Keep all SLF4J Logger classes (Prevents ProGuard from removing them)
+-keep class org.slf4j.** { *; }
 
-# Add any project specific keep options here:
+# Optional: Prevent obfuscation of logging statements (if you want to keep logging behavior intact)
+-dontwarn org.slf4j.**
+
+# Keep classes and methods related to FastImage and react-native-video
+-keep class com.dylanvann.fastimage.** { *; }
+-keep class com.brentvatne.react.** { *; }
+-keep class com.danikula.videocache.** { *; }
+
+# Keep all classes related to your VideoShow components and video caching
+-keep class com.danikula.videocache.** { *; }
+
+# General rules for React Native libraries to avoid issues with ProGuard stripping code
+-keep public class * extends ReactActivity
+-keep class com.facebook.react.ReactPackage { *; }
+-keepclassmembers class * extends ReactActivity {
+   public void onActivityResult(int, int, android.content.Intent);
+}

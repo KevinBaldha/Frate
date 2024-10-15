@@ -128,6 +128,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:1.6.1"
     implementation 'androidx.fragment:fragment:1.6.1' // Add this if not already included
     implementation 'com.google.firebase:firebase-analytics:17.3.0' //Added
+    implementation 'org.slf4j:slf4j-api:1.7.30' //  Added
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

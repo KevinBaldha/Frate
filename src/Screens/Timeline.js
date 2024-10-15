@@ -740,9 +740,9 @@ class Timeline extends PureComponent {
         attachImages: [
           ...this.state.attachImages,
           {
-            pdf: res.uri,
-            type: Platform.OS === 'ios' ? 'application/pdf' : res.type,
-            name: res.name,
+            pdf: res?.[0]?.uri,
+            type: Platform.OS === 'ios' ? 'application/pdf' : res?.[0]?.type,
+            name: res?.[0]?.name,
           },
         ],
       });
@@ -756,9 +756,14 @@ class Timeline extends PureComponent {
   };
 
   removeImage = (item, index) => {
-    this.state.attachImages.splice(index, 1);
+    // this.state.attachImages.splice(index, 1);
+    // this.setState({
+    //   attachImages: this.state.attachImages,
+    // });
+    const updatedAttachImages = this.state.attachImages.filter((_, i) => i !== index);
+
     this.setState({
-      attachImages: this.state.attachImages,
+      attachImages: updatedAttachImages,
     });
   };
 

@@ -134,6 +134,7 @@ class GroupInformation extends Component {
         this.setState({
           groupsDetails: data,
           joined: data?.joined,
+          isSwitchOn: response?.data?.is_notification,
         });
       }
     } catch (error) {}
