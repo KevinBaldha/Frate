@@ -73,7 +73,6 @@ class Groups extends Component {
     this.focusListener = navigation.addListener('focus', () => {
       this.getGroupsList();
       this.getCategories();
-      // this.getGroupsList();
       this.setState({tutorialModel: true});
     });
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);

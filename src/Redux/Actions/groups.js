@@ -116,7 +116,7 @@ export const reportGroup = payload => {
       dispatch({type: types.REPORT_GROUP, payload: groupReport});
     } else {
       dispatch({type: types.REPORT_GROUP, payload: null});
-      Alert.alert(groupReport.errorMsg);
+      Alert.alert(groupReport?.errorMsg?.message?groupReport?.errorMsg?.message:groupReport?.errorMsg);
     }
   };
 };

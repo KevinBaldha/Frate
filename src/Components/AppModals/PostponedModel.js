@@ -17,8 +17,8 @@ const PostponedModel = (props) => {
       animationOut="zoomOut"
       statusBarTranslucent
       deviceHeight={height}
-      backdropColor={theme.colors.grey11}
-      backdropOpacity={0.8}
+      backdropColor={theme.colors.grey23}
+      backdropOpacity={0.9}
       onBackButtonPress={close}
       onBackdropPress={close}>
       <View style={styles.mainContainer}>
