@@ -598,9 +598,22 @@ class Timeline extends PureComponent {
     this.setState({postText: text});
   };
 
-  handleCommentTxt = (text, data, index) => {
+  handleCommentTxt = async(text, data, index) => {
     data.commentTxt = text;
-    this.setState({searchData: this.state.searchData, commentedIndex: index});
+    // this.setState({searchData: this.state.searchData, commentedIndex: index});
+
+    const updatedSearchData = [...this.state.searchData];
+
+    updatedSearchData[index] = {
+      ...updatedSearchData[index],
+      commentTxt: text,
+    };
+
+    this.setState({
+      searchData: updatedSearchData,
+      commentedIndex: index,
+    });
+    await this.props.getPost(1, 0);
   };
 
   openImagePicker = () => {
