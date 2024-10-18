@@ -916,7 +916,7 @@ class Timeline extends PureComponent {
     }
   };
 
-  closePaymentModal = async type => {
+  closePaymentModal = async (type, obj = {}) => {
     const {allData, navigation} = this.props;
     const {selectedPost, sponsorData} = this.state;
     let postId = selectedPost?.id,
@@ -924,7 +924,11 @@ class Timeline extends PureComponent {
       day = sponsorData?.day,
       amount = sponsorData?.amount;
 
-    this.setState({paymentModel: false});
+    // this.setState({paymentModel: false});
+    this.setState({sponsorModel: false});
+    setTimeout(() => {
+      this.setState({perfectModel: true});
+    }, 1000);
 
     if (type === 1) {
     } else if (type === 2) {
@@ -954,15 +958,23 @@ class Timeline extends PureComponent {
         this.props.isPostLoading(true);
         let makeSponsorForm = new FormData();
         makeSponsorForm.append('post_id', postId);
-        makeSponsorForm.append('no_of_people', persons);
-        makeSponsorForm.append('days', day);
-        makeSponsorForm.append('price', amount ? amount : 0);
+
+        if (type === 3) {
+          makeSponsorForm.append('no_of_people', obj.no_of_people);
+          makeSponsorForm.append('price', obj.price);
+          makeSponsorForm.append('transaction_id', obj.transaction_id);
+          makeSponsorForm.append('type', obj.type);
+          makeSponsorForm.append('days', 0);
+        } else {
+          makeSponsorForm.append('no_of_people', persons);
+          makeSponsorForm.append('days', day);
+          makeSponsorForm.append('price', amount ? amount : 0);
+        }
 
         let response = await postAPICall(
           API.makeSponsorPostNew,
           makeSponsorForm,
         );
-        console.log('closePaymentModal response ->', response);
 
         this.props.isPostLoading(false);
         if (response.error) {
@@ -971,8 +983,9 @@ class Timeline extends PureComponent {
           if (response?.data?.user_own_sponser_post) {
             var allPostDetail = allData;
             const postIndex = allPostDetail?.data.findIndex(
-              d => d.id === postId,
+              (d) => d.id === postId,
             );
+
             allPostDetail.data[postIndex].is_sponsored = 1;
             this.props.getPostLocally(allPostDetail);
             this.setState({
@@ -980,9 +993,11 @@ class Timeline extends PureComponent {
               isOwnPost: response?.data?.user_own_sponser_post,
             });
           }
-          setTimeout(() => {
-            this.closePerfectModel();
-          }, 500);
+          // this.closePerfectModel();
+          // setTimeout(() => {
+          //   this.closePerfectModel();
+          //   console.log('4 4 4 4 4====>');
+          // }, 500);
         }
       } catch (error) {
         this.props.isPostLoading(false);
@@ -2045,6 +2060,8 @@ class Timeline extends PureComponent {
           <Sponsor
             isVisible={sponsorModel}
             togglePaymentModal={this.closeSponsorModel}
+            selectedPost={selectedPost}
+            callInappPurchase={this.closePaymentModal}
           />
           {/* <ShareOptions showModel={true} /> */}
           <PaymentModel

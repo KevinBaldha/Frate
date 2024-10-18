@@ -57,7 +57,7 @@ const GroupCard = (props) => {
           </View>
           <View style={styles.bottomView}>
             <TouchableOpacity onPress={() => onPressImage(item, index)}>
-              <GroupImages members={item} />
+              <GroupImages members={item} InteractionsDetails={false} />
             </TouchableOpacity>
           </View>
         </View>

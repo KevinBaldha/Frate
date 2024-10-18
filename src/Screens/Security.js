@@ -150,7 +150,6 @@ const styles = StyleSheet.create({
     height: scale(1),
   },
   switchView: {
-    backgroundColor: 'red',
     width: scale(105),
     height: scale(105),
     borderColor: theme.colors.grey10,

@@ -13,6 +13,8 @@ buildscript {
         googlePlayServicesAuthVersion = "19.2.0"
         firebaseMessagingVersion = "21.1.0"
         firebaseVersion = "17.3.4"
+        androidXAnnotation = "1.1.0"
+        androidXBrowser = "1.0.0"
     }
     repositories {
         google()

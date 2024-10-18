@@ -1,11 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React from 'react';
+import React, {useRef} from 'react';
 import {
   StyleSheet,
   View,
   TextInput,
   Text,
   TouchableOpacity,
+  Platform,
+  Animated,
 } from 'react-native';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import {useFocusEffect} from '@react-navigation/core';
@@ -17,15 +19,101 @@ import {getLocalText} from '../../Locales/I18n';
 import {Label, Button} from '../index';
 import externalStyle from '../../Css';
 import {API, postAPICall} from '../../Utils/appApi';
+import {
+  initConnection,
+  requestPurchase,
+  withIAPContext,
+  getProducts,
+  finishTransaction,
+} from 'react-native-iap';
+
+const isIos = Platform.OS === 'ios';
 
 const Sponsor = (props) => {
   const {isVisible, togglePaymentModal} = props;
   const [info, setInfo] = React.useState(false);
-  const [sliderOneValue, setSliderOneValue] = React.useState([2]);
   const [days, setDays] = React.useState(2);
+  const [sliderOneValue, setSliderOneValue] = React.useState([2]);
   const [people, setPeople] = React.useState(sliderOneValue * 100);
   const [totalAmount, setTotalAmount] = React.useState(0);
   const [usDollarRate, setUSDollarRate] = React.useState(0);
+  const animatedValue = useRef(new Animated.Value(sliderOneValue[0])).current;
+  const [productData, setProductData] = React.useState([]);
+
+  //IN App Purchase===========
+  const dollarAmountToSku = {
+    0.99: 'sponsored_post_100',
+    4.99: 'sponsored_post_500',
+    9.99: 'sponsored_post_1000',
+    14.99: 'sponsored_post_1500',
+    19.99: 'sponsored_post_2000',
+    24.99: 'sponsored_post_2500',
+  };
+
+  const handlePressBuy = async () => {
+    const productIds = Object.values(dollarAmountToSku);
+    // Fetch product information from the app store
+    const connection = await initConnection();
+    console.log('connection', connection);
+
+    const products = await getProducts({skus: productIds});
+    setProductData(products[0]?.productId);
+
+    const dollarAmount = getDollarAmount(sliderOneValue[0]);
+    const sku = dollarAmountToSku[dollarAmount];
+
+    if (sku) {
+      const purchase = await requestPurchase({
+        sku: sku,
+        andDangerouslyFinishTransactionAutomaticallyIOS: false,
+      });
+      if (purchase && purchase.transactionId) {
+        props.callInappPurchase(3, {
+          no_of_people: nearestTitle,
+          days: 0,
+          price: getDollarAmount(sliderOneValue[0]),
+          transaction_id: purchase.transactionId,
+          type: 'in_app',
+        });
+        await finishTransaction({purchase: purchase, isConsumable: true});
+      } else {
+        console.log(
+          'Purchase data is invalid or missing transactionId:',
+          purchase,
+        );
+      }
+    } else {
+      console.error('SKU not found for dollar amount:', dollarAmount);
+    }
+  };
+
+  const pricePoints = [
+    {value: 42, title: '100', dollarAmount: '0.99'},
+    {value: 467, title: '500', dollarAmount: '4.99'},
+    {value: 903, title: '1000', dollarAmount: '9.99'},
+    {value: 1375, title: '1500', dollarAmount: '14.99'},
+    {value: 1838, title: '2000', dollarAmount: '19.99'},
+    {value: 2496, title: '2500', dollarAmount: '24.99'},
+  ];
+
+  const getNearestTitle = (inputValue) => {
+    const nearestPoint = pricePoints.reduce((prev, curr) =>
+      Math.abs(curr.value - inputValue) < Math.abs(prev.value - inputValue)
+        ? curr
+        : prev,
+    );
+    return nearestPoint.title;
+  };
+  const nearestTitle = getNearestTitle(people);
+
+  const getDollarAmount = (value) => {
+    return (
+      pricePoints
+        .slice()
+        .reverse()
+        .find((point) => value >= point.value)?.dollarAmount || '0.99'
+    );
+  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -39,11 +127,28 @@ const Sponsor = (props) => {
     }, [isVisible]),
   );
 
-  const sliderOneValuesChange = async (values) => {
-    await setSliderOneValue(values);
-    await setPeople(values * 100);
+  const animateSliderToValue = (targetValue) => {
+    Animated.timing(animatedValue, {
+      toValue: targetValue,
+      duration: 250, // Adjust the duration as needed
+      useNativeDriver: false,
+    }).start(() => {
+      setSliderOneValue([targetValue]);
+    });
   };
 
+  const sliderOneValuesChangeCallIOS = (values) => {
+    const nearestValue = [42, 467, 903, 1375, 1838, 2496].reduce((prev, curr) =>
+      Math.abs(curr - values[0]) < Math.abs(prev - values[0]) ? curr : prev,
+    );
+    animateSliderToValue(nearestValue);
+  };
+
+  const sliderOneValuesChange = async (values) => {
+    await setSliderOneValue(values);
+    // await setPeople(values * 100);
+    await setPeople(values);
+  };
   const sliderOneValuesChangeCall = async () => {
     await calculateSponsorPostAPI(parseInt(days, 0));
   };
@@ -76,20 +181,8 @@ const Sponsor = (props) => {
     } catch (error) {}
   };
 
-  return (
-    <Modal
-      isVisible={isVisible}
-      animationIn="zoomIn"
-      animationOut="zoomOut"
-      statusBarTranslucent
-      deviceHeight={height}
-      backdropColor={theme.colors.grey11}
-      backdropOpacity={0.9}
-      onBackdropPress={() => {
-        setDays(1);
-        setSliderOneValue([]);
-        togglePaymentModal('close');
-      }}>
+  const renderSponsorAndroid = () => {
+    return (
       <View style={styles.mainContainer}>
         <View style={styles.container}>
           <View style={styles.headerCon}>
@@ -241,7 +334,6 @@ const Sponsor = (props) => {
               />
             </TouchableOpacity>
           </View>
-
           <Button
             title={getLocalText('Sponsor.paybtntxt')}
             style={{marginTop: scale(30)}}
@@ -262,6 +354,116 @@ const Sponsor = (props) => {
           </View>
         ) : null}
       </View>
+    );
+  };
+
+  const renderSponsorIOS = () => {
+    return (
+      <View style={styles.mainContainer}>
+        <View style={styles.container}>
+          <View style={styles.headerCon}>
+            <View style={{flexDirection: 'row'}}>
+              <Icon
+                name="trending-up"
+                size={scale(18)}
+                color={theme.colors.blue}
+              />
+              <Label
+                title={getLocalText('Sponsor.title')}
+                style={{marginLeft: scale(10)}}
+              />
+            </View>
+          </View>
+          <View style={[styles.iosCard, externalStyle.shadow]}>
+            <View style={styles.iosCardCon}>
+              <Text style={styles.iosSubtext}>
+                {getLocalText('Sponsor.subtext')}
+              </Text>
+            </View>
+            <View style={styles.iosSliderView}>
+              <MultiSlider
+                values={sliderOneValue}
+                sliderLength={theme.SCREENWIDTH * 0.7}
+                onValuesChange={sliderOneValuesChange}
+                onValuesChangeFinish={sliderOneValuesChangeCallIOS}
+                markerStyle={{
+                  width: scale(15),
+                  height: scale(15),
+                  backgroundColor: theme.colors.white,
+                }}
+                markerContainerStyle={styles.picker}
+                max={2500}
+                min={1}
+                selectedStyle={{
+                  backgroundColor: theme.colors.grey10,
+                }}
+                unselectedStyle={{
+                  backgroundColor: theme.colors.grey10,
+                }}
+                trackStyle={{
+                  backgroundColor: theme.colors.grey10,
+                  height: scale(0.8),
+                }}
+              />
+              <View style={styles.range}>
+                {pricePoints.map(({value, title}) => (
+                  <Label
+                    key={value}
+                    title={title}
+                    style={
+                      sliderOneValue[0] === value
+                        ? styles.blueLimitTx
+                        : styles.limitTxt
+                    }
+                  />
+                ))}
+              </View>
+            </View>
+          </View>
+          <Button
+            title={
+              getLocalText('Sponsor.payer') +
+              ' $' +
+              getDollarAmount(sliderOneValue[0])
+            }
+            style={{marginTop: scale(30), marginBottom: scale(35)}}
+            onPress={() => {
+              handlePressBuy();
+            }}
+          />
+        </View>
+        {info ? (
+          <View style={styles.popupCon}>
+            <Label
+              style={styles.popuptxt}
+              title={getLocalText('Sponsor.info')}
+            />
+            <View style={styles.divider} />
+
+            <TouchableOpacity onPress={() => setInfo(!info)}>
+              <Icon name="x" size={scale(20)} color={theme.colors.white} />
+            </TouchableOpacity>
+          </View>
+        ) : null}
+      </View>
+    );
+  };
+
+  return (
+    <Modal
+      isVisible={isVisible}
+      animationIn="zoomIn"
+      animationOut="zoomOut"
+      statusBarTranslucent
+      deviceHeight={height}
+      backdropColor={theme.colors.grey11}
+      backdropOpacity={0.9}
+      onBackdropPress={() => {
+        setDays(1);
+        setSliderOneValue([0]);
+        togglePaymentModal('close');
+      }}>
+      {isIos ? renderSponsorIOS() : renderSponsorAndroid()}
     </Modal>
   );
 };
@@ -278,6 +480,12 @@ const styles = StyleSheet.create({
     width: theme.SCREENWIDTH - scale(35),
   },
   sliderView: {alignSelf: 'center', marginTop: scale(5)},
+  iosSliderView: {
+    alignSelf: 'center',
+    backgroundColor: theme.colors.white,
+    borderRadius: scale(12),
+    height: scale(60),
+  },
   headerCon: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -290,6 +498,15 @@ const styles = StyleSheet.create({
     shadowRadius: scale(9),
     marginTop: scale(25),
   },
+  iosCard: {
+    backgroundColor: theme.colors.white,
+    borderRadius: scale(15),
+    padding: scale(15),
+    shadowRadius: scale(9),
+    marginTop: scale(25),
+    minHeight: scale(10),
+    maxHeight: scale(150),
+  },
   numbrtTxt: {
     fontSize: scale(35),
     color: theme.colors.blue,
@@ -301,13 +518,31 @@ const styles = StyleSheet.create({
     color: theme.colors.black,
     marginLeft: scale(15),
   },
+  iosSubtext: {
+    fontFamily: theme.fonts.muktaVaaniLight,
+    fontSize: scale(15),
+    color: theme.colors.black,
+  },
   limitTxt: {
     fontSize: scale(12),
     color: theme.colors.grey10,
   },
+  blueLimitTx: {
+    fontSize: scale(16),
+    color: theme.colors.blue,
+    marginTop: scale(10),
+    fontFamily: theme.fonts.muktaMedium,
+  },
   cardCon: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  iosCardCon: {
+    alignItems: 'center',
+    textAlign: 'center',
+    fontFamily: theme.fonts.muktaRegular,
+    fontSize: scale(16),
+    color: theme.colors.black,
   },
   peopleTxt: {
     fontSize: scale(16),
@@ -386,4 +621,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Sponsor;
+export default withIAPContext(Sponsor);

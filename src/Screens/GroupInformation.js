@@ -915,7 +915,6 @@ const styles = StyleSheet.create({
   },
   image: {width: '100%', height: scale(200), resizeMode: 'stretch'},
   switchView: {
-    backgroundColor: 'red',
     width: scale(105),
     height: scale(105),
     borderColor: theme.colors.grey10,

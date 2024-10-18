@@ -19,6 +19,9 @@ const GroupImages = (props) => {
       <View style={styles.subView}>
         {userImages !== undefined &&
           userImages?.slice(0, 3).map((d, i) => {
+            // console.log('d?.user_pic?.original ->',d?.user_pic?.original);
+  console.log('d?.image?.optimize ->',d?.image?.optimize );
+  // console.log('d?.user_pic?.optimize ->',d?.user_pic?.optimize);
             return (
               <FastImage
                 key={i.toString()}

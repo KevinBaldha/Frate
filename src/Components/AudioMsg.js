@@ -117,9 +117,7 @@ const AudioMsg = props => {
 
   const stepSize = calculateStepSize();
 
-  console.log('stepSize ->');
-  
-
+  console.log('stepSize ->',stepSize);
 
   console.log('formatTime POSITION->', formatTime(position));
   console.log('formatTime DURATION->', formatTime(duration));
