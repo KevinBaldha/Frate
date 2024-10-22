@@ -45,7 +45,9 @@ const ChooseCityPopup = props => {
         </Text>
         <View style={styles.buttonView}>
           <Button
-            onPress={onPressSubmit}
+            onPress={()=>{
+              console.log('HANDLE SIGN UP INSIDE!!!!!');
+              onPressSubmit}}
             title={getLocalText('Information.imsurebtn')}
             style={styles.btn}
             titleStyle={[{color: theme.colors.blue}, styles.txt]}

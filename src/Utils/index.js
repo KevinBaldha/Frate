@@ -19,6 +19,7 @@ import {
   getDuration,
   amPmTime,
 } from './helper';
+import {constants, dollarAmountToSku} from './constants';
 
 export {
   Api,
@@ -38,4 +39,6 @@ export {
   amPmTime,
   height,
   width,
+  constants,
+  dollarAmountToSku,
 };

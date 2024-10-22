@@ -296,7 +296,8 @@
     "sponserSend": "Your sponsorship has been requested. Please wait for confirmation",
     "sponserOwnSend": "You have sponsored your post!",
     "cardUpload": "You don't have a card uploaded",
-    "addCard": "Let's do it!"
+    "addCard": "Let's do it!",
+    "payer": "Payer"
   },
   "Report": {
     "title": "Report the activity",

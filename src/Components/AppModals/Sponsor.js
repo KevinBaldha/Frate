@@ -1,5 +1,8 @@
+/* eslint-disable radix */
+/* eslint-disable no-unused-vars */
+/* eslint-disable eol-last */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {useRef} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -8,13 +11,14 @@ import {
   TouchableOpacity,
   Platform,
   Animated,
+  Alert,
 } from 'react-native';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import {useFocusEffect} from '@react-navigation/core';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Feather';
 import * as RNLocalize from 'react-native-localize';
-import {scale, theme, height} from '../../Utils';
+import {scale, theme, height, constants, dollarAmountToSku} from '../../Utils';
 import {getLocalText} from '../../Locales/I18n';
 import {Label, Button} from '../index';
 import externalStyle from '../../Css';
@@ -25,38 +29,155 @@ import {
   withIAPContext,
   getProducts,
   finishTransaction,
+  flushFailedPurchasesCachedAsPendingAndroid,
+  endConnection,
+  getAvailablePurchases,
+  purchaseUpdatedListener,
+  purchaseErrorListener,
 } from 'react-native-iap';
 
 const isIos = Platform.OS === 'ios';
 
-const Sponsor = (props) => {
+const Sponsor = props => {
   const {isVisible, togglePaymentModal} = props;
-  const [info, setInfo] = React.useState(false);
-  const [days, setDays] = React.useState(2);
-  const [sliderOneValue, setSliderOneValue] = React.useState([2]);
-  const [people, setPeople] = React.useState(sliderOneValue * 100);
-  const [totalAmount, setTotalAmount] = React.useState(0);
-  const [usDollarRate, setUSDollarRate] = React.useState(0);
+  const [info, setInfo] = useState(false);
+  const [days, setDays] = useState(2);
+  const [sliderOneValue, setSliderOneValue] = useState([2]);
+  const [people, setPeople] = useState(sliderOneValue * 100);
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [usDollarRate, setUSDollarRate] = useState(0);
   const animatedValue = useRef(new Animated.Value(sliderOneValue[0])).current;
-  const [productData, setProductData] = React.useState([]);
+  const [productData, setProductData] = useState([]);
+
+  const [products, setProducts] = useState([]);
+  const [isLoading, setLoading] = useState(true);
 
   //IN App Purchase===========
-  const dollarAmountToSku = {
-    0.99: 'sponsored_post_100',
-    4.99: 'sponsored_post_500',
-    9.99: 'sponsored_post_1000',
-    14.99: 'sponsored_post_1500',
-    19.99: 'sponsored_post_2000',
-    24.99: 'sponsored_post_2500',
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        const connection = await initConnection();
+        console.log('Connection initialized:', connection);
+        if (Platform.OS === 'android') {
+          flushFailedPurchasesCachedAsPendingAndroid();
+        }
+      } catch (error) {
+        console.error('Error occurred during initilization', error.message);
+      }
+    };
+
+    init();
+
+    return () => {
+      endConnection();
+    };
+  }, []);
+
+  // console.log('constants ->',constants);
+  // console.log('constants.productSkus[0] ->',constants.productSkus[0]);
+
+  useFocusEffect(
+    useCallback(() => {
+      // setLoading(true);
+      const getPurchase = async () => {
+        console.log('getPurchase !!');
+
+        try {
+          const result = await getAvailablePurchases();
+
+          console.log('getPurchase result ->',result);
+          console.log('constants ->',constants);
+
+          const hasPurchased = result.find(
+            product => product.productId === constants.productSkus[0],
+          );
+          console.log('hasPurchased ->', hasPurchased);
+
+          // setLoading(false);
+          // setPremiumUser(hasPurchased);
+        } catch (error) {
+          console.error('Error occurred while fetching purchases', error);
+        }
+      };
+
+      getPurchase();
+    }, []),
+  );
+
+  useEffect(() => {
+    const purchaseUpdateSubscription = purchaseUpdatedListener(
+      async purchase => {
+        const receipt = purchase.transactionReceipt;
+        console.log('receipt ->',receipt);
+
+        if (receipt) {
+          try {
+            await finishTransaction({purchase, isConsumable: true});
+          } catch (error) {
+            console.error(
+              'An error occurred while completing transaction',
+              error,
+            );
+          }
+          notifySuccessfulPurchase();
+        }
+      },
+    );
+
+    const purchaseErrorSubscription = purchaseErrorListener(error =>
+      console.error('Purchase error', error.message),
+    );
+
+    const fetchProducts = async () => {
+      console.log('FETCH PRODUCTS -!!',await getProducts({skus: constants.productSkus}));
+
+      try {
+        const result = await getProducts({skus: constants.productSkus});
+        console.log('fetchProducts result ->',result);
+
+        setProductData(result);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching products!');
+      }
+    };
+
+    fetchProducts();
+
+    return () => {
+      purchaseUpdateSubscription.remove();
+      purchaseErrorSubscription.remove();
+    };
+  }, []);
+
+  const notifySuccessfulPurchase = () => {
+    Alert.alert('Success', 'Purchase successful!');
   };
 
-  const handlePressBuy = async () => {
+  const handlePurchaseAndroid = async (productId) => {
+    console.log('handlePurchaseAndroid ->',productId);
+    // setPurchaseLoading(true)
+    try {
+      await requestPurchase({skus: [productId && productId]});
+    } catch (error) {
+      console.error('Error occurred while making purchase');
+    } finally {
+      // setLoading(false);
+    }
+  };
+
+  const handlePurchaseIOS = async () => {
+    console.log('handlePurchaseIOS!!');
+
     const productIds = Object.values(dollarAmountToSku);
     // Fetch product information from the app store
     const connection = await initConnection();
     console.log('connection', connection);
 
     const products = await getProducts({skus: productIds});
+    console.log('products ->',products);
+
     setProductData(products[0]?.productId);
 
     const dollarAmount = getDollarAmount(sliderOneValue[0]);
@@ -87,6 +208,8 @@ const Sponsor = (props) => {
     }
   };
 
+  const handlePurchase = (productId)=> isIos ? handlePurchaseIOS() : productId && handlePurchaseAndroid(productId);
+
   const pricePoints = [
     {value: 42, title: '100', dollarAmount: '0.99'},
     {value: 467, title: '500', dollarAmount: '4.99'},
@@ -96,7 +219,7 @@ const Sponsor = (props) => {
     {value: 2496, title: '2500', dollarAmount: '24.99'},
   ];
 
-  const getNearestTitle = (inputValue) => {
+  const getNearestTitle = inputValue => {
     const nearestPoint = pricePoints.reduce((prev, curr) =>
       Math.abs(curr.value - inputValue) < Math.abs(prev.value - inputValue)
         ? curr
@@ -106,12 +229,12 @@ const Sponsor = (props) => {
   };
   const nearestTitle = getNearestTitle(people);
 
-  const getDollarAmount = (value) => {
+  const getDollarAmount = value => {
     return (
       pricePoints
         .slice()
         .reverse()
-        .find((point) => value >= point.value)?.dollarAmount || '0.99'
+        .find(point => value >= point.value)?.dollarAmount || '0.99'
     );
   };
 
@@ -127,7 +250,7 @@ const Sponsor = (props) => {
     }, [isVisible]),
   );
 
-  const animateSliderToValue = (targetValue) => {
+  const animateSliderToValue = targetValue => {
     Animated.timing(animatedValue, {
       toValue: targetValue,
       duration: 250, // Adjust the duration as needed
@@ -137,14 +260,14 @@ const Sponsor = (props) => {
     });
   };
 
-  const sliderOneValuesChangeCallIOS = (values) => {
+  const sliderOneValuesChangeCallIOS = values => {
     const nearestValue = [42, 467, 903, 1375, 1838, 2496].reduce((prev, curr) =>
       Math.abs(curr - values[0]) < Math.abs(prev - values[0]) ? curr : prev,
     );
     animateSliderToValue(nearestValue);
   };
 
-  const sliderOneValuesChange = async (values) => {
+  const sliderOneValuesChange = async values => {
     await setSliderOneValue(values);
     // await setPeople(values * 100);
     await setPeople(values);
@@ -153,7 +276,7 @@ const Sponsor = (props) => {
     await calculateSponsorPostAPI(parseInt(days, 0));
   };
 
-  const setDay = async (i) => {
+  const setDay = async i => {
     if (i > 365) {
       await setDays(2);
       await calculateSponsorPostAPI(2);
@@ -163,7 +286,7 @@ const Sponsor = (props) => {
     }
   };
 
-  const calculateSponsorPostAPI = async (day) => {
+  const calculateSponsorPostAPI = async day => {
     let formdata = new FormData();
     formdata.append('days', day ? day : 1);
     formdata.append('people', people);
@@ -186,7 +309,7 @@ const Sponsor = (props) => {
       <View style={styles.mainContainer}>
         <View style={styles.container}>
           <View style={styles.headerCon}>
-            <View style={{flexDirection: 'row'}}>
+            <View style={styles.flexRow}>
               <Icon
                 name="trending-up"
                 size={scale(18)}
@@ -264,7 +387,7 @@ const Sponsor = (props) => {
               <TextInput
                 value={days.toString()}
                 maxLength={3}
-                onChangeText={(txt) => setDay(txt)}
+                onChangeText={txt => setDay(txt)}
                 placeholderTextColor={theme.colors.grey10}
                 style={styles.textinput}
                 onSubmitEditing={() => {
@@ -362,7 +485,7 @@ const Sponsor = (props) => {
       <View style={styles.mainContainer}>
         <View style={styles.container}>
           <View style={styles.headerCon}>
-            <View style={{flexDirection: 'row'}}>
+            <View style={styles.flexRow}>
               <Icon
                 name="trending-up"
                 size={scale(18)}
@@ -427,9 +550,7 @@ const Sponsor = (props) => {
               getDollarAmount(sliderOneValue[0])
             }
             style={{marginTop: scale(30), marginBottom: scale(35)}}
-            onPress={() => {
-              handlePressBuy();
-            }}
+            onPress={() => handlePurchase()}
           />
         </View>
         {info ? (
@@ -463,7 +584,8 @@ const Sponsor = (props) => {
         setSliderOneValue([0]);
         togglePaymentModal('close');
       }}>
-      {isIos ? renderSponsorIOS() : renderSponsorAndroid()}
+      {renderSponsorIOS()}
+      {/* {isIos ? renderSponsorIOS() : renderSponsorAndroid()} */}
     </Modal>
   );
 };
@@ -619,6 +741,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: scale(10),
   },
+  flexRow: {flexDirection: 'row'},
 });
 
 export default withIAPContext(Sponsor);

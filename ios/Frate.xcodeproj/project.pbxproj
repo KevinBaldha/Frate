@@ -20,7 +20,8 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A0232CC422074F3F97145818 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1103E7DE0B2D497BA625C891 /* Rubik-Regular.ttf */; };
 		A976FC5FC69F485D9F1E8941 /* MuktaVaani-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4F769046FBC94C078EF33B2F /* MuktaVaani-ExtraBold.ttf */; };
-		B31A8ED22CAD46DE00FA2C85 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B31A8ED12CAD46DE00FA2C85 /* GoogleService-Info.plist */; };
+		B35D54802CC788D600D59EB3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B35D547F2CC788D600D59EB3 /* GoogleService-Info.plist */; };
+		B35D54832CC7A3A200D59EB3 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35D54822CC7A3A200D59EB3 /* File.swift */; };
 		B3F9A4752CC26CC000107DC0 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3F9A4742CC26CC000107DC0 /* StoreKit.framework */; };
 		BDBC3AF5194D4C0DAA72AD83 /* Mukta-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 19EAE8A8ED93425EABF450D6 /* Mukta-SemiBold.ttf */; };
 		C30DA5E7B1CF4944BB395C83 /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FAD0BD8345C540AAB89A254E /* Roboto-Bold.ttf */; };
@@ -77,7 +78,11 @@
 		A35D06227BBF4B4AA1B52913 /* Rubik-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Medium.ttf"; path = "../assets/fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; };
 		A69EB51FB3FA441283EC8DD3 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = ../assets/fonts/FontAwesome5_Solid.ttf; sourceTree = "<group>"; };
 		AD556649E97C456BAD5E043B /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = ../assets/fonts/AntDesign.ttf; sourceTree = "<group>"; };
-		B31A8ED12CAD46DE00FA2C85 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Frate/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B35D547F2CC788D600D59EB3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B35D54812CC7A3A200D59EB3 /* Frate-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Frate-Bridging-Header.h"; sourceTree = "<group>"; };
+		B35D54822CC7A3A200D59EB3 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
+		B35D54842CC7A69500D59EB3 /* Frate.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Frate.entitlements; path = Frate/Frate.entitlements; sourceTree = "<group>"; };
+		B35D548D2CC7AFCE00D59EB3 /* FrateDebug.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; name = FrateDebug.entitlements; path = Frate/FrateDebug.entitlements; sourceTree = "<group>"; };
 		B3F9A4742CC26CC000107DC0 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		BA88ABE37A76F5449C30DD0B /* Pods_Frate.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Frate.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6FFBA173A16421792993A72 /* Rubik-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-SemiBold.ttf"; path = "../assets/fonts/Rubik-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -134,6 +139,8 @@
 		13B07FAE1A68108700A75B9A /* Frate */ = {
 			isa = PBXGroup;
 			children = (
+				B35D548D2CC7AFCE00D59EB3 /* FrateDebug.entitlements */,
+				B35D54842CC7A69500D59EB3 /* Frate.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -142,6 +149,8 @@
 				13B07FB71A68108700A75B9A /* main.m */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
 				E3B810A8E5AE33C0CCA79238 /* PrivacyInfo.xcprivacy */,
+				B35D54822CC7A3A200D59EB3 /* File.swift */,
+				B35D54812CC7A3A200D59EB3 /* Frate-Bridging-Header.h */,
 			);
 			name = Frate;
 			sourceTree = "<group>";
@@ -167,7 +176,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				B31A8ED12CAD46DE00FA2C85 /* GoogleService-Info.plist */,
+				B35D547F2CC788D600D59EB3 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* Frate */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* FrateTests */,
@@ -272,6 +281,7 @@
 				74B8073A211B418C02309F4A /* [CP] Embed Pods Frameworks */,
 				FD1029D76DF5A92D34A92A1D /* [CP] Copy Pods Resources */,
 				4F22DA1667C5AABF0B972954 /* [CP-User] [RNFB] Core Configuration */,
+				B3DC3BD52CC7BD53006AE3D5 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -295,7 +305,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1540;
 					};
 				};
 			};
@@ -306,6 +316,49 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
+				he,
+				ar,
+				el,
+				ja,
+				uk,
+				es_MX,
+				zh_CN,
+				nb,
+				es,
+				pt_BR,
+				da,
+				it,
+				sk,
+				pt_PT,
+				ms,
+				sv,
+				cs,
+				ko,
+				hu,
+				tr,
+				pl,
+				zh_TW,
+				en_GB,
+				vi,
+				ru,
+				fr_CA,
+				fr,
+				fi,
+				id,
+				nl,
+				th,
+				pt,
+				ro,
+				hr,
+				hi,
+				ca,
+				"zh-Hans",
+				fa,
+				"zh-Hant",
+				"fa-IR",
+				"da-DK",
+				"pt-BR",
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
@@ -341,7 +394,7 @@
 				2A1FE4678ECD4A7A9B8BD083 /* MuktaVaani-Light.ttf in Resources */,
 				47AC0473FE7946F8B3E9AD01 /* MuktaVaani-SemiBold.ttf in Resources */,
 				C30DA5E7B1CF4944BB395C83 /* Roboto-Bold.ttf in Resources */,
-				B31A8ED22CAD46DE00FA2C85 /* GoogleService-Info.plist in Resources */,
+				B35D54802CC788D600D59EB3 /* GoogleService-Info.plist in Resources */,
 				1912EBEA879A4346A6A6975A /* Rubik-Light.ttf in Resources */,
 				0EA8885F72F5490CA9EFFE60 /* Rubik-Medium.ttf in Resources */,
 				A0232CC422074F3F97145818 /* Rubik-Regular.ttf in Resources */,
@@ -454,6 +507,23 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Frate-FrateTests/Pods-Frate-FrateTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		B3DC3BD52CC7BD53006AE3D5 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
+		};
 		D55732DE179BFB4690A23DD1 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -509,6 +579,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
+				B35D54832CC7A3A200D59EB3 /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -528,6 +599,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 3E735D1FAC59DC14FC9C4F1F /* Pods-Frate-FrateTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -555,6 +627,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 16B96F0A7E42652C5E999A0F /* Pods-Frate-FrateTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = FrateTests/Info.plist;
@@ -581,12 +654,167 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Frate/Frate.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = H8YQQ5FYBC;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pods/hermes-engine/destroot/Library/Frameworks/macosx",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AppAuth/AppAuth.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/BVLinearGradient/BVLinearGradient.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DoubleConversion/DoubleConversion.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore/FirebaseCore.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreExtension/FirebaseCoreExtension.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreInternal/FirebaseCoreInternal.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseDynamicLinks/FirebaseDynamicLinks.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstallations/FirebaseInstallations.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseMessaging/FirebaseMessaging.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMAppAuth/GTMAppAuth.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransport/GoogleDataTransport.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleSignIn/GoogleSignIn.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities/GoogleUtilities.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/KTVCocoaHTTPServer/KTVCocoaHTTPServer.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/KTVHTTPCache/KTVHTTPCache.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC/FBLPromises.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RCT-Folly/folly.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RCTDeprecation/RCTDeprecation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RCTTypeSafety/RCTTypeSafety.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNAppleAuthentication/RNAppleAuthentication.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNAudio/RNAudio.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNAudioRecorderPlayer/RNAudioRecorderPlayer.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNCAsyncStorage/RNCAsyncStorage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNCClipboard/RNCClipboard.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNCMaskedView/RNCMaskedView.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNCPushNotificationIOS/RNCPushNotificationIOS.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNDeviceInfo/RNDeviceInfo.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNFBApp/RNFBApp.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNFBDynamicLinks/RNFBDynamicLinks.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNFBMessaging/RNFBMessaging.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNFS/RNFS.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNFastImage/RNFastImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNGestureHandler/RNGestureHandler.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNGoogleSignin/RNGoogleSignin.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNI18n/RNI18n.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNIap/RNIap.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNImageCropPicker/RNImageCropPicker.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNLocalize/RNLocalize.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNPDF/RNPDF.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNPermissions/RNPermissions.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNReanimated/RNReanimated.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNSVG/RNSVG.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNScreens/RNScreens.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNShare/RNShare.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNSound/RNSound.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNVectorIcons/RNVectorIcons.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-CoreModules/CoreModules.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-FabricComponents/React_FabricComponents.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-FabricImage/React_FabricImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-ImageManager/React_ImageManager.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-Mapbuffer/React_Mapbuffer.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-NativeModulesApple/React_NativeModulesApple.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTAnimation/RCTAnimation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTAppDelegate/React_RCTAppDelegate.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTBlob/RCTBlob.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTFabric/RCTFabric.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTImage/RCTImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTLinking/RCTLinking.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTNetwork/RCTNetwork.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTSettings/RCTSettings.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTText/RCTText.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTVibration/RCTVibration.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RuntimeApple/React_RuntimeApple.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RuntimeCore/React_RuntimeCore.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RuntimeHermes/React_RuntimeHermes.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/cxxreact.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-debug/React_debug.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-defaultsnativemodule/React_defaultsnativemodule.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-domnativemodule/React_domnativemodule.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-featureflags/React_featureflags.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-featureflagsnativemodule/React_featureflagsnativemodule.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-hermes/reacthermes.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-idlecallbacksnativemodule/idlecallbacksnativemodule.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jserrorhandler/React_jserrorhandler.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsi/jsi.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsiexecutor/jsireact.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsinspector/jsinspector_modern.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-logger/logger.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-microtasksnativemodule/React_microtasksnativemodule.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-nativeconfig/React_nativeconfig.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-perflogger/reactperflogger.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-performancetimeline/React_performancetimeline.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-rendererconsistency/React_rendererconsistency.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-rendererdebug/React_rendererdebug.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-runtimescheduler/React_runtimescheduler.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-utils/React_utils.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ReactCodegen/ReactCodegen.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ReactNativeIncallManager/ReactNativeIncallManager.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImageWebPCoder/SDWebImageWebPCoder.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SocketRocket/SocketRocket.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftAudioEx/SwiftAudioEx.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/TOCropViewController/TOCropViewController.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Toast/Toast.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Yoga/yoga.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/fmt/fmt.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/glog/glog.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/libwebp/libwebp.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb/nanopb.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-camera/react_native_camera.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-cameraroll/react_native_cameraroll.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-date-picker/react_native_date_picker.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-document-picker/react_native_document_picker.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-fbsdk-next/react_native_fbsdk_next.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-image-resizer/react_native_image_resizer.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-netinfo/react_native_netinfo.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-pager-view/react_native_pager_view.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-pinchable/react_native_pinchable.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-safe-area-context/react_native_safe_area_context.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-simple-toast/react_native_simple_toast.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-slider/react_native_slider.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-splash-screen/react_native_splash_screen.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-track-player/react_native_track_player.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-video-cache/react_native_video_cache.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-video/react_native_video.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-webrtc/react_native_webrtc.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/rn-fetch-blob/rn_fetch_blob.framework/Headers\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/FBLazyVector\"",
+					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTRequired\"",
+					"\"${PODS_ROOT}/Headers/Public/React-callinvoker\"",
+					"\"${PODS_ROOT}/Headers/Public/React-runtimeexecutor\"",
+					"\"${PODS_ROOT}/Headers/Public/boost\"",
+					"\"${PODS_ROOT}/Headers/Public/hermes-engine\"",
+					"\"$(PODS_ROOT)/DoubleConversion\"",
+					"$(inherited)",
+					"${PODS_ROOT}/Firebase/CoreOnly/Sources",
+					"\"$(PODS_ROOT)/boost\"",
+					"\"$(PODS_ROOT)/boost\"",
+					"\"$(PODS_ROOT)/boost-for-react-native\"",
+					"\"$(PODS_ROOT)/glog\"",
+					"\"$(PODS_ROOT)/RCT-Folly\"",
+					"\"$(PODS_ROOT)/Headers/Public/React-hermes\"",
+					"\"$(PODS_ROOT)/Headers/Public/hermes-engine\"",
+					"\"$(PODS_ROOT)/../../node_modules/react-native/ReactCommon\"",
+					"\"$(PODS_ROOT)/../../node_modules/react-native-reanimated/apple\"",
+					"\"$(PODS_ROOT)/../../node_modules/react-native-reanimated/Common/cpp\"",
+					"\"$(PODS_ROOT)/Headers/Private/React-Core\"",
+				);
 				INFOPLIST_FILE = Frate/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Frate;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -601,6 +829,7 @@
 				PRODUCT_NAME = Frate;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Frate_development;
+				SWIFT_OBJC_BRIDGING_HEADER = "Frate-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -613,11 +842,166 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Frate/Frate.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = H8YQQ5FYBC;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pods/hermes-engine/destroot/Library/Frameworks/macosx",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/AppAuth/AppAuth.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/BVLinearGradient/BVLinearGradient.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/DoubleConversion/DoubleConversion.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCore/FirebaseCore.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreExtension/FirebaseCoreExtension.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseCoreInternal/FirebaseCoreInternal.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseDynamicLinks/FirebaseDynamicLinks.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseInstallations/FirebaseInstallations.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/FirebaseMessaging/FirebaseMessaging.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMAppAuth/GTMAppAuth.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleDataTransport/GoogleDataTransport.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleSignIn/GoogleSignIn.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/GoogleUtilities/GoogleUtilities.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/KTVCocoaHTTPServer/KTVCocoaHTTPServer.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/KTVHTTPCache/KTVHTTPCache.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/PromisesObjC/FBLPromises.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RCT-Folly/folly.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RCTDeprecation/RCTDeprecation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RCTTypeSafety/RCTTypeSafety.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNAppleAuthentication/RNAppleAuthentication.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNAudio/RNAudio.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNAudioRecorderPlayer/RNAudioRecorderPlayer.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNCAsyncStorage/RNCAsyncStorage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNCClipboard/RNCClipboard.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNCMaskedView/RNCMaskedView.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNCPushNotificationIOS/RNCPushNotificationIOS.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNDeviceInfo/RNDeviceInfo.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNFBApp/RNFBApp.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNFBDynamicLinks/RNFBDynamicLinks.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNFBMessaging/RNFBMessaging.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNFS/RNFS.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNFastImage/RNFastImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNGestureHandler/RNGestureHandler.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNGoogleSignin/RNGoogleSignin.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNI18n/RNI18n.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNIap/RNIap.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNImageCropPicker/RNImageCropPicker.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNLocalize/RNLocalize.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNPDF/RNPDF.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNPermissions/RNPermissions.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNReanimated/RNReanimated.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNSVG/RNSVG.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNScreens/RNScreens.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNShare/RNShare.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNSound/RNSound.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/RNVectorIcons/RNVectorIcons.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-Core/React.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-CoreModules/CoreModules.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-Fabric/React_Fabric.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-FabricComponents/React_FabricComponents.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-FabricImage/React_FabricImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-ImageManager/React_ImageManager.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-Mapbuffer/React_Mapbuffer.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-NativeModulesApple/React_NativeModulesApple.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTAnimation/RCTAnimation.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTAppDelegate/React_RCTAppDelegate.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTBlob/RCTBlob.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTFabric/RCTFabric.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTImage/RCTImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTLinking/RCTLinking.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTNetwork/RCTNetwork.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTSettings/RCTSettings.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTText/RCTText.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RCTVibration/RCTVibration.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RuntimeApple/React_RuntimeApple.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RuntimeCore/React_RuntimeCore.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-RuntimeHermes/React_RuntimeHermes.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-cxxreact/cxxreact.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-debug/React_debug.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-defaultsnativemodule/React_defaultsnativemodule.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-domnativemodule/React_domnativemodule.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-featureflags/React_featureflags.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-featureflagsnativemodule/React_featureflagsnativemodule.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-graphics/React_graphics.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-hermes/reacthermes.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-idlecallbacksnativemodule/idlecallbacksnativemodule.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jserrorhandler/React_jserrorhandler.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsi/jsi.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsiexecutor/jsireact.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-jsinspector/jsinspector_modern.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-logger/logger.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-microtasksnativemodule/React_microtasksnativemodule.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-nativeconfig/React_nativeconfig.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-perflogger/reactperflogger.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-performancetimeline/React_performancetimeline.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-rendererconsistency/React_rendererconsistency.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-rendererdebug/React_rendererdebug.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-runtimescheduler/React_runtimescheduler.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/React-utils/React_utils.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ReactCodegen/ReactCodegen.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/ReactNativeIncallManager/ReactNativeIncallManager.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImageWebPCoder/SDWebImageWebPCoder.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SocketRocket/SocketRocket.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/SwiftAudioEx/SwiftAudioEx.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/TOCropViewController/TOCropViewController.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Toast/Toast.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Yoga/yoga.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/fmt/fmt.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/glog/glog.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/libwebp/libwebp.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/nanopb/nanopb.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-camera/react_native_camera.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-cameraroll/react_native_cameraroll.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-date-picker/react_native_date_picker.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-document-picker/react_native_document_picker.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-fbsdk-next/react_native_fbsdk_next.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-image-resizer/react_native_image_resizer.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-netinfo/react_native_netinfo.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-pager-view/react_native_pager_view.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-pinchable/react_native_pinchable.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-safe-area-context/react_native_safe_area_context.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-simple-toast/react_native_simple_toast.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-slider/react_native_slider.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-splash-screen/react_native_splash_screen.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-track-player/react_native_track_player.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-video-cache/react_native_video_cache.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-video/react_native_video.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/react-native-webrtc/react_native_webrtc.framework/Headers\"",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/rn-fetch-blob/rn_fetch_blob.framework/Headers\"",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/FBLazyVector\"",
+					"\"${PODS_ROOT}/Headers/Public/Firebase\"",
+					"\"${PODS_ROOT}/Headers/Public/RCTRequired\"",
+					"\"${PODS_ROOT}/Headers/Public/React-callinvoker\"",
+					"\"${PODS_ROOT}/Headers/Public/React-runtimeexecutor\"",
+					"\"${PODS_ROOT}/Headers/Public/boost\"",
+					"\"${PODS_ROOT}/Headers/Public/hermes-engine\"",
+					"\"$(PODS_ROOT)/DoubleConversion\"",
+					"$(inherited)",
+					"${PODS_ROOT}/Firebase/CoreOnly/Sources",
+					"\"$(PODS_ROOT)/boost\"",
+					"\"$(PODS_ROOT)/boost\"",
+					"\"$(PODS_ROOT)/boost-for-react-native\"",
+					"\"$(PODS_ROOT)/glog\"",
+					"\"$(PODS_ROOT)/RCT-Folly\"",
+					"\"$(PODS_ROOT)/Headers/Public/React-hermes\"",
+					"\"$(PODS_ROOT)/Headers/Public/hermes-engine\"",
+					"\"$(PODS_ROOT)/../../node_modules/react-native/ReactCommon\"",
+					"\"$(PODS_ROOT)/../../node_modules/react-native-reanimated/apple\"",
+					"\"$(PODS_ROOT)/../../node_modules/react-native-reanimated/Common/cpp\"",
+					"\"$(PODS_ROOT)/Headers/Private/React-Core\"",
+				);
 				INFOPLIST_FILE = Frate/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Frate;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -632,6 +1016,7 @@
 				PRODUCT_NAME = Frate;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Frate_development;
+				SWIFT_OBJC_BRIDGING_HEADER = "Frate-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

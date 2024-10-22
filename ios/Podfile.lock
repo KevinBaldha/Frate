@@ -25,15 +25,15 @@ PODS:
     - FBSDKCoreKit (= 17.3.0)
   - FBSDKShareKit (17.3.0):
     - FBSDKCoreKit (= 17.3.0)
-  - Firebase/CoreOnly (11.2.0):
-    - FirebaseCore (= 11.2.0)
-  - Firebase/DynamicLinks (11.2.0):
+  - Firebase/CoreOnly (11.3.0):
+    - FirebaseCore (= 11.3.0)
+  - Firebase/DynamicLinks (11.3.0):
     - Firebase/CoreOnly
-    - FirebaseDynamicLinks (~> 11.2.0)
-  - Firebase/Messaging (11.2.0):
+    - FirebaseDynamicLinks (~> 11.3.0)
+  - Firebase/Messaging (11.3.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 11.2.0)
-  - FirebaseCore (11.2.0):
+    - FirebaseMessaging (~> 11.3.0)
+  - FirebaseCore (11.3.0):
     - FirebaseCoreInternal (~> 11.0)
     - GoogleUtilities/Environment (~> 8.0)
     - GoogleUtilities/Logger (~> 8.0)
@@ -41,14 +41,14 @@ PODS:
     - FirebaseCore (~> 11.0)
   - FirebaseCoreInternal (11.3.0):
     - "GoogleUtilities/NSData+zlib (~> 8.0)"
-  - FirebaseDynamicLinks (11.2.0):
+  - FirebaseDynamicLinks (11.3.0):
     - FirebaseCore (~> 11.0)
   - FirebaseInstallations (11.3.0):
     - FirebaseCore (~> 11.0)
     - GoogleUtilities/Environment (~> 8.0)
     - GoogleUtilities/UserDefaults (~> 8.0)
     - PromisesObjC (~> 2.4)
-  - FirebaseMessaging (11.2.0):
+  - FirebaseMessaging (11.3.0):
     - FirebaseCore (~> 11.0)
     - FirebaseInstallations (~> 11.0)
     - GoogleDataTransport (~> 10.0)
@@ -1772,17 +1772,17 @@ PODS:
     - React-Core
     - SDWebImage (~> 5.11.1)
     - SDWebImageWebPCoder (~> 0.8.4)
-  - RNFBApp (21.0.0):
-    - Firebase/CoreOnly (= 11.2.0)
+  - RNFBApp (21.2.0):
+    - Firebase/CoreOnly (<= 11.4.0)
     - React-Core
-  - RNFBDynamicLinks (21.0.0):
-    - Firebase/DynamicLinks (= 11.2.0)
+  - RNFBDynamicLinks (21.2.0):
+    - Firebase/DynamicLinks (<= 11.4.0)
     - GoogleUtilities/AppDelegateSwizzler
     - React-Core
     - RNFBApp
-  - RNFBMessaging (21.0.0):
-    - Firebase/Messaging (= 11.2.0)
-    - FirebaseCoreExtension
+  - RNFBMessaging (21.2.0):
+    - Firebase/Messaging (<= 11.4.0)
+    - FirebaseCoreExtension (<= 11.4.0)
     - React-Core
     - RNFBApp
   - RNFS (2.20.0):
@@ -1830,7 +1830,7 @@ PODS:
     - React
   - RNPermissions (4.1.5):
     - React-Core
-  - RNReanimated (3.16.0):
+  - RNReanimated (3.16.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1850,10 +1850,10 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated (= 3.16.0)
-    - RNReanimated/worklets (= 3.16.0)
+    - RNReanimated/reanimated (= 3.16.1)
+    - RNReanimated/worklets (= 3.16.1)
     - Yoga
-  - RNReanimated/reanimated (3.16.0):
+  - RNReanimated/reanimated (3.16.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1873,9 +1873,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNReanimated/reanimated/apple (= 3.16.0)
+    - RNReanimated/reanimated/apple (= 3.16.1)
     - Yoga
-  - RNReanimated/reanimated/apple (3.16.0):
+  - RNReanimated/reanimated/apple (3.16.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1896,7 +1896,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNReanimated/worklets (3.16.0):
+  - RNReanimated/worklets (3.16.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2385,13 +2385,13 @@ SPEC CHECKSUMS:
   FBSDKGamingServicesKit: c9cb7317649310a4211796166c255122b7513480
   FBSDKLoginKit: ad0d6485feace32d65f407f6a288c4dfa8ec559c
   FBSDKShareKit: e96f20fc2f6f68d25ae310a0f64f147f25ef66a4
-  Firebase: 98e6bf5278170668a7983e12971a66b2cd57fc8c
-  FirebaseCore: a282032ae9295c795714ded2ec9c522fc237f8da
+  Firebase: 5c575140761e22324806f401e38c483d58db2dec
+  FirebaseCore: 8542de610f35f86196ba26cdb2544565a5157c8e
   FirebaseCoreExtension: 30bb063476ef66cd46925243d64ad8b2c8ac3264
   FirebaseCoreInternal: ac26d09a70c730e497936430af4e60fb0c68ec4e
-  FirebaseDynamicLinks: 4fa5589f3d0c59b00235025a36690edf97559409
+  FirebaseDynamicLinks: f370f4f98f12d595f815cfb518c8c235cc0a132c
   FirebaseInstallations: 58cf94dabf1e2bb2fa87725a9be5c2249171cda0
-  FirebaseMessaging: c9ec7b90c399c7a6100297e9d16f8a27fc7f7152
+  FirebaseMessaging: ed3f874c733f1d20e32b82a3428f6a9f01ef9270
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
   glog: 69ef571f3de08433d766d614c73a9838a06bf7eb
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
@@ -2490,9 +2490,9 @@ SPEC CHECKSUMS:
   RNCPushNotificationIOS: 64218f3c776c03d7408284a819b2abfda1834bc8
   RNDeviceInfo: e13b7d68878fba693c9fbb13ca4d56ad57d95917
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
-  RNFBApp: 4122dd41d8d7ff017b6ecf777a6224f5b349ca04
-  RNFBDynamicLinks: c4e3eb01697e4444f2c4a4391787a81eb4fe4e02
-  RNFBMessaging: 32d4c1aa872c72b8efa13f922e3ae375fba465ef
+  RNFBApp: 91c5eba32f43787a66f4c00cf7625f472cd3e0fb
+  RNFBDynamicLinks: 4c116e74b6d6bc768713c83d184ee473f717e2b2
+  RNFBMessaging: a45ffab6c9de1942b8ed351896f6304b349d1eea
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: b1bde7ef45d1472a8145a143efc097df8a9173a4
   RNGoogleSignin: 9e68b9bcc3888219357924e32ee563624745647d
@@ -2502,7 +2502,7 @@ SPEC CHECKSUMS:
   RNLocalize: 4f22418187ecd5ca693231093ff1d912d1b3c9bc
   RNPDF: 8526c7210ff375c29d2461c51945e2f5480f7b60
   RNPermissions: 5b96247c15864f9d89d7f51eeb0f2b736a2b212d
-  RNReanimated: c8a3f8b5d3e861f55bdddfc4858f45a29017e1be
+  RNReanimated: 131b50b14a60d02cd023c42c9a8fc486deeaf6d5
   RNScreens: de55b9d7de8a017d1588dcb70415492d0b0597c2
   RNShare: f1f2fc67c9032793f4203deffa611cb6c3c4c059
   RNSound: 6c156f925295bdc83e8e422e7d8b38d33bc71852

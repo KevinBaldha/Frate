@@ -296,7 +296,8 @@
     "sponserSend": "Votre demande de sponsorisation a été faite. Veuillez attendre la confirmation",
     "sponserOwnSend": "Vous avez sponsorisé votre publication !",
     "cardUpload": "Vous n'avez pas téléchargé de carte.",
-    "addCard": "Faisons-le!"
+    "addCard": "Faisons-le!",
+    "payer": "Payeur"
   },
   "Report": {
     "title": "Reporter l’activité",
