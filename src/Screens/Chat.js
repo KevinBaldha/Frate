@@ -2206,7 +2206,6 @@ class Chat extends Component {
             style={[
               // styles.list,
               {
-                flex: 1 ,
                 height:
                   this.state.singleChatId === '1'
                     ? listHeight
@@ -2232,7 +2231,6 @@ class Chat extends Component {
                   ? theme.SCREENHEIGHT / 3
                   : scale(0),
                 paddingBottom: this.state.keybordStatus ? scale(0) : scale(20),
-              flexGrow: 1, // Allow FlatList to grow and keep scrolling
               },
             ]}
             showsVerticalScrollIndicator={false}
