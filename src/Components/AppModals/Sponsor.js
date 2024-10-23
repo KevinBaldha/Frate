@@ -88,6 +88,7 @@ const Sponsor = props => {
 
           console.log('getPurchase result ->',result);
           console.log('constants ->',constants);
+          console.log('constants.productSkus[0] ->',constants.productSkus[0]);
 
           const hasPurchased = result.find(
             product => product.productId === constants.productSkus[0],

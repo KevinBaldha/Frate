@@ -171,5 +171,7 @@
 	<string>YES</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+  <key>NSLocalNetworkUsageDescription</key>
+  <string>This app requires access to devices on your local network.</string>
 </dict>
 </plist>

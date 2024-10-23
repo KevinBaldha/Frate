@@ -749,13 +749,15 @@ class Timeline extends PureComponent {
         type: [DocumentPicker.types.pdf],
       });
 
+      const response = Platform.OS === 'ios' ? res : res?.[0];
+
       this.setState({
         attachImages: [
           ...this.state.attachImages,
           {
-            pdf: res?.[0]?.uri,
-            type: Platform.OS === 'ios' ? 'application/pdf' : res?.[0]?.type,
-            name: res?.[0]?.name,
+            pdf: response?.uri,
+            type: Platform.OS === 'ios' ? 'application/pdf' : response?.type,
+            name: response?.name,
           },
         ],
       });

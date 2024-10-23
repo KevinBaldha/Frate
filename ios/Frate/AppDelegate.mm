@@ -68,13 +68,15 @@
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
   
-  bool didFinish=[super application:application didFinishLaunchingWithOptions:launchOptions];
-  
+  //  bool didFinish=[super application:application didFinishLaunchingWithOptions:launchOptions];
+
+  // Show splash screen
   [RNSplashScreen show];
   
+  // FBSDK initialization
   [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
   
-  return didFinish;
+  return YES;
 }
 
 //Called when a notification is delivered to a foreground app.
@@ -114,11 +116,6 @@
                     restorationHandler:restorationHandler];
 }
 
-- (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
-{
-  return [self bundleURL];
-}
-
 - (NSURL *)bundleURL
 {
 #if DEBUG
@@ -126,6 +123,11 @@
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
+}
+
+- (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
+{
+  return [self bundleURL];
 }
 
 // Required for the register event.

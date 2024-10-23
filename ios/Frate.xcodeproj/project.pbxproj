@@ -20,6 +20,7 @@
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		A0232CC422074F3F97145818 /* Rubik-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1103E7DE0B2D497BA625C891 /* Rubik-Regular.ttf */; };
 		A976FC5FC69F485D9F1E8941 /* MuktaVaani-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4F769046FBC94C078EF33B2F /* MuktaVaani-ExtraBold.ttf */; };
+		B30DE9E72CC8C20B00036D5E /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = B30DE9E62CC8C20B00036D5E /* main.jsbundle */; };
 		B35D54802CC788D600D59EB3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B35D547F2CC788D600D59EB3 /* GoogleService-Info.plist */; };
 		B35D54832CC7A3A200D59EB3 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35D54822CC7A3A200D59EB3 /* File.swift */; };
 		B3F9A4752CC26CC000107DC0 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B3F9A4742CC26CC000107DC0 /* StoreKit.framework */; };
@@ -78,6 +79,7 @@
 		A35D06227BBF4B4AA1B52913 /* Rubik-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Rubik-Medium.ttf"; path = "../assets/fonts/Rubik-Medium.ttf"; sourceTree = "<group>"; };
 		A69EB51FB3FA441283EC8DD3 /* FontAwesome5_Solid.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Solid.ttf; path = ../assets/fonts/FontAwesome5_Solid.ttf; sourceTree = "<group>"; };
 		AD556649E97C456BAD5E043B /* AntDesign.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = AntDesign.ttf; path = ../assets/fonts/AntDesign.ttf; sourceTree = "<group>"; };
+		B30DE9E62CC8C20B00036D5E /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		B35D547F2CC788D600D59EB3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B35D54812CC7A3A200D59EB3 /* Frate-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Frate-Bridging-Header.h"; sourceTree = "<group>"; };
 		B35D54822CC7A3A200D59EB3 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
@@ -139,6 +141,7 @@
 		13B07FAE1A68108700A75B9A /* Frate */ = {
 			isa = PBXGroup;
 			children = (
+				B30DE9E62CC8C20B00036D5E /* main.jsbundle */,
 				B35D548D2CC7AFCE00D59EB3 /* FrateDebug.entitlements */,
 				B35D54842CC7A69500D59EB3 /* Frate.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -393,6 +396,7 @@
 				A976FC5FC69F485D9F1E8941 /* MuktaVaani-ExtraBold.ttf in Resources */,
 				2A1FE4678ECD4A7A9B8BD083 /* MuktaVaani-Light.ttf in Resources */,
 				47AC0473FE7946F8B3E9AD01 /* MuktaVaani-SemiBold.ttf in Resources */,
+				B30DE9E72CC8C20B00036D5E /* main.jsbundle in Resources */,
 				C30DA5E7B1CF4944BB395C83 /* Roboto-Bold.ttf in Resources */,
 				B35D54802CC788D600D59EB3 /* GoogleService-Info.plist in Resources */,
 				1912EBEA879A4346A6A6975A /* Rubik-Light.ttf in Resources */,
@@ -1106,10 +1110,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -1193,10 +1194,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
