@@ -68,5 +68,6 @@ export {default as BlockMsgModal} from './AppModals/BlockMsgModal';
 export {default as AudioModel} from './AppModals/AudioModel';
 export {default as ResetPasswordModel} from './ResetPasswordModel';
 export {default as ChooseCityPopup} from './AppModals/ChooseCityPopup';
+export {default as DeleteAccountModel} from './AppModals/DeleteAccount';
 
 export {RadioButton, CheckBox, Button, CustomButton, Label, Title, Error};

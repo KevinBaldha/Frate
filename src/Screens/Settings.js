@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
 import {connect} from 'react-redux';
 import {
+  DeleteAccountModel,
   ScreenContainer,
   Label,
   SearchBar,
@@ -26,6 +27,7 @@ class Settings extends Component {
     super(props);
     this.apiService = new Api();
     this.state = {
+      isDeleteAccount: false,
       searchText: '',
       searchModel: false,
       options: [
@@ -54,7 +56,7 @@ class Settings extends Component {
       searchFoucs: false,
     };
   }
-  handleOption = (navProps) => {
+  handleOption = navProps => {
     this.props.navigation.navigate(navProps);
   };
 
@@ -63,9 +65,9 @@ class Settings extends Component {
       await this.googlesignOut();
       await this.logOut();
       const keys = await AsyncStorage.getAllKeys();
-      var newKeys = keys.filter((item) => item !== 'fcmToken');
+      var newKeys = keys.filter(item => item !== 'fcmToken');
       this.props.logout();
-      newKeys.map((item) => {
+      newKeys.map(item => {
         AsyncStorage.removeItem(item);
       });
       await postAPICall(API.logOut);
@@ -168,11 +170,23 @@ class Settings extends Component {
           </View>
           <Label title={`${getLocalText('Settings.signOut')}`} />
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => this.setState({isDeleteAccount: true})}
+          style={styles.btncontainer1}>
+          <View style={styles.profile}>
+            <Icon name="trash-2" size={scale(17)} color={theme.colors.blue} />
+          </View>
+          <Label title={`${getLocalText('Settings.deleteAccount')}`} />
+        </TouchableOpacity>
         <View style={styles.versionContainer}>
           <Label title={`V.${DeviceInfo.getBuildNumber()}.22.7`} />
         </View>
 
         <OfflineModel />
+        <DeleteAccountModel
+          isVisible={this.state.isDeleteAccount}
+          close={() => this.setState({isDeleteAccount: false})}
+        />
         <SearchModel isVisible={searchModel} closeSearch={this.searchClose} />
       </ScreenContainer>
     );
@@ -218,6 +232,14 @@ const styles = StyleSheet.create({
     marginLeft: scale(18),
     marginTop: scale(20),
     position: 'absolute',
+    bottom: scale(70),
+  },
+  btncontainer1: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: scale(18),
+    marginTop: scale(20),
+    position: 'absolute',
     bottom: scale(35),
   },
   profile: {
@@ -230,7 +252,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const loginstatus = state.AppReducer.login;
   const userDatas = state.UserInfo.data;
   const userToken = state.UserInfo.userToken;
