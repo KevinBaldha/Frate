@@ -1658,6 +1658,8 @@ class Timeline extends PureComponent {
   };
 
   onViewableItemsChanged = async ({viewableItems, changed}) => {
+    console.log('onViewableItemsChanged....');
+    
     try {
       if (viewableItems.length !== 0) {
         let frmData = new FormData();
@@ -1665,7 +1667,8 @@ class Timeline extends PureComponent {
           frmData.append('post_id[]', element?.item?.id);
         });
 
-        await postAPICall(API.getStoreUserLog, frmData);
+       const response = await postAPICall(API.getStoreUserLog, frmData);
+       console.log('onViewableItemsChanged response ->',response);
       }
     } catch (error) {}
   };

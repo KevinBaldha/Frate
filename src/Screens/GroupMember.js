@@ -3,7 +3,6 @@ import {
   View,
   FlatList,
   StyleSheet,
-  ScrollView,
   TouchableOpacity,
   SectionList,
   ActivityIndicator,
@@ -529,7 +528,7 @@ class GroupMember extends Component {
     if (this.state.groupUserList) {
       if (this.state.currentPage <= this.state.totalPage && !loadMembersData) {
         let page = this.state.currentPage + 1;
-        if (page < this.state.totalPage) {
+        if (page < this.state.totalPage || page === this.state.totalPage) {
           this.setState({loadmoreMembers: true});
           loadMembersData = true;
           let membersRes = await getAPICall(
@@ -638,7 +637,7 @@ class GroupMember extends Component {
           subHeader={
             singleChatId !== '1' && (
               <GroupImages
-                groupImagesView={{marginLeft: scale(55), top: scale(-5)}}
+                groupImagesView={{marginLeft: scale(55), marginTop: scale(2)}}
                 members={groupsDetails}
               />
             )
@@ -652,7 +651,7 @@ class GroupMember extends Component {
           navigateScreen={() => {}}
         />
 
-        <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
+        <View style={styles.scroll} >
           {selectedTab === 0 ? (
             <View>
               {singleChatId !== '1' && (
@@ -669,14 +668,14 @@ class GroupMember extends Component {
                     <Loader loading={this.state.loadding} />
                   ) : (
                     <FlatList
-                      scrollEnabled={false}
+                      // scrollEnabled={false}
                       data={groupUserList === undefined ? '' : groupUserList}
                       extraData={this.state}
                       keyExtractor={(_, index) => index.toString()}
                       renderItem={this.renderPeoples}
                       contentContainerStyle={{
                         paddingHorizontal: scale(23),
-                        paddingBottom: scale(10),
+                        paddingBottom: scale(130),
                       }}
                       // style={{height: theme.SCREENHEIGHT * 0.45}}
                       nestedScrollEnabled
@@ -770,7 +769,7 @@ class GroupMember extends Component {
               )}
             </View>
           ) : null}
-        </ScrollView>
+        </View>
         <FullMediaModel
           isShow={this.state.fullScreenMedia}
           closeModel={this.handleClose}

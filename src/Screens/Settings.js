@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import FastImage from 'react-native-fast-image';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import {LoginManager} from 'react-native-fbsdk-next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
+import Toast from 'react-native-simple-toast';
 import {connect} from 'react-redux';
 import {
   DeleteAccountModel,
@@ -15,11 +16,12 @@ import {
   BackgroundChunk,
   SearchModel,
   OfflineModel,
+  Loader,
 } from '../Components';
 import {scale, theme, Api, images} from '../Utils';
 import {getLocalText} from '../Locales/I18n';
 import {isLogin, logout, userData} from '../Redux/Actions';
-import {API, postAPICall} from '../Utils/appApi';
+import {API, deleteAPICall, postAPICall} from '../Utils/appApi';
 import {checkValidUrl} from '../Utils/helper';
 
 class Settings extends Component {
@@ -28,6 +30,7 @@ class Settings extends Component {
     this.apiService = new Api();
     this.state = {
       isDeleteAccount: false,
+      loading:false,
       searchText: '',
       searchModel: false,
       options: [
@@ -56,9 +59,7 @@ class Settings extends Component {
       searchFoucs: false,
     };
   }
-  handleOption = navProps => {
-    this.props.navigation.navigate(navProps);
-  };
+  handleOption = (navProps) => this.props.navigation.navigate(navProps);
 
   clearAsyncStorage = async () => {
     try {
@@ -93,12 +94,36 @@ class Settings extends Component {
   }
 
   //close search model
-  searchClose = () => {
-    this.setState({searchModel: !this.state.searchModel});
-  };
+  searchClose = () => this.setState({searchModel: !this.state.searchModel});
 
-  notificationPress = async () => {
-    this.props.navigation.navigate('Notification');
+  notificationPress = async () => this.props.navigation.navigate('Notification');
+
+  onConfirmAccountDeletion=async()=>{
+    this.setState({isDeleteAccount: false});
+    this.setState({loading:true});
+
+      const userId = this.props?.userDatas?.id;
+
+      try {
+        let deleteUser = await deleteAPICall(API.user + userId);
+
+        if (deleteUser.success) {
+          this.props.isLogin(false);
+          this.props.logout();
+          this.apiService.setToken('');
+          this.clearAsyncStorage();
+          this.setState({loading:false});
+          Toast.show('Your account has been successfully deleted!', Toast.SHORT);
+          // Toast.show(deleteUser.message, Toast.SHORT);
+          this.props.navigation.replace('Login');
+        } else {
+          this.setState({loading:false});
+          Alert.alert(deleteUser.errorMsg.message);
+        }
+      } catch (error) {
+        this.setState({loading:false});
+        Alert.alert(error);
+      }
   };
 
   render() {
@@ -186,8 +211,11 @@ class Settings extends Component {
         <DeleteAccountModel
           isVisible={this.state.isDeleteAccount}
           close={() => this.setState({isDeleteAccount: false})}
+          onDeleteAccount={()=>this.onConfirmAccountDeletion()}
         />
         <SearchModel isVisible={searchModel} closeSearch={this.searchClose} />
+
+        <Loader loading={this.state.loading} />
       </ScreenContainer>
     );
   }

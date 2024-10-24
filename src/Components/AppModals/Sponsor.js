@@ -131,13 +131,17 @@ const Sponsor = props => {
     );
 
     const fetchProducts = async () => {
-      console.log('FETCH PRODUCTS -!!',await getProducts({skus: constants.productSkus}));
+      console.log('FETCH PRODUCTS -!!');
 
       try {
+        const connection = await initConnection();
+        console.log('connection ->', connection);
+        console.log('constants.productSkus ->', constants.productSkus);
         const result = await getProducts({skus: constants.productSkus});
-        console.log('fetchProducts result ->',result);
+        // const products = await getProducts({skus: ['point_1000']});
+        console.log('fetchProducts result ->',products);
 
-        setProductData(result);
+        // setProductData(result);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching products!');
@@ -157,10 +161,11 @@ const Sponsor = props => {
   };
 
   const handlePurchaseAndroid = async (productId) => {
+    console.log('handlePurchaseAndroid!!');
     console.log('handlePurchaseAndroid ->',productId);
     // setPurchaseLoading(true)
     try {
-      await requestPurchase({skus: [productId && productId]});
+      await requestPurchase({skus: ['point_1000']});
     } catch (error) {
       console.error('Error occurred while making purchase');
     } finally {
@@ -209,7 +214,10 @@ const Sponsor = props => {
     }
   };
 
-  const handlePurchase = (productId)=> isIos ? handlePurchaseIOS() : productId && handlePurchaseAndroid(productId);
+  const handlePurchase = (productId)=> {
+    console.log('handlePurchase...!',productId);
+    isIos ? handlePurchaseIOS() : productId && handlePurchaseAndroid(productId);
+  };
 
   const pricePoints = [
     {value: 42, title: '100', dollarAmount: '0.99'},

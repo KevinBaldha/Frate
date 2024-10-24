@@ -189,16 +189,12 @@ class Signup4 extends Component {
 
   //Signup User
   handleSignup = async () => {
-    console.log('HANDLE SIGN UP!!!!!');
-    
     let fcm = '';
     if (this.state.fcmToken === null || !this.state.fcmToken) {
       fcm = await messaging().getToken();
     } else {
       fcm = await this.state.fcmToken;
     }
-
-    console.log('fcm ->',fcm);
 
     this.setState({cityPopup: !this.state.cityPopup});
     if (this.state.selectedId) {

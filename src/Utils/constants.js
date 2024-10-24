@@ -12,8 +12,7 @@ export const dollarAmountToSku = {
 };
 
 const productSkus = Platform.select({
-  android: ['android.test.purchased'],
-  ios: ['app.frate'],
+  android: ['elog_monthly'],  //  point_1000  //  elog_monthly
 });
 
 export const constants = {

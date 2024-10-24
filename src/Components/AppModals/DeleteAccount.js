@@ -7,8 +7,8 @@ import {Label} from '../index';
 import externalStyle from '../../Css';
 import {getLocalText} from '../../Locales/I18n';
 
-const DeleteAccountModel = props => {
-  const {isVisible, close} = props;
+const DeleteAccountModel = (props) => {
+  const {isVisible, close,onDeleteAccount} = props;
   return (
     <Modal
       isVisible={isVisible}
@@ -37,7 +37,8 @@ const DeleteAccountModel = props => {
             <TouchableOpacity
               style={styles.yesBtn}
               onPress={() => {
-                close(1);
+                close();
+                onDeleteAccount();
               }}>
               <Label
                 title={getLocalText('Settings.yesDeleteAccount')}

@@ -47,6 +47,9 @@ export default class Statistics extends Component {
   getStatics = async () => {
     let postId = this.props.route.params.data?.id;
     let staticsResponse = await getAPICall(API.getPostStatics + postId);
+    console.log('dataValue ->', staticsResponse.data);
+    console.log('dataValue?.user_reach_count ->', staticsResponse.data?.user_reach_count);
+    
     if (staticsResponse.success) {
       let dataValue = staticsResponse.data;
       let countData = [
@@ -78,6 +81,8 @@ export default class Statistics extends Component {
       this.setState({visitor: VisitorArray});
       let stackedData = [];
       let xAxisList = [];
+      console.log('dataValue.total_views_of_post_per_day ->',dataValue.total_views_of_post_per_day);
+      
 
       dataValue.total_views_of_post_per_day.map(value => {
         stackedData.push({
@@ -111,6 +116,8 @@ export default class Statistics extends Component {
 
   render() {
     const {options, visitor, stackedData} = this.state;
+    console.log('stackedData ->',stackedData);
+    
     const totalCount =
       visitor[0]?.count + visitor[1]?.count + visitor[2]?.count;
     const maleCount =
