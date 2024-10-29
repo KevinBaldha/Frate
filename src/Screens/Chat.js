@@ -218,7 +218,9 @@ class Chat extends Component {
       if (nextAppState === 'active') {
         this.appState.current = AppState.currentState;
         this.callInitialize();
-      } else if (nextAppState === 'background') {
+      }else if(nextAppState === 'active' && !this.peer){
+        this.initSoket();
+      }else if (nextAppState === 'background') {
         this.appState.current = AppState.currentState;
         this.clearData();
         this.setState({lastessageId: 0});
@@ -421,7 +423,7 @@ class Chat extends Component {
       debug: 3,
     });
 
-    peer.on('error', () => {});
+    peer.on('error', (_err) => {});
     this.socketConnect = io.connect(soketUrl, {
       // transports: ['websocket'],
     });
@@ -958,10 +960,11 @@ class Chat extends Component {
         allowMultiSelection: true,
       });
 
+      const resp = Platform.OS === 'ios' ? res : res[0];
       var fileObj = {
-        name: res.name,
-        type: res.type,
-        uri: res.uri,
+        name: resp.name,
+        type: resp.type,
+        uri: resp.uri,
       };
 
       const body = new FormData();
@@ -991,15 +994,15 @@ class Chat extends Component {
               'x-chunk-number': 1,
               'x-chunk-total-number': 1,
               // 'x-chunk-size': res.size,
-              'x-file-name': res.name,
-              'x-file-size': res.size,
+              'x-file-name': resp.name,
+              'x-file-size': resp.size,
               'x-file-identity': new Date().getTime(),
               'x-file-audio_duration': '',
-              'x-file-type': res.type,
+              'x-file-type': resp.type,
             },
           },
         )
-        .then(response => {
+        .then((response) => {
           openAttachment = false;
           switch (response.status) {
             case 200:
@@ -1048,12 +1051,11 @@ class Chat extends Component {
   upload(file, next, retry, unlink) {
     const body = new FormData();
     body.append('file', file.blob); // param name  //chat_id
-
     body.append(
       this.state.singleChatId === '1' ? 'chat_id' : 'room_id',
       this.state.singleChatId === '1'
-        ? this?.props?.route?.params?.data?.id
-        : this.props.route.params?.roomId,
+      ? this?.props?.route?.params?.data?.id
+      : this.props.route.params?.roomId,
     );
     body.append('user_id', this.state.loginUserData?.id);
     body.append('name', this.state.loginUserData?.first_name);

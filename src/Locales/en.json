@@ -155,7 +155,9 @@
     "delete": "Delete Post",
     "searchfor": "Search for",
     "Copy": "Copier",
-    "yourCon": "Your conversation"
+    "yourCon": "Your conversation",
+    "requestAlreadySent":"Your request is already sent",
+    "alreadySponsoredPost":"You have already sponsored this post"
   },
   "Groups": {
     "categories": "Categories",

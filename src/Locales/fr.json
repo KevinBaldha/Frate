@@ -155,7 +155,9 @@
     "delete": "Supprimer la publication",
     "searchfor": "Rechercher",
     "Copy": "Copier",
-    "yourCon": "Votre conversation"
+    "yourCon": "Votre conversation",
+    "requestAlreadySent":"Votre demande a déjà été envoyée",
+    "alreadySponsoredPost":"Vous avez déjà parrainé cet article"
   },
   "Groups": {
     "categories": "Catégories",

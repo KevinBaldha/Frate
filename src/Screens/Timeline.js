@@ -124,6 +124,7 @@ class Timeline extends PureComponent {
       ],
       paymentModel: false,
       perfectModel: false,
+      perfectModel2: false,
       isOwnPost: false,
       reportModel: false,
       reportDetails: false,
@@ -166,6 +167,7 @@ class Timeline extends PureComponent {
       postCommentView: false,
       lastPostId: 0,
       commentedIndex: -1,
+      isSponsoredByLoggedInUser: '',
     };
     this._keyboardDidShow = this._keyboardDidShow.bind(this);
     this._keyboardDidHide = this._keyboardDidHide.bind(this);
@@ -836,10 +838,32 @@ class Timeline extends PureComponent {
     this.setState({selectedPost: data});
     this.postOptionClose();
     if (index === -1) {
-      this.setState({
-        loading: true,
-        sponsorModel: !this.state.sponsorModel,
-      });
+      switch (data?.is_sponsored_by_loggedin_user) {
+        case 0:
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              perfectModel2: !prevState.perfectModel2,
+              isSponsoredByLoggedInUser: data?.is_sponsored_by_loggedin_user,
+            };
+          });
+          break;
+        case 1:
+          await this.setState((prevState) => {
+            return {
+              ...prevState,
+              perfectModel2: !prevState.perfectModel2,
+              isSponsoredByLoggedInUser: data?.is_sponsored_by_loggedin_user,
+            };
+          });
+          break;
+        case '':
+          this.setState({
+            loading: true,
+            sponsorModel: !this.state.sponsorModel,
+          });
+          break;
+      }
       await this.getAllPaymentCards();
     } else if (index === 0) {
       this.handleSavePost(item);
@@ -1075,11 +1099,24 @@ class Timeline extends PureComponent {
       };
     });
   };
+  closePerfectModel2 = async () => {
+    await this.setState((prevState) => {
+      return {
+        ...prevState,
+        perfectModel2: !prevState.perfectModel2,
+      };
+    });
+  };
 
   handlePerfectModal = async () => {
     const {navigation} = this.props;
     navigation.navigate('Sponsor');
     this.closePerfectModel();
+  };
+  handlePerfectModal2 = async () => {
+    // const {navigation} = this.props;
+    // navigation.navigate('Sponsor');
+    this.closePerfectModel2();
   };
 
   //post like emoji
@@ -1727,6 +1764,7 @@ class Timeline extends PureComponent {
       postLikeOption,
       paymentCardData,
       perfectModel,
+      perfectModel2,
       isOwnPost,
       exitGroupModel,
       postDeleteModel,
@@ -1749,6 +1787,7 @@ class Timeline extends PureComponent {
       shareOptionsModel,
       bodyColor,
       mediaOption,
+      isSponsoredByLoggedInUser,
     } = this.state;
     const {
       notificationBell,
@@ -2080,6 +2119,13 @@ class Timeline extends PureComponent {
             close={this.closePerfectModel}
             onRedirect={this.handlePerfectModal}
             isOwnPost={isOwnPost}
+          />
+
+          <PerfectModel
+            isVisible={perfectModel2}
+            close={this.closePerfectModel2}
+            onRedirect={this.handlePerfectModal2}
+            isSponsoredByLoggedInUser={isSponsoredByLoggedInUser}
           />
 
           <ConfirmationModel

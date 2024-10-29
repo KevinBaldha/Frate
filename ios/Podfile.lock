@@ -1766,7 +1766,7 @@ PODS:
     - React-Core
   - RNCPushNotificationIOS (1.11.0):
     - React-Core
-  - RNDeviceInfo (13.1.0):
+  - RNDeviceInfo (13.2.0):
     - React-Core
   - RNFastImage (8.6.3):
     - React-Core
@@ -1787,7 +1787,7 @@ PODS:
     - RNFBApp
   - RNFS (2.20.0):
     - React-Core
-  - RNGestureHandler (2.20.0):
+  - RNGestureHandler (2.20.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1917,7 +1917,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.34.0):
+  - RNScreens (3.34.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2488,13 +2488,13 @@ SPEC CHECKSUMS:
   RNCClipboard: 5e503962f0719ace8f7fdfe9c60282b526305c85
   RNCMaskedView: 090213d32d8b3bb83a4dcb7d12c18f0152591906
   RNCPushNotificationIOS: 64218f3c776c03d7408284a819b2abfda1834bc8
-  RNDeviceInfo: e13b7d68878fba693c9fbb13ca4d56ad57d95917
+  RNDeviceInfo: 29e01d5ae94bdb5a0f6c11a4c438132545b4df80
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFBApp: 91c5eba32f43787a66f4c00cf7625f472cd3e0fb
   RNFBDynamicLinks: 4c116e74b6d6bc768713c83d184ee473f717e2b2
   RNFBMessaging: a45ffab6c9de1942b8ed351896f6304b349d1eea
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
-  RNGestureHandler: b1bde7ef45d1472a8145a143efc097df8a9173a4
+  RNGestureHandler: 4b397b156d173028ff97960b5ebacfbb21232081
   RNGoogleSignin: 9e68b9bcc3888219357924e32ee563624745647d
   RNI18n: e2f7e76389fcc6e84f2c8733ea89b92502351fd8
   RNIap: 782dfc372068823e73d0c3d70e95a08f6b652971
@@ -2503,7 +2503,7 @@ SPEC CHECKSUMS:
   RNPDF: 8526c7210ff375c29d2461c51945e2f5480f7b60
   RNPermissions: 5b96247c15864f9d89d7f51eeb0f2b736a2b212d
   RNReanimated: 131b50b14a60d02cd023c42c9a8fc486deeaf6d5
-  RNScreens: de55b9d7de8a017d1588dcb70415492d0b0597c2
+  RNScreens: d050c427f0305f449924d9370fdaa7342e5c2012
   RNShare: f1f2fc67c9032793f4203deffa611cb6c3c4c059
   RNSound: 6c156f925295bdc83e8e422e7d8b38d33bc71852
   RNSVG: 8b1a777d54096b8c2a0fd38fc9d5a454332bbb4d

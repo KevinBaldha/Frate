@@ -8,7 +8,7 @@ import externalStyle from '../../Css';
 import {getLocalText} from '../../Locales/I18n';
 
 const PerfectModel = (props) => {
-  const {isVisible, close, isOwnPost, onRedirect} = props;
+  const {isVisible, close, isOwnPost, onRedirect, isSponsoredByLoggedInUser} = props;
 
   return (
     <Modal
@@ -34,11 +34,22 @@ const PerfectModel = (props) => {
             onPress={() => {
               onRedirect();
             }}>
-            <Text style={styles.txt1}>
-              {isOwnPost
-                ? getLocalText('Sponsor.sponserOwnSend')
-                : getLocalText('Sponsor.sponserSend')}
-            </Text>
+             {isOwnPost && (
+              <Text style={styles.txt1}>
+                {isOwnPost
+                  ? getLocalText('Sponsor.sponserOwnSend')
+                  : getLocalText('Sponsor.sponserSend')}
+              </Text>
+            )}
+            {isSponsoredByLoggedInUser !== '' && (
+              <Text style={styles.txt1}>
+                {isSponsoredByLoggedInUser === 0
+                  ? getLocalText('Timeline.requestAlreadySent')
+                  : isSponsoredByLoggedInUser === 1
+                  ? getLocalText('Timeline.alreadySponsoredPost')
+                  : getLocalText('Sponsor.sponserSend')}
+              </Text>
+            )}
           </TouchableOpacity>
 
           <TouchableOpacity

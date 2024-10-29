@@ -180,12 +180,13 @@ const Comment = props => {
           <Title title={getLocalText('Post.noComment')} />
         </View>
       ) : (
+        //  slice(0, 2).
         <View
           style={{
             padding: scale(20),
           }}>
           {comments &&
-            comments.slice(0, 2).map((d, i) => {
+            comments.map((d, i) => {
               return (
                 <View key={i}>
                   <View style={[styles.replayCon]}>

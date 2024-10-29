@@ -35,6 +35,7 @@ import {
   purchaseUpdatedListener,
   purchaseErrorListener,
 } from 'react-native-iap';
+import {dollarAmountToSkuAndroid} from '../../Utils/constants';
 
 const isIos = Platform.OS === 'ios';
 
@@ -50,7 +51,7 @@ const Sponsor = props => {
   const [productData, setProductData] = useState([]);
 
   const [products, setProducts] = useState([]);
-  const [isLoading, setLoading] = useState(true);
+  const [isLoading, setLoading] = useState(false);
 
   //IN App Purchase===========
 
@@ -58,9 +59,17 @@ const Sponsor = props => {
     const init = async () => {
       try {
         const connection = await initConnection();
-        console.log('Connection initialized:', connection);
+
         if (Platform.OS === 'android') {
-          flushFailedPurchasesCachedAsPendingAndroid();
+          const isFlushSuccessful =
+            flushFailedPurchasesCachedAsPendingAndroid();
+          if (!isFlushSuccessful) {
+            console.log('No failed purchases cached as pending.');
+          } else {
+            console.log(
+              'Failed purchases cached as pending flushed successfully.',
+            );
+          }
         }
       } catch (error) {
         console.error('Error occurred during initilization', error.message);
@@ -69,36 +78,19 @@ const Sponsor = props => {
 
     init();
 
-    return () => {
-      endConnection();
-    };
+    return () => endConnection();
   }, []);
-
-  // console.log('constants ->',constants);
-  // console.log('constants.productSkus[0] ->',constants.productSkus[0]);
 
   useFocusEffect(
     useCallback(() => {
-      // setLoading(true);
       const getPurchase = async () => {
-        console.log('getPurchase !!');
-
         try {
-          const result = await getAvailablePurchases();
-
-          console.log('getPurchase result ->',result);
-          console.log('constants ->',constants);
-          console.log('constants.productSkus[0] ->',constants.productSkus[0]);
-
-          const hasPurchased = result.find(
-            product => product.productId === constants.productSkus[0],
+          const availablePurchases = await getAvailablePurchases();
+          const hasPurchased = await availablePurchases?.some?.(purchase =>
+            constants.productSkus.includes(purchase.productId),
           );
-          console.log('hasPurchased ->', hasPurchased);
-
-          // setLoading(false);
-          // setPremiumUser(hasPurchased);
         } catch (error) {
-          console.error('Error occurred while fetching purchases', error);
+          console.error('Purchase fetching error:', error.message);
         }
       };
 
@@ -109,82 +101,79 @@ const Sponsor = props => {
   useEffect(() => {
     const purchaseUpdateSubscription = purchaseUpdatedListener(
       async purchase => {
-        const receipt = purchase.transactionReceipt;
-        console.log('receipt ->',receipt);
-
-        if (receipt) {
-          try {
-            await finishTransaction({purchase, isConsumable: true});
-          } catch (error) {
-            console.error(
-              'An error occurred while completing transaction',
-              error,
-            );
-          }
-          notifySuccessfulPurchase();
-        }
+        if (purchase.transactionReceipt) {
+                  const transactionRes = await finishTransaction({
+                    purchase: purchase,
+                    isConsumable: true,
+                  });
+                  if(transactionRes?.code !== 'OK'){
+                      Alert.alert(`${transactionRes?.message}`);
+                  }
+            };
       },
     );
 
     const purchaseErrorSubscription = purchaseErrorListener(error =>
-      console.error('Purchase error', error.message),
+      console.error('Purchase error:', error.message),
     );
 
     const fetchProducts = async () => {
-      console.log('FETCH PRODUCTS -!!');
-
       try {
-        const connection = await initConnection();
-        console.log('connection ->', connection);
-        console.log('constants.productSkus ->', constants.productSkus);
-        const result = await getProducts({skus: constants.productSkus});
-        // const products = await getProducts({skus: ['point_1000']});
-        console.log('fetchProducts result ->',products);
-
-        // setProductData(result);
-        setLoading(false);
+        const productResult = await getProducts({skus: constants.productSkus});
       } catch (error) {
-        console.error('Error fetching products!');
+        console.error('Error fetching products:', error.message);
       }
     };
 
     fetchProducts();
 
     return () => {
-      purchaseUpdateSubscription.remove();
-      purchaseErrorSubscription.remove();
+      purchaseUpdateSubscription?.remove();
+      purchaseErrorSubscription?.remove();
     };
   }, []);
 
-  const notifySuccessfulPurchase = () => {
-    Alert.alert('Success', 'Purchase successful!');
-  };
+  const handlePurchaseAndroid = async sku => {
+    const skuExists = products.some(product => product.productId === sku);
+    if (skuExists) {
+      try {
+        try {
+          const purchase = await requestPurchase({
+            skus: [sku],
+          });
 
-  const handlePurchaseAndroid = async (productId) => {
-    console.log('handlePurchaseAndroid!!');
-    console.log('handlePurchaseAndroid ->',productId);
-    // setPurchaseLoading(true)
-    try {
-      await requestPurchase({skus: ['point_1000']});
-    } catch (error) {
-      console.error('Error occurred while making purchase');
-    } finally {
-      // setLoading(false);
+          if (purchase?.[0] && purchase?.[0]?.transactionId) {
+            props.callInappPurchase?.(3, {
+              no_of_people: nearestTitle,
+              days: 0,
+              price: getDollarAmount(sliderOneValue[0]),
+              transaction_id: purchase?.[0]?.transactionId,
+              type: 'in_app',
+            });
+          } else {
+            console.log(
+              'Purchase data is invalid or missing transactionId:',
+              purchase?.[0],
+            );
+          }
+        } catch (e) {
+          console.log('handlePurchaseAndroid error ->', e);
+        }
+      } catch (error) {
+        console.error('Error occurred while making purchase ->', error);
+      } finally {
+      }
     }
   };
 
   const handlePurchaseIOS = async () => {
-    console.log('handlePurchaseIOS!!');
-
     const productIds = Object.values(dollarAmountToSku);
     // Fetch product information from the app store
     const connection = await initConnection();
-    console.log('connection', connection);
 
-    const products = await getProducts({skus: productIds});
-    console.log('products ->',products);
+    const productsList = await getProducts({skus: productIds});
 
-    setProductData(products[0]?.productId);
+    setProductData(productsList[0]?.productId);
 
     const dollarAmount = getDollarAmount(sliderOneValue[0]);
     const sku = dollarAmountToSku[dollarAmount];
@@ -214,9 +203,13 @@ const Sponsor = props => {
     }
   };
 
-  const handlePurchase = (productId)=> {
-    console.log('handlePurchase...!',productId);
-    isIos ? handlePurchaseIOS() : productId && handlePurchaseAndroid(productId);
+  const handlePurchase = () => {
+    const dollarAmount = getDollarAmount(sliderOneValue?.[0]);
+    const dollarAmountSKU = isIos
+      ? dollarAmountToSku
+      : dollarAmountToSkuAndroid;
+    const sku = dollarAmountSKU?.[dollarAmount];
+    isIos ? handlePurchaseIOS() : handlePurchaseAndroid(sku);
   };
 
   const pricePoints = [
@@ -275,7 +268,6 @@ const Sponsor = props => {
     );
     animateSliderToValue(nearestValue);
   };
-
   const sliderOneValuesChange = async values => {
     await setSliderOneValue(values);
     // await setPeople(values * 100);
@@ -311,182 +303,6 @@ const Sponsor = props => {
       setTotalAmount(total);
       return total;
     } catch (error) {}
-  };
-
-  const renderSponsorAndroid = () => {
-    return (
-      <View style={styles.mainContainer}>
-        <View style={styles.container}>
-          <View style={styles.headerCon}>
-            <View style={styles.flexRow}>
-              <Icon
-                name="trending-up"
-                size={scale(18)}
-                color={theme.colors.blue}
-              />
-              <Label
-                title={getLocalText('Sponsor.title')}
-                style={{marginLeft: scale(10)}}
-              />
-            </View>
-
-            <TouchableOpacity
-              onPress={() => {
-                togglePaymentModal('close');
-              }}>
-              <Icon name="x" size={scale(22)} color={theme.colors.blue} />
-            </TouchableOpacity>
-          </View>
-          <View style={[styles.card, externalStyle.shadow]}>
-            <View style={styles.cardCon}>
-              <Label title={'1.'} style={styles.numbrtTxt} />
-              <Text style={styles.subtxt}>
-                {getLocalText('Sponsor.subtext')}
-              </Text>
-            </View>
-            <View style={styles.sliderView}>
-              <MultiSlider
-                values={sliderOneValue}
-                sliderLength={theme.SCREENWIDTH * 0.7}
-                onValuesChange={sliderOneValuesChange}
-                onValuesChangeFinish={sliderOneValuesChangeCall}
-                markerStyle={{
-                  width: scale(11),
-                  height: scale(11),
-                  backgroundColor: theme.colors.white,
-                }}
-                markerContainerStyle={styles.picker}
-                max={50}
-                min={1}
-                selectedStyle={{
-                  backgroundColor: theme.colors.grey10,
-                }}
-                unselectedStyle={{
-                  backgroundColor: theme.colors.grey10,
-                }}
-                trackStyle={{
-                  backgroundColor: theme.colors.grey10,
-                  height: scale(0.8),
-                }}
-              />
-
-              <View style={styles.range}>
-                <Label title={'100'} style={styles.limitTxt} />
-                <Label title={'5000'} style={styles.limitTxt} />
-              </View>
-              <Label
-                title={people + ' ' + getLocalText('Sponsor.people')}
-                style={[styles.peopleTxt]}
-              />
-            </View>
-          </View>
-          <View
-            style={[
-              styles.card,
-              externalStyle.shadow,
-              {shadowRadius: scale(9), marginTop: scale(25)},
-            ]}>
-            <View style={styles.cardCon}>
-              <Label title={'2.'} style={styles.numbrtTxt} />
-              <Text style={styles.subtxt}>
-                {getLocalText('Sponsor.secondtxt')}
-              </Text>
-            </View>
-            <View style={styles.inputContainer}>
-              <TextInput
-                value={days.toString()}
-                maxLength={3}
-                onChangeText={txt => setDay(txt)}
-                placeholderTextColor={theme.colors.grey10}
-                style={styles.textinput}
-                onSubmitEditing={() => {
-                  if (!days) {
-                    setDay('2');
-                  }
-                }}
-                keyboardType="number-pad"
-                returnKeyType={'done'}
-              />
-              <Label
-                title={
-                  days <= 1
-                    ? getLocalText('Sponsor.day')
-                    : getLocalText('Sponsor.days')
-                }
-                style={{color: theme.colors.blue, fontSize: scale(15)}}
-              />
-            </View>
-            <Label
-              title={`${getLocalText('Sponsor.minmum')} & ${getLocalText(
-                'Sponsor.maximum',
-              )} ${getLocalText('Sponsor.days')}`}
-              style={styles.mintxt}
-            />
-          </View>
-
-          <Text style={styles.pricetxt}>
-            {`Est. en ${RNLocalize.getCountry() === 'CA' ? 'CA' : 'USD'}$`}
-            <Text
-              style={{
-                fontSize: scale(32),
-                color: theme.colors.blue,
-                fontFamily: theme.fonts.muktaVaaniExtraBold,
-              }}>
-              {usDollarRate}
-              <Text
-                style={{
-                  fontSize: scale(16),
-                  fontFamily: theme.fonts.muktaBold,
-                }}>
-                {`/${getLocalText('Sponsor.day')}`}
-              </Text>
-            </Text>
-          </Text>
-
-          <View style={styles.infoView}>
-            <Label
-              title={`Total en ${
-                RNLocalize.getCountry() === 'CA' ? 'CA' : 'USD'
-              }$ ${totalAmount}`}
-              style={[
-                styles.pricetxt,
-                {
-                  color: theme.colors.grey10,
-                  marginTop: scale(0),
-                  marginRight: scale(3),
-                },
-              ]}
-            />
-
-            <TouchableOpacity onPress={() => setInfo(!info)}>
-              <Icon
-                name="info"
-                color={info ? theme.colors.blue : theme.colors.grey10}
-                size={scale(17)}
-              />
-            </TouchableOpacity>
-          </View>
-          <Button
-            title={getLocalText('Sponsor.paybtntxt')}
-            style={{marginTop: scale(30)}}
-            onPress={() => togglePaymentModal(true, days, people, totalAmount)}
-          />
-        </View>
-        {info ? (
-          <View style={styles.popupCon}>
-            <Label
-              style={styles.popuptxt}
-              title={getLocalText('Sponsor.info')}
-            />
-            <View style={styles.divider} />
-
-            <TouchableOpacity onPress={() => setInfo(!info)}>
-              <Icon name="x" size={scale(20)} color={theme.colors.white} />
-            </TouchableOpacity>
-          </View>
-        ) : null}
-      </View>
-    );
   };
 
   const renderSponsorIOS = () => {

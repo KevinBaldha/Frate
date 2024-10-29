@@ -314,7 +314,8 @@ class Singup extends Component {
           viewIsInsideTabBar={true}
           style={styles.keyboardavoid}
           enableOnAndroid={true}
-          keyboardOpeningTime={false}
+          // keyboardOpeningTime={false}
+          keyboardOpeningTime={250}
           contentInsetAdjustmentBehavior="scrollableAxes"
           enableResetScrollToCoords={true}
           horizontal={false}
