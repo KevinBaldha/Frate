@@ -60,7 +60,9 @@ const Sponsor = props => {
       try {
         await initConnection();
 
-        const availableProducts = await getProducts({ skus: constants.productSkus });
+        const availableProducts = await getProducts({
+          skus: constants.productSkus,
+        });
 
         setProducts(availableProducts);
       } catch (error) {
@@ -68,21 +70,26 @@ const Sponsor = props => {
       }
     };
 
-    const purchaseUpdateSubscription = purchaseUpdatedListener(async (purchase) => {
-      if (purchase.transactionReceipt) {
-        // try {
-          const transactionStatus = await finishTransaction({ purchase, isConsumable: true });
-          if(transactionStatus?.code !== 'OK'){
+    const purchaseUpdateSubscription = purchaseUpdatedListener(
+      async purchase => {
+        if (purchase.transactionReceipt) {
+          // try {
+          const transactionStatus = await finishTransaction({
+            purchase,
+            isConsumable: true,
+          });
+          if (transactionStatus?.code !== 'OK' && Platform.OS === 'android') {
             Alert.alert(`${transactionStatus?.message}`);
           }
           // Alert.alert('Success', 'Purchase was successful!');
-        // } catch (error) {
-        //   console.error('Transaction completion error:', error);
-        // }
-      }
-    });
+          // } catch (error) {
+          //   console.error('Transaction completion error:', error);
+          // }
+        }
+      },
+    );
 
-    const purchaseErrorSubscription = purchaseErrorListener((error) => {
+    const purchaseErrorSubscription = purchaseErrorListener(error => {
       console.error('Purchase error:', error.message);
       Alert.alert('Purchase Error', error.message);
     });
@@ -96,7 +103,7 @@ const Sponsor = props => {
     };
   }, []);
 
-  const handlePurchaseAndroid = async (sku) => {
+  const handlePurchaseAndroid = async sku => {
     const skuExists = products.some(product => product.productId === sku);
     if (skuExists) {
       try {
@@ -114,13 +121,16 @@ const Sponsor = props => {
               type: 'in_app',
             });
           } else {
-            Alert.alert('Purchase data is invalid or missing transactionId:',purchase?.[0]);
+            Alert.alert(
+              'Purchase data is invalid or missing transactionId:',
+              purchase?.[0],
+            );
           }
         } catch (e) {
-          Alert.alert('Error',`${e}`);
+          Alert.alert('Error', `${e}`);
         }
       } catch (error) {
-        Alert.alert('Error occurred while making purchase',`${error}`);
+        Alert.alert('Error occurred while making purchase', `${error}`);
       }
     }
   };
@@ -152,18 +162,21 @@ const Sponsor = props => {
         });
         await finishTransaction({purchase: purchase, isConsumable: true});
       } else {
-        Alert.alert('Purchase data is invalid or missing transactionId:',purchase?.[0]);
+        Alert.alert(
+          'Purchase data is invalid or missing transactionId:',
+          purchase?.[0],
+        );
       }
     } else {
-      Alert.alert('SKU not found for dollar amount:',dollarAmount);
+      Alert.alert('SKU not found for dollar amount:', dollarAmount);
     }
   };
 
   const handlePurchase = () => {
     const dollarAmount = getDollarAmount(sliderOneValue?.[0]);
     const dollarAmountSKU = isIos
-    ? dollarAmountToSku
-    : dollarAmountToSkuAndroid;
+      ? dollarAmountToSku
+      : dollarAmountToSkuAndroid;
     const sku = dollarAmountSKU?.[dollarAmount];
     isIos ? handlePurchaseIOS() : handlePurchaseAndroid(sku);
   };
