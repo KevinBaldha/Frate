@@ -551,7 +551,7 @@ class UserData extends Component {
                   return (
                     <TouchableNativeFeedback
                       onPress={() => {
-                        this.handleClose(i);
+                        this.handleCloseGallrayView(i);
                       }}>
                       <FastImage
                         key={i.toString()}
@@ -627,7 +627,7 @@ class UserData extends Component {
       refreshing: false,
     });
   };
-  handleClose = (index) => {
+  handleCloseGallrayView = (index) => {
     this.setState({gallrayView: !this.state.gallrayView, gallrayindex: index});
   };
 
@@ -678,7 +678,8 @@ class UserData extends Component {
             source={{
               uri:
                 item?.recipient_id === this.props.userDetails?.id
-                  ? item?.sender_image?.small
+                  ? item?.sender_image?.small ||
+                    item?.sender_image?.optimize
                   : item?.recipient_image?.small ||
                     item?.recipient_image?.optimize, //optimize
             }}

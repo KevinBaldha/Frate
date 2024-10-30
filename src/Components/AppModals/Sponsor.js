@@ -43,7 +43,7 @@ const Sponsor = props => {
   const {isVisible, togglePaymentModal} = props;
   const [info, setInfo] = useState(false);
   const [days, setDays] = useState(2);
-  const [sliderOneValue, setSliderOneValue] = useState([2]);
+  const [sliderOneValue, setSliderOneValue] = useState([42]);
   const [people, setPeople] = useState(sliderOneValue * 100);
   const [totalAmount, setTotalAmount] = useState(0);
   const [usDollarRate, setUSDollarRate] = useState(0);
@@ -212,8 +212,8 @@ const Sponsor = props => {
   useFocusEffect(
     React.useCallback(() => {
       async function checkDefaultRate() {
-        sliderOneValuesChange([2]);
-        const dollarRate = await calculateSponsorPostAPI(2);
+        sliderOneValuesChange([42]);
+        const dollarRate = await calculateSponsorPostAPI(42);
         setUSDollarRate(dollarRate);
         await sliderOneValuesChangeCall();
       }
@@ -323,7 +323,8 @@ const Sponsor = props => {
                 }}
               />
               <View style={styles.range}>
-                {pricePoints.map(({value, title}) => (
+                {pricePoints.map(({value, title}) => {
+                  return(
                   <Label
                     key={value}
                     title={title}
@@ -333,7 +334,7 @@ const Sponsor = props => {
                         : styles.limitTxt
                     }
                   />
-                ))}
+                )})}
               </View>
             </View>
           </View>
