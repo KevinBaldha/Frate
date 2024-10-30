@@ -87,8 +87,6 @@ const AudioMsg = props => {
   };
 
   const formatTime = audioDuration => {
-    console.log('audioDuration ->', audioDuration);
-    console.log('audioDuration ->', typeof audioDuration);
 
     // Ensure audioDuration is a number and not undefined
     if (typeof audioDuration !== 'number') {
@@ -106,8 +104,6 @@ const AudioMsg = props => {
   };
 
   const time = item?.audio_duration?.split(':');
-  console.log('item?.audio_duration->', item?.audio_duration);
-  console.log('audioindex->', audioindex);
 
   const sliderWidth = 100;
 
@@ -117,10 +113,7 @@ const AudioMsg = props => {
 
   const stepSize = calculateStepSize();
 
-  console.log('stepSize ->',stepSize);
 
-  console.log('formatTime POSITION->', formatTime(position));
-  console.log('formatTime DURATION->', formatTime(duration));
 
   return (
     <View

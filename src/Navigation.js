@@ -253,6 +253,17 @@ class Navigation extends Component {
     }
   };
 
+  getFcmToken = async () => {
+    const fcmToken = await messaging().getToken();
+    console.log('FCM ---->',fcmToken);
+    if (fcmToken) {
+      AsyncStorage.setItem('fcmToken', fcmToken);
+      if (!this.props.firstTimeInstall) {
+        this.props.installApp(1);
+      }
+    }
+  };
+
   requestUserPermission = async () => {
     const authStatus = await firebase.messaging().requestPermission();
     const enableds = await firebase.messaging().hasPermission();
@@ -266,16 +277,6 @@ class Navigation extends Component {
 
     if (enabled) {
       this.getFcmToken();
-    }
-  };
-
-  getFcmToken = async () => {
-    const fcmToken = await messaging().getToken();
-    if (fcmToken) {
-      AsyncStorage.setItem('fcmToken', fcmToken);
-      if (!this.props.firstTimeInstall) {
-        this.props.installApp(1);
-      }
     }
   };
 

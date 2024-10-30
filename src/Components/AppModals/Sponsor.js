@@ -56,84 +56,47 @@ const Sponsor = props => {
   //IN App Purchase===========
 
   useEffect(() => {
-    const init = async () => {
+    const initializeIAPConnection = async () => {
       try {
-        const connection = await initConnection();
+        await initConnection();
 
-        if (Platform.OS === 'android') {
-          const isFlushSuccessful =
-            flushFailedPurchasesCachedAsPendingAndroid();
-          if (!isFlushSuccessful) {
-            console.log('No failed purchases cached as pending.');
-          } else {
-            console.log(
-              'Failed purchases cached as pending flushed successfully.',
-            );
+        const availableProducts = await getProducts({ skus: constants.productSkus });
+
+        setProducts(availableProducts);
+      } catch (error) {
+        console.error('Error initializing IAP connection:', error);
+      }
+    };
+
+    const purchaseUpdateSubscription = purchaseUpdatedListener(async (purchase) => {
+      if (purchase.transactionReceipt) {
+        // try {
+          const transactionStatus = await finishTransaction({ purchase, isConsumable: true });
+          if(transactionStatus?.code !== 'OK'){
+            Alert.alert(`${transactionStatus?.message}`);
           }
-        }
-      } catch (error) {
-        console.error('Error occurred during initilization', error.message);
+          // Alert.alert('Success', 'Purchase was successful!');
+        // } catch (error) {
+        //   console.error('Transaction completion error:', error);
+        // }
       }
-    };
+    });
 
-    init();
+    const purchaseErrorSubscription = purchaseErrorListener((error) => {
+      console.error('Purchase error:', error.message);
+      Alert.alert('Purchase Error', error.message);
+    });
 
-    return () => endConnection();
-  }, []);
+    initializeIAPConnection();
 
-  useFocusEffect(
-    useCallback(() => {
-      const getPurchase = async () => {
-        try {
-          const availablePurchases = await getAvailablePurchases();
-          const hasPurchased = await availablePurchases?.some?.(purchase =>
-            constants.productSkus.includes(purchase.productId),
-          );
-        } catch (error) {
-          console.error('Purchase fetching error:', error.message);
-        }
-      };
-
-      getPurchase();
-    }, []),
-  );
-
-  useEffect(() => {
-    const purchaseUpdateSubscription = purchaseUpdatedListener(
-      async purchase => {
-        if (purchase.transactionReceipt) {
-                  const transactionRes = await finishTransaction({
-                    purchase: purchase,
-                    isConsumable: true,
-                  });
-                  if(transactionRes?.code !== 'OK'){
-                      Alert.alert(`${transactionRes?.message}`);
-                  }
-            };
-      },
-    );
-
-    const purchaseErrorSubscription = purchaseErrorListener(error =>
-      console.error('Purchase error:', error.message),
-    );
-
-    const fetchProducts = async () => {
-      try {
-        const productResult = await getProducts({skus: constants.productSkus});
-      } catch (error) {
-        console.error('Error fetching products:', error.message);
-      }
-    };
-
-    fetchProducts();
-
+    // Cleanup listeners on unmount
     return () => {
       purchaseUpdateSubscription?.remove();
       purchaseErrorSubscription?.remove();
     };
   }, []);
 
-  const handlePurchaseAndroid = async sku => {
+  const handlePurchaseAndroid = async (sku) => {
     const skuExists = products.some(product => product.productId === sku);
     if (skuExists) {
       try {
@@ -151,17 +114,13 @@ const Sponsor = props => {
               type: 'in_app',
             });
           } else {
-            console.log(
-              'Purchase data is invalid or missing transactionId:',
-              purchase?.[0],
-            );
+            Alert.alert('Purchase data is invalid or missing transactionId:',purchase?.[0]);
           }
         } catch (e) {
-          console.log('handlePurchaseAndroid error ->', e);
+          Alert.alert('Error',`${e}`);
         }
       } catch (error) {
-        console.error('Error occurred while making purchase ->', error);
-      } finally {
+        Alert.alert('Error occurred while making purchase',`${error}`);
       }
     }
   };
@@ -193,21 +152,18 @@ const Sponsor = props => {
         });
         await finishTransaction({purchase: purchase, isConsumable: true});
       } else {
-        console.log(
-          'Purchase data is invalid or missing transactionId:',
-          purchase,
-        );
+        Alert.alert('Purchase data is invalid or missing transactionId:',purchase?.[0]);
       }
     } else {
-      console.error('SKU not found for dollar amount:', dollarAmount);
+      Alert.alert('SKU not found for dollar amount:',dollarAmount);
     }
   };
 
   const handlePurchase = () => {
     const dollarAmount = getDollarAmount(sliderOneValue?.[0]);
     const dollarAmountSKU = isIos
-      ? dollarAmountToSku
-      : dollarAmountToSkuAndroid;
+    ? dollarAmountToSku
+    : dollarAmountToSkuAndroid;
     const sku = dollarAmountSKU?.[dollarAmount];
     isIos ? handlePurchaseIOS() : handlePurchaseAndroid(sku);
   };

@@ -1019,6 +1019,7 @@ class Timeline extends PureComponent {
               isOwnPost: response?.data?.user_own_sponser_post,
             });
           }
+          this.getAllPost();
           // this.closePerfectModel();
           // setTimeout(() => {
           //   this.closePerfectModel();
@@ -1112,11 +1113,6 @@ class Timeline extends PureComponent {
     const {navigation} = this.props;
     navigation.navigate('Sponsor');
     this.closePerfectModel();
-  };
-  handlePerfectModal2 = async () => {
-    // const {navigation} = this.props;
-    // navigation.navigate('Sponsor');
-    this.closePerfectModel2();
   };
 
   //post like emoji
@@ -1695,8 +1691,7 @@ class Timeline extends PureComponent {
   };
 
   onViewableItemsChanged = async ({viewableItems, changed}) => {
-    console.log('onViewableItemsChanged....');
-    
+
     try {
       if (viewableItems.length !== 0) {
         let frmData = new FormData();
@@ -1704,8 +1699,7 @@ class Timeline extends PureComponent {
           frmData.append('post_id[]', element?.item?.id);
         });
 
-       const response = await postAPICall(API.getStoreUserLog, frmData);
-       console.log('onViewableItemsChanged response ->',response);
+       await postAPICall(API.getStoreUserLog, frmData);
       }
     } catch (error) {}
   };
@@ -2124,7 +2118,7 @@ class Timeline extends PureComponent {
           <PerfectModel
             isVisible={perfectModel2}
             close={this.closePerfectModel2}
-            onRedirect={this.handlePerfectModal2}
+            // onRedirect={this.closePerfectModel2}
             isSponsoredByLoggedInUser={isSponsoredByLoggedInUser}
           />
 
