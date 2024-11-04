@@ -218,9 +218,9 @@ class Chat extends Component {
       if (nextAppState === 'active') {
         this.appState.current = AppState.currentState;
         this.callInitialize();
-      }else if(nextAppState === 'active' && !this.peer){
+      } else if (nextAppState === 'active' && !this.peer) {
         this.initSoket();
-      }else if (nextAppState === 'background') {
+      } else if (nextAppState === 'background') {
         this.appState.current = AppState.currentState;
         this.clearData();
         this.setState({lastessageId: 0});
@@ -423,7 +423,7 @@ class Chat extends Component {
       debug: 3,
     });
 
-    peer.on('error', (_err) => {});
+    peer.on('error', _err => {});
     this.socketConnect = io.connect(soketUrl, {
       // transports: ['websocket'],
     });
@@ -924,7 +924,7 @@ class Chat extends Component {
     await ImagePicker.openPicker({
       includeBase64: true,
       compressImageMaxHeight: 500,
-      compressImageQuality: 0.5,
+      compressImageQuality: 1,
       compressImageMaxWidth: 500,
     })
       .then(async response => {
@@ -1002,7 +1002,7 @@ class Chat extends Component {
             },
           },
         )
-        .then((response) => {
+        .then(response => {
           openAttachment = false;
           switch (response.status) {
             case 200:
@@ -1054,8 +1054,8 @@ class Chat extends Component {
     body.append(
       this.state.singleChatId === '1' ? 'chat_id' : 'room_id',
       this.state.singleChatId === '1'
-      ? this?.props?.route?.params?.data?.id
-      : this.props.route.params?.roomId,
+        ? this?.props?.route?.params?.data?.id
+        : this.props.route.params?.roomId,
     );
     body.append('user_id', this.state.loginUserData?.id);
     body.append('name', this.state.loginUserData?.first_name);
@@ -1217,7 +1217,7 @@ class Chat extends Component {
     ImagePicker.openCamera({
       includeBase64: true,
       compressImageMaxHeight: 300,
-      compressImageQuality: 0.5,
+      compressImageQuality: 1,
       compressVideoPreset: '640x480',
       compressImageMaxWidth: 300,
     }).then(image => {
@@ -1425,9 +1425,12 @@ class Chat extends Component {
                   }}
                   style={styles.imageView}>
                   <Image
-                    source={{uri: item?.video_thumb}}
+                    source={{
+                      uri: item?.video_thumb,
+                      priority: FastImage.priority.high,
+                    }}
                     // source={{uri: item?.attachment}}
-                    style={styles.images}
+                    style={[styles.images]}
                     indicator={ProgressBar}
                   />
                   <Label
@@ -1714,11 +1717,12 @@ class Chat extends Component {
                       this.setState({fullScreenMedia: true});
                     }}
                     style={styles.imageView}>
-                    <Image
+                    <FastImage
                       source={{
                         uri: item?.localFilePath || item.video_thumb,
+                        priority: FastImage.priority.high,
                       }}
-                      style={styles.images}
+                      style={[styles.images]}
                       indicator={ProgressBar}
                     />
                     <Label
@@ -1886,12 +1890,13 @@ class Chat extends Component {
                     {item?.message_type === 'Image' ? (
                       <FastImage
                         source={
-                          item?.attachment === null
+                          (item?.attachment === null
                             ? images.profilepick
                             : {
                                 //   item?.attachment,
                                 uri: item?.attachment,
-                              }
+                              },
+                          {priority: FastImage.priority.high})
                         }
                         style={styles.images}
                       />

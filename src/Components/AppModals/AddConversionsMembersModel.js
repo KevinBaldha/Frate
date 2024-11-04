@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
 import {
@@ -9,6 +10,7 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
+  Keyboard,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Feather';
@@ -31,6 +33,28 @@ const AddConversionsMembersModel = props => {
   const [total, setTotal] = useState(1);
   // const [groupMemberParPageData, setGroupTotalParPageData] = useState(1);
   const [loadMoreData, setLoadMoreData] = useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      },
+    );
+
+    // Cleanup listeners on unmount
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   useEffect(() => {
     if (show) {
@@ -188,8 +212,9 @@ const AddConversionsMembersModel = props => {
       isVisible={show}
       animationIn="zoomIn"
       animationOut="zoomOut"
-      statusBarTranslucent
+      // statusBarTranslucent
       // deviceHeight={height}
+      style={{margin:0}}
       backdropColor={theme.colors.grey11}
       onBackButtonPress={() => {
         closeModal();
@@ -263,31 +288,41 @@ const AddConversionsMembersModel = props => {
                 })}
             </ScrollView>
           </View>
-          <View style={styles.checkBoxCon}>
-            <Label title="Add all members " style={styles.memberName} />
-            <TouchableOpacity
-              onPress={() => {
-                setChecked(!checked);
-                addAllMembers();
-              }}
-              style={[styles.checkBox]}>
-              <Icon2
-                name={checked ? 'radiobox-marked' : 'radiobox-blank'}
-                size={scale(28)}
-                color={theme.colors.blue}
-              />
-            </TouchableOpacity>
-          </View>
-          <FlatList
-            contentContainerStyle={styles.listContain}
-            keyExtractor={(_, index) => index.toString()}
-            data={members}
-            extraData={[members, this.props]}
-            renderItem={({item, index}) => renderList(item, index)}
-            onEndReachedThreshold={0.2}
-            onEndReached={loadMore}
-            ListFooterComponent={renderFooter}
-          />
+            <View style={styles.checkBoxCon}>
+              <Label title="Add all members " style={styles.memberName} />
+              <TouchableOpacity
+                onPress={() => {
+                  setChecked(!checked);
+                  addAllMembers();
+                }}
+                style={[styles.checkBox]}>
+                <Icon2
+                  name={checked ? 'radiobox-marked' : 'radiobox-blank'}
+                  size={scale(28)}
+                  color={theme.colors.blue}
+                />
+              </TouchableOpacity>
+            </View>
+            <FlatList
+              scrollEnabled
+              bounces={false}
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps={'always'}
+              contentContainerStyle={[styles.listContain,{
+                maxHeight: isKeyboardVisible
+                  ? Platform.OS === 'ios'
+                    ? scale(236)
+                    : scale(236)
+                  : '100%',
+              }]}
+              keyExtractor={(_, index) => index.toString()}
+              data={members}
+              extraData={[members, this.props]}
+              renderItem={({item, index}) => renderList(item, index)}
+              onEndReachedThreshold={0.2}
+              onEndReached={loadMore}
+              ListFooterComponent={renderFooter}
+            />
           {selectedMembers.length !== 0 && (
             <>
               <TouchableOpacity
@@ -330,10 +365,15 @@ const styles = StyleSheet.create({
   },
   headerShadow: {shadowRadius: 2, elevation: 3},
   inputBox: {left: scale(-10), width: '90%'},
+  addAllMembersScroll: {flex: 1},
+  addAllMembersContentContainer: {
+    maxHeight: scale(242),
+    minHeight: scale(242),
+  },
   listContain: {
     paddingHorizontal: scale(10),
     marginTop: scale(5),
-    paddingBottom: scale(10),
+    paddingBottom: scale(80),
   },
   memberView: {
     flexDirection: 'row',

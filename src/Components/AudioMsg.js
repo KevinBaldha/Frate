@@ -5,17 +5,18 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
-  Dimensions,
 } from 'react-native';
 import Slider from '@react-native-community/slider';
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Foundation';
-import TrackPlayer, {useProgress} from 'react-native-track-player';
-import {scale, theme, images, moderatedScale} from '../Utils';
+import TrackPlayer, {State, useProgress} from 'react-native-track-player';
+import {scale, theme, images} from '../Utils';
 import externalStyle from '../Css';
 import {Label} from './index';
 
-const AudioMsg = props => {
+const AudioMsg = (props) => {
+  const [play, setPlay] = useState(true);
+  const [loadAudio, setLoadAudio] = useState(false);
   const {
     url,
     item,
@@ -30,21 +31,24 @@ const AudioMsg = props => {
     created_at,
   } = props;
   const {position, duration} = useProgress();
-
-  // const [currentplay, setCurrentplay] = useState(null);
-  const [loadAudio, setLoadAudio] = useState(false);
-  const [play, setPlay] = useState(false);
   const [value, setvalue] = useState(0);
-
+  // const [currentplay, setCurrentplay] = useState(null);
   useEffect(() => {
     init();
-  }, []);
 
-  useEffect(() => {
-    if (position >= duration && duration > 0) {
-      setPlay(true); // Set play to true when the audio reaches the end
-    }
-  }, [position, duration]);
+    const playbackListener = TrackPlayer.addEventListener(
+      'playback-state',
+      async (state) => {
+        if (state?.state === State.Paused || state?.state === State.Stopped) {
+          setPlay(true);
+        }
+      },
+    );
+
+    return () => {
+      playbackListener.remove();
+    };
+  }, []);
 
   const init = async () => {
     await TrackPlayer.setupPlayer();
@@ -74,47 +78,19 @@ const AudioMsg = props => {
     } else {
       await TrackPlayer.pause();
     }
+    setPlay(!play);
     setLoadAudio(false);
   };
 
-  const changeTime = async seconds => {
+  const changeTime = async (seconds) => {
     const reminaTime = duration > 0 ? duration - seconds : 0;
     setvalue(reminaTime);
   };
 
-  const onDropProgress = time => {
+  const onDropProgress = (time) => {
     TrackPlayer.seekTo(time);
   };
-
-  const formatTime = audioDuration => {
-
-    // Ensure audioDuration is a number and not undefined
-    if (typeof audioDuration !== 'number') {
-      return '00 : 00'; // Default fallback if audioDuration is invalid
-    }
-
-    const time = item?.audio_duration?.split(':');
-
-    // Ensure time is split properly and use fallback values for minutes and seconds
-    const formattedMinutes = time?.[1] !== undefined ? time[1].padStart(2, '0') : '00';
-    const formattedSeconds = time?.[2] !== undefined ? time[2].padStart(2, '0') : '00';
-
-    // Display formatted time as MM : SS
-    return `${formattedMinutes} : ${formattedSeconds}`;
-  };
-
   const time = item?.audio_duration?.split(':');
-
-  const sliderWidth = 100;
-
-  const calculateStepSize = () => {
-    return duration > 0 ? sliderWidth / duration : sliderWidth;
-  };
-
-  const stepSize = calculateStepSize();
-
-
-
   return (
     <View
       style={[
@@ -169,8 +145,8 @@ const AudioMsg = props => {
           <TouchableOpacity
             onPress={() => {
               handlePreviousIndex();
-              setPlay(!play);
               handlePlay();
+              // setPlay(!play);
             }}
             style={{paddingLeft: scale(10)}}>
             <Icon
@@ -185,11 +161,7 @@ const AudioMsg = props => {
           minimumValue={0}
           maximumValue={duration}
           value={audioindex !== previousIndex ? 0 : position}
-          style={[{width: sliderWidth}, styles.slider]}
-          step={stepSize} // Adjust the step size based on duration
-          // maximumValue={duration}
-          // value={audioindex !== previousIndex ? 0 : position}
-          // style={[{ width: sliderWidth }, styles.slider]}
+          style={styles.slider}
           thumbTintColor={iconColor ? theme.colors.white : theme.colors.blue}
           maximumTrackTintColor={
             iconColor ? theme.colors.blueLine : theme.colors.grey22
@@ -198,10 +170,10 @@ const AudioMsg = props => {
             iconColor ? theme.colors.white : theme.colors.blue
           }
           thumbTouchSize={{width: 10, height: 10}}
-          onSlidingComplete={data => {
+          onSlidingComplete={(data) => {
             onDropProgress(data);
           }}
-          onValueChange={seconds => {
+          onValueChange={(seconds) => {
             changeTime(seconds);
           }}
         />
@@ -213,11 +185,10 @@ const AudioMsg = props => {
             styles.txt,
             {color: iconColor ? theme.colors.white : theme.colors.grey6},
           ]}>
-          {/* {time &&
+          {time &&
             `${time[1] !== undefined ? time[1] : '00'} : ${
               time[2] !== undefined ? time[2] : '04'
-            }`} */}
-          {formatTime(position)}
+            }`}
         </Text>
         <Text
           style={[
@@ -263,6 +234,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   slider: {
+    width: scale(100),
     padding: 0,
     marginLeft: -scale(10),
     marginTop: scale(-3),

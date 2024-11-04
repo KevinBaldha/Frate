@@ -305,7 +305,7 @@ const PostsCommentModel = props => {
       backdropColor={theme.colors.darkBlue}
       animationIn="slideInUp"
       animationOut="slideOutDown"
-      statusBarTranslucent
+      // statusBarTranslucent
       deviceHeight={height}
       onSwipeComplete={close}
       swipeThreshold={25}

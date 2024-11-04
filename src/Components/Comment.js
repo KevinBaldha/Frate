@@ -186,7 +186,7 @@ const Comment = props => {
             padding: scale(20),
           }}>
           {comments &&
-            comments.map((d, i) => {
+            comments?.map((d, i) => {
               return (
                 <View key={i}>
                   <View style={[styles.replayCon]}>

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@bam.tech/react-native-image-resizer": "^3.0.10",
+    "@carchaze/react-native-voice-message-player": "^1.0.5",
     "@invertase/react-native-apple-authentication": "^2.4.0",
     "@ptomasroos/react-native-multi-slider": "^2.2.2",
     "@react-native-async-storage/async-storage": "^2.0.0",
