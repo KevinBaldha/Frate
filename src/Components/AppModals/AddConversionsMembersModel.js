@@ -214,7 +214,7 @@ const AddConversionsMembersModel = props => {
       animationOut="zoomOut"
       // statusBarTranslucent
       // deviceHeight={height}
-      style={{margin:0}}
+      style={{margin: 0}}
       backdropColor={theme.colors.grey11}
       onBackButtonPress={() => {
         closeModal();
@@ -288,33 +288,32 @@ const AddConversionsMembersModel = props => {
                 })}
             </ScrollView>
           </View>
-            <View style={styles.checkBoxCon}>
-              <Label title="Add all members " style={styles.memberName} />
-              <TouchableOpacity
-                onPress={() => {
-                  setChecked(!checked);
-                  addAllMembers();
-                }}
-                style={[styles.checkBox]}>
-                <Icon2
-                  name={checked ? 'radiobox-marked' : 'radiobox-blank'}
-                  size={scale(28)}
-                  color={theme.colors.blue}
-                />
-              </TouchableOpacity>
-            </View>
+          <View style={styles.checkBoxCon}>
+            <Label title="Add all members " style={styles.memberName} />
+            <TouchableOpacity
+              onPress={() => {
+                setChecked(!checked);
+                addAllMembers();
+              }}
+              style={[styles.checkBox]}>
+              <Icon2
+                name={checked ? 'radiobox-marked' : 'radiobox-blank'}
+                size={scale(28)}
+                color={theme.colors.blue}
+              />
+            </TouchableOpacity>
+          </View>
+          <ScrollView
+            bounces={false}
+            keyboardShouldPersistTaps={'always'}
+            showsVerticalScrollIndicator={false}
+            style={styles.addAllMembersScroll}>
             <FlatList
               scrollEnabled
               bounces={false}
               showsVerticalScrollIndicator={false}
               keyboardShouldPersistTaps={'always'}
-              contentContainerStyle={[styles.listContain,{
-                maxHeight: isKeyboardVisible
-                  ? Platform.OS === 'ios'
-                    ? scale(236)
-                    : scale(236)
-                  : '100%',
-              }]}
+              contentContainerStyle={styles.listContain}
               keyExtractor={(_, index) => index.toString()}
               data={members}
               extraData={[members, this.props]}
@@ -323,6 +322,7 @@ const AddConversionsMembersModel = props => {
               onEndReached={loadMore}
               ListFooterComponent={renderFooter}
             />
+          </ScrollView>
           {selectedMembers.length !== 0 && (
             <>
               <TouchableOpacity
@@ -366,10 +366,6 @@ const styles = StyleSheet.create({
   headerShadow: {shadowRadius: 2, elevation: 3},
   inputBox: {left: scale(-10), width: '90%'},
   addAllMembersScroll: {flex: 1},
-  addAllMembersContentContainer: {
-    maxHeight: scale(242),
-    minHeight: scale(242),
-  },
   listContain: {
     paddingHorizontal: scale(10),
     marginTop: scale(5),

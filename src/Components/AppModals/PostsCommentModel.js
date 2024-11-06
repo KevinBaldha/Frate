@@ -63,6 +63,7 @@ const PostsCommentModel = props => {
   const ref_input = useRef();
   const dispatch = useDispatch();
   const [previousIndexClick, setPreviousIndexClick] = useState(-1);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   const {getData} = useSelector(state => state.PostReducer);
   useEffect(() => {
@@ -297,6 +298,27 @@ const PostsCommentModel = props => {
     );
   };
 
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardVisible(true);
+      },
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardVisible(false);
+      },
+    );
+
+    // Cleanup listeners on unmount
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   return (
     <Modal
       onBackButtonPress={close}
@@ -323,7 +345,13 @@ const PostsCommentModel = props => {
           keyboardShouldPersistTaps="handled"
           style={styles.keyboardView}
           behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? scale(0) : scale(0)}>
+          keyboardVerticalOffset={
+            isKeyboardVisible
+              ? Platform.OS === 'ios'
+                ? scale(0)
+                : scale(20)
+              : scale(0)
+          }>
           <Loader loading={loadding} />
           <FlatList
             keyboardShouldPersistTaps="handled"
@@ -514,7 +542,7 @@ const styles = StyleSheet.create({
     marginHorizontal: scale(5),
     paddingHorizontal: scale(10),
     paddingVertical: scale(7),
-    marginTop: scale(15),
+    // marginTop: scale(15),
   },
   topView: {
     flexDirection: 'row',
