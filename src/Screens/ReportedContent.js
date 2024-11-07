@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React, {Component} from 'react';
 import {
   View,
@@ -361,8 +362,8 @@ class ReportedContent extends Component {
                     {
                       backgroundColor:
                         data.id === this.state.type
-                          ? theme.colors.white
-                          : theme.colors.grey14,
+                          ? theme.colors.grey14
+                          : theme.colors.white,
                     },
                   ]}>
                   <Label

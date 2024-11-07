@@ -2010,9 +2010,7 @@ class Chat extends Component {
     this.setState({postPone: false});
   };
 
-  setEmoji = emoji => {
-    this.setState({msg: this.state.msg + emoji.emoji});
-  };
+  setEmoji = emoji => this.setState({msg: this.state.msg + emoji.emoji});
 
   onPressKeybord() {
     this.textinput.focus();
@@ -2743,6 +2741,7 @@ const styles = StyleSheet.create({
   },
   writeText: {
     fontSize: scale(14),
+    marginBottom:Platform.OS === 'android' ? scale(2) : 0,
   },
   alignSelf: {
     alignSelf: 'center',

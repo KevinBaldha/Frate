@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import FastImage from 'react-native-fast-image';
@@ -8,7 +9,7 @@ import {Button} from './Button';
 import {getLocalText} from '../Locales/I18n';
 import {REPORTSTATUS} from '../Utils/StaticData';
 
-const ReportPostCard = (props) => {
+const ReportPostCard = props => {
   const {item, onPress, index, type} = props;
   return (
     <View style={[externalStyle.shadow, styles.container]}>
@@ -37,7 +38,7 @@ const ReportPostCard = (props) => {
       </View>
       <View
         style={[
-          styles.row,
+          styles.btnRow,
           {flexDirection: type !== 'post' ? 'row' : 'row-reverse'},
         ]}>
         <Button
@@ -114,14 +115,20 @@ const styles = StyleSheet.create({
     fontSize: scale(11),
     color: theme.colors.grey10,
   },
+  btnRow: {
+    overflow: 'hidden',
+    width: '100%',
+    justifyContent: 'space-between',
+  },
   btn: {
-    width: '45%',
-    borderRadius: scale(20),
-    marginTop: scale(10),
+    width: '48%',
+    borderRadius: scale(40),
+    marginTop: scale(29),
     marginBottom: scale(0),
     height: scale(50),
     justifyContent: 'center',
     alignItems: 'center',
+    marginHorizontal: 0,
   },
   devider: {
     marginTop: scale(25),

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {isIphoneX} from 'react-native-iphone-x-helper';
@@ -160,7 +161,7 @@ export default class SearchBar extends Component {
             )}
             {options && (
               <TouchableOpacity
-                style={styles.alignEnd}
+                style={notificationBadge ? styles.alignCenter : styles.alignEnd}
                 onPress={() => {
                   onPressOptions();
                 }}>
@@ -179,7 +180,7 @@ export default class SearchBar extends Component {
               <View style={styles.fillterCon}>
                 <Label
                   title={getLocalText('Timeline.searchfor').toUpperCase()}
-                  style={{fontSize: scale(10)}}
+                  style={{fontSize: scale(10),marginHorizontal: scale(18)}}
                 />
                 <ScrollView
                   horizontal={true}
@@ -242,7 +243,7 @@ const styles = StyleSheet.create({
     marginTop: isIphoneX() ? scale(45) : scale(20),
   },
   searchSubView: {
-    marginHorizontal: scale(18),
+    // marginHorizontal: scale(18),
     justifyContent: 'space-between',
   },
   row: {flexDirection: 'row', alignItems: 'center'},
@@ -270,11 +271,12 @@ const styles = StyleSheet.create({
     marginVertical: scale(10),
   },
   fillterbtn: {
-    paddingHorizontal: scale(25),
-    margin: 5,
+    paddingHorizontal: scale(24),
+    marginRight: scale(5),
+    marginVertical: scale(5),
     justifyContent: 'center',
     alignItems: 'center',
-    padding: scale(11),
+    paddingVertical: scale(11),
     borderRadius: scale(20),
   },
   dotView: {
@@ -293,6 +295,10 @@ const styles = StyleSheet.create({
   scrollContain: {
     paddingHorizontal: scale(0),
     alignItems: 'center',
+    alignSelf:'center',
+    justifyContent:'space-evenly',
+    width: Dimensions.get('window').width - scale(20),
+    marginLeft: scale(12),
   },
   alignEnd: {
     alignSelf: 'flex-end',

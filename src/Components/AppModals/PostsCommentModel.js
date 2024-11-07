@@ -543,6 +543,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(10),
     paddingVertical: scale(7),
     // marginTop: scale(15),
+    marginBottom: Platform.OS === 'android' ? scale(5) : 0,
   },
   topView: {
     flexDirection: 'row',

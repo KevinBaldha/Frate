@@ -7,6 +7,8 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/Feather';
@@ -45,7 +47,14 @@ const ReportDetailsModel = (props) => {
         animationOut="zoomOut"
         statusBarTranslucent
         deviceHeight={height}
-        backdropColor={theme.colors.grey11}>
+        backdropColor={theme.colors.grey11}
+        onBackButtonPress={()=> Keyboard.dismiss()}
+        onBackdropPress={()=> Keyboard.dismiss()}>
+        <KeyboardAvoidingView enabled
+          keyboardShouldPersistTaps="handled"
+          style={styles.keyboardView}
+          behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+          keyboardVerticalOffset={scale(0)}>
         <View style={styles.mainContainer}>
           <View style={styles.container}>
             <View style={styles.headerCon}>
@@ -137,6 +146,7 @@ const ReportDetailsModel = (props) => {
           reasonHanlde={handleReson}
           reportList={reasonList}
         />
+      </KeyboardAvoidingView>
       </Modal>
     </TouchableWithoutFeedback>
   );

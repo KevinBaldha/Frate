@@ -90,7 +90,7 @@ const ReportModel = (props) => {
                 <View style={styles.cardCon}>
                   <FastImage
                     source={
-                      data?.user_pic === null || undefined
+                      data?.user_pic === null || data?.user_pic === undefined
                         ? images.profilepick
                         : {
                             uri:

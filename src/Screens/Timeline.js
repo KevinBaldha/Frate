@@ -201,6 +201,8 @@ class Timeline extends PureComponent {
     await this.getAllPost();
 
     await this.handleDeepLink();
+    console.log('COMPONENTDID MOUNT.....');
+
     await this.messageListener();
     this.setState({
       bodyColor: userData?.color ? userData?.color : theme.defaultGradient,
@@ -266,6 +268,8 @@ class Timeline extends PureComponent {
   };
 
   messageListener = async () => {
+    console.log('messageListener....');
+
     let notificationRouteType = '';
     let notificationMessage = '';
     await PushNotification.configure({
@@ -316,11 +320,14 @@ class Timeline extends PureComponent {
     });
 
     messaging().onMessage(async remoteMessage => {
+      console.log('messaging().onMessage....');
+      console.log('remoteMessage ->', remoteMessage);
       if (Platform.OS === 'ios') {
         PushNotificationIOS.getApplicationIconBadgeNumber(badge => {
           PushNotificationIOS.setApplicationIconBadgeNumber(badge + 1);
         });
       }
+      console.log('showNotification OUTSIDE.....');
       this.showNotification(remoteMessage);
     });
 
@@ -360,6 +367,9 @@ class Timeline extends PureComponent {
   };
 
   showNotification = remoteMessage => {
+    console.log('showNotification....');
+    console.log('remoteMessage ->', remoteMessage);
+
     PushNotification.getChannels(function (channel_ids) {});
     PushNotification.checkPermissions(function (permissions) {});
 
@@ -387,13 +397,29 @@ class Timeline extends PureComponent {
         }
       },
     );
-
-    this.props.setNotificationBellIcon(
-      remoteMessage?.data?.notification_type ===
-        notificationTypes.newMessageInPersonalChatroom
-        ? false
-        : true,
+    console.log(
+      'remoteMessage?.data?.notification_type ->',
+      remoteMessage?.data?.notification_type,
     );
+    console.log(
+      'notificationTypes.newMessageInPersonalChatroom ->',
+      notificationTypes.newMessageInPersonalChatroom,
+    );
+    console.log(
+      'remoteMessage?.data?.notification_type === notificationTypes.newMessageInPersonalChatroom ->',
+      remoteMessage?.data?.notification_type ===
+        notificationTypes.newMessageInPersonalChatroom,
+    );
+
+    console.log('setNotificationBellIcon....');
+
+    // this.props.setNotificationBellIcon(
+    //   remoteMessage?.data?.notification_type ===
+    //   notificationTypes.newMessageInPersonalChatroom
+    //   ? false
+    //     : true,
+    // );
+    this.props.setNotificationBellIcon(true);
 
     if (remoteMessage?.data?.notification_type === notificationTypes.newPost) {
       this.props.setNewPostBadge(true);
@@ -401,6 +427,12 @@ class Timeline extends PureComponent {
       remoteMessage?.data?.notification_type ===
       notificationTypes.newMessageInPersonalChatroom
     ) {
+      console.log(
+        'remoteMessage?.data?.notification_type === notificationTypes.newMessageInPersonalChatroom',
+        remoteMessage?.data?.notification_type ===
+          notificationTypes.newMessageInPersonalChatroom,
+      );
+
       this.props.setNewChatBadge(true);
     }
   };
@@ -600,7 +632,7 @@ class Timeline extends PureComponent {
     this.setState({postText: text});
   };
 
-  handleCommentTxt = async(text, data, index) => {
+  handleCommentTxt = async (text, data, index) => {
     data.commentTxt = text;
     // this.setState({searchData: this.state.searchData, commentedIndex: index});
 
@@ -777,7 +809,9 @@ class Timeline extends PureComponent {
     // this.setState({
     //   attachImages: this.state.attachImages,
     // });
-    const updatedAttachImages = this.state.attachImages.filter((_, i) => i !== index);
+    const updatedAttachImages = this.state.attachImages.filter(
+      (_, i) => i !== index,
+    );
 
     this.setState({
       attachImages: updatedAttachImages,
@@ -796,10 +830,12 @@ class Timeline extends PureComponent {
 
   // post reaction modal
   handlePressLike = async (item, index, evt) => {
+    const updatedPostLikeOptionIndex =
+      this.state.postLikeOptionIndex === index ? '' : index;
+
     this.setState({
       postLikeOption: item?.id,
-      postLikeOptionIndex:
-        this.state.postLikeOptionIndex === index ? '' : index,
+      postLikeOptionIndex: updatedPostLikeOptionIndex,
       indicatorOffsetForLike: evt.nativeEvent.pageY,
     });
   };
@@ -840,7 +876,7 @@ class Timeline extends PureComponent {
     if (index === -1) {
       switch (data?.is_sponsored_by_loggedin_user) {
         case 0:
-          await this.setState((prevState) => {
+          await this.setState(prevState => {
             return {
               ...prevState,
               perfectModel2: !prevState.perfectModel2,
@@ -849,7 +885,7 @@ class Timeline extends PureComponent {
           });
           break;
         case 1:
-          await this.setState((prevState) => {
+          await this.setState(prevState => {
             return {
               ...prevState,
               perfectModel2: !prevState.perfectModel2,
@@ -1009,7 +1045,7 @@ class Timeline extends PureComponent {
           if (response?.data?.user_own_sponser_post) {
             var allPostDetail = allData;
             const postIndex = allPostDetail?.data.findIndex(
-              (d) => d.id === postId,
+              d => d.id === postId,
             );
 
             allPostDetail.data[postIndex].is_sponsored = 1;
@@ -1101,7 +1137,7 @@ class Timeline extends PureComponent {
     });
   };
   closePerfectModel2 = async () => {
-    await this.setState((prevState) => {
+    await this.setState(prevState => {
       return {
         ...prevState,
         perfectModel2: !prevState.perfectModel2,
@@ -1116,45 +1152,90 @@ class Timeline extends PureComponent {
   };
 
   //post like emoji
-  onPressLikeEmoji = async value => {
+  // onPressLikeEmoji = async value => {
+  //   this.closeEmojiModal();
+  //   const {postLikeOption, postLikeOptionIndex} = this.state;
+  //   var id = '';
+  //   if (value === 0) {
+  //     id = 1;
+  //   } else if (value === 1) {
+  //     id = 2;
+  //   } else if (value === 2) {
+  //     id = 3;
+  //   } else if (value === 3) {
+  //     id = 4;
+  //   } else if (value === 4) {
+  //     id = 5;
+  //   }
+  //   await this.props.postLikeShareSave(postLikeOption, 'like', id);
+  //   if (this.props.isPostLike) {
+  //     this.state.userPost[postLikeOptionIndex].is_like =
+  //       !this.state.userPost[postLikeOptionIndex].is_like;
+  //     this.state.userPost[postLikeOptionIndex].emoji =
+  //       value === 0
+  //         ? 1
+  //         : value === 1
+  //         ? 2
+  //         : value === 2
+  //         ? 3
+  //         : value === 3
+  //         ? 4
+  //         : 5;
+  //     this.setState({userPost: this.state.userPost});
+  //     if (this.state.userPost[postLikeOptionIndex].is_like) {
+  //       this.state.userPost[postLikeOptionIndex].total_like =
+  //         this.state.userPost[postLikeOptionIndex].total_like + 1;
+  //       this.setState({userPost: this.state.userPost});
+  //     } else {
+  //       this.state.userPost[postLikeOptionIndex].total_like =
+  //         this.state.userPost[postLikeOptionIndex].total_like - 1;
+  //       this.setState({userPost: this.state.userPost});
+  //     }
+  //   }
+  // };
+
+
+  onPressLikeEmoji = async (value) => {
     this.closeEmojiModal();
     const {postLikeOption, postLikeOptionIndex} = this.state;
-    var id = '';
-    if (value === 0) {
-      id = 1;
-    } else if (value === 1) {
-      id = 2;
-    } else if (value === 2) {
-      id = 3;
-    } else if (value === 3) {
-      id = 4;
-    } else if (value === 4) {
-      id = 5;
-    }
-    await this.props.postLikeShareSave(postLikeOption, 'like', id);
+    // Map the emoji value to the corresponding id
+    const emojiId =
+      value === 0 ? 1 : value === 1 ? 2 : value === 2 ? 3 : value === 3 ? 4 : 5;
+    // Call the postLikeShareSave method with emoji id
+    await this.props.postLikeShareSave(postLikeOption, 'like', emojiId);
     if (this.props.isPostLike) {
-      this.state.userPost[postLikeOptionIndex].is_like =
-        !this.state.userPost[postLikeOptionIndex].is_like;
-      this.state.userPost[postLikeOptionIndex].emoji =
-        value === 0
-          ? 1
-          : value === 1
-          ? 2
-          : value === 2
-          ? 3
-          : value === 3
-          ? 4
-          : 5;
-      this.setState({userPost: this.state.userPost});
-      if (this.state.userPost[postLikeOptionIndex].is_like) {
-        this.state.userPost[postLikeOptionIndex].total_like =
-          this.state.userPost[postLikeOptionIndex].total_like + 1;
-        this.setState({userPost: this.state.userPost});
+      // Make a copy of the userPost array
+      const updatedUserPost = [...this.state.userPost];
+      // Get the post at the index that needs to be updated
+      const postToUpdate = updatedUserPost[postLikeOptionIndex];
+      // Check if the same emoji is clicked again to remove it
+      const isSameEmojiClicked = postToUpdate.emoji === emojiId;
+      // If the same emoji is clicked, remove the like (set emoji to null and toggle is_like)
+      if (isSameEmojiClicked) {
+        const updatedPost = {
+          ...postToUpdate,
+          is_like: false, // Dislike the post
+          emoji: null, // Remove emoji
+          total_like: postToUpdate.total_like - 1, // Decrease like count
+        };
+        updatedUserPost[postLikeOptionIndex] = updatedPost;
       } else {
-        this.state.userPost[postLikeOptionIndex].total_like =
-          this.state.userPost[postLikeOptionIndex].total_like - 1;
-        this.setState({userPost: this.state.userPost});
+        // If a different emoji is clicked
+        let newLikeCount = postToUpdate.total_like;
+        // Ensure we don't increment the like count beyond a certain limit (for example, max of 5)
+        if (!postToUpdate.is_like) {
+          newLikeCount = Math.min(postToUpdate.total_like + 1, 5); // Increment like count, but limit to 5
+        }
+        const updatedPost = {
+          ...postToUpdate,
+          is_like: true, // Mark the post as liked
+          emoji: emojiId, // Set the new emoji
+          total_like: newLikeCount, // Update the like count
+        };
+        updatedUserPost[postLikeOptionIndex] = updatedPost;
       }
+      // Update the state with the modified array
+      this.setState({userPost: updatedUserPost});
     }
   };
 
@@ -1167,47 +1248,87 @@ class Timeline extends PureComponent {
   };
 
   //post like
+  // onLikePress = async (item, index, isLikeModel) => {
+  //   let {searchText} = this.state;
+  //   if (searchText === '') {
+  //     this.state.userPost[index].is_like = !this.state.userPost[index].is_like;
+  //     this.state.userPost[index].total_like = this.state.userPost[index].is_like
+  //       ? this.state.userPost[index].total_like + 1
+  //       : this.state.userPost[index].total_like - 1;
+
+  //     if (!this.state.userPost[index].is_like) {
+  //       this.state.userPost[index].emoji = null;
+  //     }
+
+  //     this.setState({userPost: this.state.userPost});
+
+  //     if (this.state.fullScreenView) {
+  //       this.setState({viewPost: item});
+  //       this.state.viewPost.is_like = !this.state.viewPost.is_like;
+
+  //       if (this.state.viewPost && this.state.viewPost?.is_like) {
+  //         this.state.viewPost[index].total_like =
+  //           this.state.viewPost[index].total_like + 1;
+  //         this.setState({viewPost: this.state.viewPost});
+  //       } else {
+  //         this.state.viewPost[index].total_like =
+  //           this.state.viewPost[index].total_like - 1;
+  //         this.setState({viewPost: this.state.viewPost});
+  //       }
+  //     }
+  //   } else {
+  //     this.state.searchData.posts[index].is_like =
+  //       !this.state.searchData.posts[index].is_like;
+  //     this.setState({searchData: this.state.searchData});
+  //     if (this.state.searchData.posts[index].is_like) {
+  //       this.state.searchData.posts[index].total_like =
+  //         this.state.searchData.posts[index].total_like + 1;
+  //       this.setState({searchData: this.state.searchData});
+  //     } else {
+  //       this.state.searchData.posts[index].total_like =
+  //         this.state.searchData.posts[index].total_like - 1;
+  //       this.setState({searchData: this.state.searchData});
+  //     }
+  //   }
+  //   await this.props.postLikeShareSave(item?.id, 'like');
+  // };
+
   onLikePress = async (item, index, isLikeModel) => {
     let {searchText} = this.state;
     if (searchText === '') {
-      this.state.userPost[index].is_like = !this.state.userPost[index].is_like;
-      this.state.userPost[index].total_like = this.state.userPost[index].is_like
-        ? this.state.userPost[index].total_like + 1
-        : this.state.userPost[index].total_like - 1;
-
-      if (!this.state.userPost[index].is_like) {
-        this.state.userPost[index].emoji = null;
+      // Use immutable update
+      const updatedUserPost = [...this.state.userPost];
+      // Toggle the like status
+      updatedUserPost[index].is_like = !updatedUserPost[index].is_like;
+      // Update the total likes
+      updatedUserPost[index].total_like = updatedUserPost[index].is_like
+        ? updatedUserPost[index].total_like + 1 // Like: Increment total likes
+        : Math.max(updatedUserPost[index].total_like - 1, 0); // Dislike: Decrement total likes but ensure it doesn't go below 0
+      // Clear emoji if dislike
+      if (!updatedUserPost[index].is_like) {
+        updatedUserPost[index].emoji = null;
       }
-
-      this.setState({userPost: this.state.userPost});
-
+      this.setState({
+        userPost: updatedUserPost,
+      });
       if (this.state.fullScreenView) {
-        this.setState({viewPost: item});
-        this.state.viewPost.is_like = !this.state.viewPost.is_like;
-
-        if (this.state.viewPost && this.state.viewPost?.is_like) {
-          this.state.viewPost[index].total_like =
-            this.state.viewPost[index].total_like + 1;
-          this.setState({viewPost: this.state.viewPost});
-        } else {
-          this.state.viewPost[index].total_like =
-            this.state.viewPost[index].total_like - 1;
-          this.setState({viewPost: this.state.viewPost});
-        }
+        const updatedViewPost = {...this.state.viewPost};
+        updatedViewPost.is_like = !updatedViewPost.is_like;
+        updatedViewPost.total_like = updatedViewPost.is_like
+          ? updatedViewPost.total_like + 1
+          : Math.max(updatedViewPost.total_like - 1, 0); // Same logic for viewPost
+        this.setState({viewPost: updatedViewPost});
       }
     } else {
-      this.state.searchData.posts[index].is_like =
-        !this.state.searchData.posts[index].is_like;
-      this.setState({searchData: this.state.searchData});
-      if (this.state.searchData.posts[index].is_like) {
-        this.state.searchData.posts[index].total_like =
-          this.state.searchData.posts[index].total_like + 1;
-        this.setState({searchData: this.state.searchData});
-      } else {
-        this.state.searchData.posts[index].total_like =
-          this.state.searchData.posts[index].total_like - 1;
-        this.setState({searchData: this.state.searchData});
-      }
+      // Update the search data similarly
+      const updatedSearchData = {...this.state.searchData};
+      updatedSearchData.posts[index].is_like =
+        !updatedSearchData.posts[index].is_like;
+      updatedSearchData.posts[index].total_like = updatedSearchData.posts[index]
+        .is_like
+        ? updatedSearchData.posts[index].total_like + 1 // Like: Increment total likes
+        : Math.max(updatedSearchData.posts[index].total_like - 1, 0); // Dislike: Decrement total likes but ensure it doesn't go below 0
+      this.setState({searchData: updatedSearchData});
     }
     await this.props.postLikeShareSave(item?.id, 'like');
   };
@@ -1691,6 +1812,7 @@ class Timeline extends PureComponent {
   };
 
   onViewableItemsChanged = async ({viewableItems, changed}) => {
+    console.log('viewableItems...', viewableItems);
 
     try {
       if (viewableItems.length !== 0) {
@@ -1698,10 +1820,14 @@ class Timeline extends PureComponent {
         viewableItems.forEach(element => {
           frmData.append('post_id[]', element?.item?.id);
         });
+        console.log('frmData...', frmData);
 
-       await postAPICall(API.getStoreUserLog, frmData);
+        const res = await postAPICall(API.getStoreUserLog, frmData);
+        console.log('res->', res);
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log('error --->', error);
+    }
   };
 
   takeVideoPhoto = async type => {
@@ -1806,13 +1932,13 @@ class Timeline extends PureComponent {
               notificationBell ? theme.colors.blue : theme.colors.darkGrey
             }
             notificationBadge={notificationBell}
-            onSearchPress={() =>
+            onSearchPress={() => {
               this.setState({
                 searchText: '',
                 searchData: [],
                 isEmojiKeyboard: false,
-              })
-            }
+              });
+            }}
             onFocus={() => {
               this.setState({isEmojiKeyboard: false});
             }}
@@ -2067,7 +2193,7 @@ class Timeline extends PureComponent {
                   onEndReached={this.loadMore}
                   onViewableItemsChanged={this.onViewableItemsChanged}
                   viewabilityConfig={{
-                    itemVisiblePercentThreshold: 100,
+                    itemVisiblePercentThreshold: 35,
                     minimumViewTime: 2000,
                   }}
                 />

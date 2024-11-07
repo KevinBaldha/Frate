@@ -1537,6 +1537,7 @@ class GroupDetails extends Component {
             bellColor={
               notificationBell ? theme.colors.blue : theme.colors.darkGrey
             }
+            notificationBadge={notificationBell}
             searchText={searchText}
             {...this.props}
             options

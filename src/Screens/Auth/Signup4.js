@@ -595,6 +595,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'flex-start',
     overflow: 'hidden',
+    marginVertical: scale(7),
   },
   cardImage: {
     width: '100%',

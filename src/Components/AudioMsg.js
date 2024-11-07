@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from 'react';
+/* eslint-disable no-shadow */
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -9,14 +10,20 @@ import {
 import Slider from '@react-native-community/slider';
 import FastImage from 'react-native-fast-image';
 import Icon from 'react-native-vector-icons/Foundation';
-import TrackPlayer, {State, useProgress} from 'react-native-track-player';
+import TrackPlayer, {
+  RepeatMode,
+  State,
+  useProgress,
+} from 'react-native-track-player';
 import {scale, theme, images} from '../Utils';
 import externalStyle from '../Css';
 import {Label} from './index';
 
-const AudioMsg = (props) => {
+const AudioMsg = props => {
   const [play, setPlay] = useState(true);
   const [loadAudio, setLoadAudio] = useState(false);
+  // const [saveDuration, setSaveDuration] = useState();
+  const saveDuration = useRef(null);
   const {
     url,
     item,
@@ -38,7 +45,7 @@ const AudioMsg = (props) => {
 
     const playbackListener = TrackPlayer.addEventListener(
       'playback-state',
-      async (state) => {
+      async state => {
         if (state?.state === State.Paused || state?.state === State.Stopped) {
           setPlay(true);
         }
@@ -47,6 +54,7 @@ const AudioMsg = (props) => {
 
     return () => {
       playbackListener.remove();
+      TrackPlayer.reset();
     };
   }, []);
 
@@ -54,12 +62,19 @@ const AudioMsg = (props) => {
     await TrackPlayer.setupPlayer();
   };
 
-  const handlePlay = async () => {
+  const handlePlay = async duration => {
     if (play) {
       setLoadAudio(true);
     }
+    console.log('duration --->', duration);
+    console.log('saveDuration.current --->', saveDuration.current);
 
-    await TrackPlayer.reset();
+    // Reset the player before adding the new track
+    if (saveDuration.current === 0) {
+      await TrackPlayer.reset();
+    }
+
+    // Create a track object with the necessary metadata
     var track1 = {
       url: url, // Load media from the network
       title: 'Avaritia',
@@ -70,24 +85,38 @@ const AudioMsg = (props) => {
       artwork: 'http://example.com/cover.png', // Load artwork from the network
       duration: duration, // Duration in seconds
     };
+
+    // Add the track to TrackPlayer
     await TrackPlayer.add(track1);
+
+    await TrackPlayer.setRepeatMode(RepeatMode.Off);
+
+    // If the duration is greater than 0, seek to that position
+    if (duration > 0) {
+      await TrackPlayer.seekTo(duration); // Seek to the specific duration
+    }
+
+    // Start playing the track or pause it based on the play state
     if (play) {
       await TrackPlayer.play();
       await TrackPlayer.setVolume(1);
-      await TrackPlayer.getState();
     } else {
       await TrackPlayer.pause();
     }
+
+    // Toggle play state
     setPlay(!play);
+
+    // Set loading to false once the audio is ready to play
     setLoadAudio(false);
   };
 
-  const changeTime = async (seconds) => {
+  const changeTime = async seconds => {
     const reminaTime = duration > 0 ? duration - seconds : 0;
     setvalue(reminaTime);
   };
 
-  const onDropProgress = (time) => {
+  const onDropProgress = time => {
     TrackPlayer.seekTo(time);
   };
   const time = item?.audio_duration?.split(':');
@@ -144,9 +173,18 @@ const AudioMsg = (props) => {
         ) : (
           <TouchableOpacity
             onPress={() => {
+              console.log('duration in progress======>', position);
               handlePreviousIndex();
-              handlePlay();
-              // setPlay(!play);
+              if (position !== saveDuration.current) {
+                saveDuration.current = position;
+              }
+              console.log(
+                'saveDuration?.current in progress======>',
+                saveDuration?.current,
+              );
+
+              handlePlay(saveDuration.current); // Play from the saved position
+              // setPlay(!play); // Toggle play state (optional depending on your state setup)
             }}
             style={{paddingLeft: scale(10)}}>
             <Icon
@@ -157,10 +195,19 @@ const AudioMsg = (props) => {
             />
           </TouchableOpacity>
         )}
+        {console.log('saveDuration.current......', saveDuration.current)}
         <Slider
           minimumValue={0}
           maximumValue={duration}
-          value={audioindex !== previousIndex ? 0 : position}
+          value={
+            saveDuration.current === 0
+              ? audioindex !== previousIndex
+                ? 0
+                : saveDuration.current > 0
+                ? saveDuration.current
+                : position
+              : saveDuration.current
+          }
           style={styles.slider}
           thumbTintColor={iconColor ? theme.colors.white : theme.colors.blue}
           maximumTrackTintColor={
@@ -170,11 +217,11 @@ const AudioMsg = (props) => {
             iconColor ? theme.colors.white : theme.colors.blue
           }
           thumbTouchSize={{width: 10, height: 10}}
-          onSlidingComplete={(data) => {
-            onDropProgress(data);
+          onSlidingComplete={data => {
+            onDropProgress(data); // Update progress when slider is released
           }}
-          onValueChange={(seconds) => {
-            changeTime(seconds);
+          onValueChange={seconds => {
+            changeTime(seconds); // Update time as slider moves
           }}
         />
       </View>
