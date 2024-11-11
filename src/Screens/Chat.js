@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
 import React, {Component} from 'react';
 import {
@@ -17,6 +18,7 @@ import {
   Animated,
   AppState,
   ActivityIndicator,
+  Linking,
 } from 'react-native';
 import EmojiPicker from 'rn-emoji-keyboard';
 import io from 'socket.io-client';
@@ -77,12 +79,14 @@ import {
   reportChat,
   getChatReoomsLocally,
 } from '../Redux/Actions';
+import DeviceInfo from 'react-native-device-info';
 let loadMoreData = false;
 let openAttachment = false;
 class Chat extends Component {
   constructor(props) {
     super(props);
     this.appState = React.createRef(AppState.currentState);
+    this.keyboardVisible = false;
     this.state = {
       Kheight: Dimensions.get('window').height,
       menu: false,
@@ -188,14 +192,6 @@ class Chat extends Component {
     this.send = this.send.bind(this);
     this.FlatListRef = null;
     this.socketRef = null;
-    this.keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      this._keyboardDidShow,
-    );
-    this.keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      this._keyboardDidHide,
-    );
 
     this.audioRecorderPlayer = new AudioRecorderPlayer();
     this.audioRecorderPlayer.setSubscriptionDuration(0.09); // optional. Default is 0.1
@@ -204,6 +200,15 @@ class Chat extends Component {
   componentDidMount() {
     this.callInitialize();
     AppState.addEventListener('change', this._handleAppStateChange);
+
+    this.keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      this._keyboardDidShow,
+    );
+    this.keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      this._keyboardDidHide,
+    );
   }
 
   callInitialize = () => {
@@ -218,10 +223,16 @@ class Chat extends Component {
       if (nextAppState === 'active') {
         this.appState.current = AppState.currentState;
         this.callInitialize();
+
+        if (this.keyboardVisible) {
+          this.setState({keybordStatus: true});
+        }
       } else if (nextAppState === 'active' && !this.peer) {
         this.initSoket();
       } else if (nextAppState === 'background') {
         this.appState.current = AppState.currentState;
+        this.setState({keybordStatus: false});
+        Keyboard.dismiss();
         this.clearData();
         this.setState({lastessageId: 0});
       }
@@ -231,6 +242,7 @@ class Chat extends Component {
   clearData = () => {
     this.socketConnect.disconnect('disconnect', () => {});
     this.socketConnect.close();
+    // AppState.removeEventListener('change', this._handleAppStateChange);
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
     clearInterval(this.Clock);
@@ -515,10 +527,12 @@ class Chat extends Component {
   };
 
   _keyboardDidShow = () => {
+    this.keyboardVisible = true;
     this.setState({keybordStatus: true});
   };
 
   _keyboardDidHide = () => {
+    this.keyboardVisible = false;
     this.setState({keybordStatus: false});
   };
 
@@ -1256,22 +1270,49 @@ class Chat extends Component {
       this.downloadFile(filePath);
     } else {
       try {
-        const granted = await PermissionsAndroid.request(
+        const permissionStatus = await PermissionsAndroid.check(
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-          {
-            title: getLocalText('Settings.storagetitle'),
-            message: getLocalText('Settings.storagemessage'),
-          },
         );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          // Start downloading
-          this.downloadFile(filePath);
+
+        if (!permissionStatus) {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+            {
+              title: getLocalText('Settings.storagetitle'),
+              message: getLocalText('Settings.storagemessage'),
+            },
+          );
+
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            this.downloadFile(filePath);
+          } else if (granted === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
+            const androidVersion = Platform.Version;
+
+            if (Platform.OS === 'android' && androidVersion >= 30) {
+              this.downloadFile(filePath);
+            } else {
+              Alert.alert(
+              'Error',
+              getLocalText('Settings.needstorage') +
+                '\nPlease enable it from settings.',
+              [
+                {
+                  text: 'Go to Settings',
+                  onPress: () => Linking.openSettings(),
+                },
+              ]
+            );
+            }
+          } else {
+            Alert.alert('Error', getLocalText('Settings.needstorage'));
+          }
         } else {
-          // If permission denied then show alert
-          Alert.alert('Error', getLocalText('Settings.needstorage'));
+          // Permission already granted, start downloading
+          this.downloadFile(filePath);
         }
       } catch (err) {
         // To handle permission related exception
+        console.warn(err);
       }
     }
   };
@@ -2199,11 +2240,13 @@ class Chat extends Component {
           style={styles.keyboardView}
           behavior={Platform.OS === 'ios' ? 'position' : 'height'}
           keyboardVerticalOffset={
-            Platform.OS === 'ios'
-              ? isIphoneX()
-                ? scale(-32)
-                : scale(-20)
-              : scale(-25)
+            this.state.keybordStatus
+              ? Platform.OS === 'ios'
+                ? isIphoneX()
+                  ? scale(-32)
+                  : scale(-20)
+                : scale(-15)
+              : 0
           }>
           <FlatList
             ref={ref => (this.FlatListRef = ref)}
@@ -2265,7 +2308,6 @@ class Chat extends Component {
               this.setState({viewYposition: e.nativeEvent.layout.y});
             }}
           />
-
           {stopRecording && this.state.newFilePath ? (
             <View
               style={[
@@ -2274,7 +2316,7 @@ class Chat extends Component {
                   bottom:
                     this.state.isEmojiKeyboard || this.state.keybordStatus
                       ? Platform.OS === 'android'
-                        ? '45%'
+                        ? '1%'
                         : isIphoneX()
                         ? '38%'
                         : '50%'
@@ -2397,7 +2439,12 @@ class Chat extends Component {
                       // this.FlatListRef.scrollToEnd();
                       this.setState({msg: txt});
                     }}
-                    onFocus={() => this.setState({isEmojiKeyboard: false})}
+                    onFocus={() =>
+                      this.setState({
+                        isEmojiKeyboard: false,
+                        keybordStatus: true,
+                      })
+                    }
                     style={[
                       styles.writeText,
                       {
@@ -2741,7 +2788,6 @@ const styles = StyleSheet.create({
   },
   writeText: {
     fontSize: scale(14),
-    marginBottom:Platform.OS === 'android' ? scale(2) : 0,
   },
   alignSelf: {
     alignSelf: 'center',

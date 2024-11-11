@@ -349,7 +349,7 @@ const PostsCommentModel = props => {
             isKeyboardVisible
               ? Platform.OS === 'ios'
                 ? scale(0)
-                : scale(20)
+                : scale(40)
               : scale(0)
           }>
           <Loader loading={loadding} />

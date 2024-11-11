@@ -25,6 +25,7 @@ import PushNotification from 'react-native-push-notification';
 import messaging from '@react-native-firebase/messaging';
 import LinearGradient from 'react-native-linear-gradient';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import {request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 // import EmojiBoard from './EmojiBoard';
 import {
   getPost,
@@ -183,7 +184,24 @@ class Timeline extends PureComponent {
     return fcm;
   };
 
+  // Request notification permission on mount
+  async requestNotificationPermission() {
+    console.log('in request notification permission module');
+
+    if (Platform.OS === 'android' && Platform.Version >= 33) {
+      const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
+      if (result === RESULTS.GRANTED) {
+        console.log('Notification permission granted');
+      } else if (result === RESULTS.DENIED) {
+        console.log('Notification permission denied');
+      } else if (result === RESULTS.BLOCKED) {
+        console.log('Notification permission permanently denied');
+      }
+    }
+  }
+
   componentDidMount = async () => {
+    this.requestNotificationPermission();
     var fcm = await this.getFcmToken();
     console.log('FCM ->', fcm);
 
@@ -274,14 +292,21 @@ class Timeline extends PureComponent {
     let notificationMessage = '';
     await PushNotification.configure({
       onNotification: notification => {
+        console.log('Received notification:', notification);
         const {foreground, userInteraction} = notification;
         if (foreground && !userInteraction) {
+          console.log(
+            'App in foreground and no user interaction, showing local notification',
+          );
           PushNotification.localNotification(notification);
           notificationRouteType = notification.data?.notification_type;
           notificationMessage = notification;
         }
 
         if (foreground && userInteraction) {
+          console.log(
+            'App in foreground and user interacted with notification',
+          );
           this.loadScreenFromMessage(
             notificationRouteType
               ? notificationRouteType
@@ -290,6 +315,9 @@ class Timeline extends PureComponent {
           );
         }
         if (!foreground && userInteraction) {
+          console.log(
+            'App in background and user interacted with notification',
+          );
           this.loadScreenFromMessage(
             notificationRouteType
               ? notificationRouteType
@@ -308,10 +336,15 @@ class Timeline extends PureComponent {
     });
     await messaging()
       .getInitialNotification()
-      .then(async response => {});
+      .then(async response => {
+        if (response) {
+          console.log('App opened by notification:', response);
+        }
+      });
 
     messaging().onNotificationOpenedApp(async remoteMessage => {
       if (remoteMessage) {
+        console.log('Notification opened from background:', remoteMessage);
         await this.loadScreenFromMessage(
           remoteMessage?.data?.type || remoteMessage?.data?.notification_type,
           remoteMessage,
@@ -320,6 +353,7 @@ class Timeline extends PureComponent {
     });
 
     messaging().onMessage(async remoteMessage => {
+      console.log('New foreground notification received:', remoteMessage);
       console.log('messaging().onMessage....');
       console.log('remoteMessage ->', remoteMessage);
       if (Platform.OS === 'ios') {
@@ -332,6 +366,7 @@ class Timeline extends PureComponent {
     });
 
     messaging().setBackgroundMessageHandler(async remoteMessage => {
+      console.log('Background message received:', remoteMessage);
       if (Platform.OS === 'ios') {
         PushNotificationIOS.getApplicationIconBadgeNumber(async badge => {
           PushNotificationIOS.setApplicationIconBadgeNumber(badge + 1);
@@ -382,7 +417,7 @@ class Timeline extends PureComponent {
         if (created) {
           PushNotification.localNotification({
             autoCancel: true,
-            channelId: 'channel-id1',
+            channelId: remoteMessage?.messageId,
             bigText: remoteMessage?.notification?.body,
             subText: '',
             userInfo: remoteMessage?.notification && remoteMessage?.data,
@@ -1194,8 +1229,7 @@ class Timeline extends PureComponent {
   //   }
   // };
 
-
-  onPressLikeEmoji = async (value) => {
+  onPressLikeEmoji = async value => {
     this.closeEmojiModal();
     const {postLikeOption, postLikeOptionIndex} = this.state;
     // Map the emoji value to the corresponding id
