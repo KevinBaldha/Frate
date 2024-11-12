@@ -186,7 +186,6 @@ class Timeline extends PureComponent {
 
   // Request notification permission on mount
   async requestNotificationPermission() {
-    console.log('in request notification permission module');
 
     if (Platform.OS === 'android' && Platform.Version >= 33) {
       const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
@@ -219,7 +218,6 @@ class Timeline extends PureComponent {
     await this.getAllPost();
 
     await this.handleDeepLink();
-    console.log('COMPONENTDID MOUNT.....');
 
     await this.messageListener();
     this.setState({
@@ -286,27 +284,18 @@ class Timeline extends PureComponent {
   };
 
   messageListener = async () => {
-    console.log('messageListener....');
-
     let notificationRouteType = '';
     let notificationMessage = '';
     await PushNotification.configure({
       onNotification: notification => {
-        console.log('Received notification:', notification);
         const {foreground, userInteraction} = notification;
         if (foreground && !userInteraction) {
-          console.log(
-            'App in foreground and no user interaction, showing local notification',
-          );
           PushNotification.localNotification(notification);
           notificationRouteType = notification.data?.notification_type;
           notificationMessage = notification;
         }
 
         if (foreground && userInteraction) {
-          console.log(
-            'App in foreground and user interacted with notification',
-          );
           this.loadScreenFromMessage(
             notificationRouteType
               ? notificationRouteType
@@ -315,9 +304,6 @@ class Timeline extends PureComponent {
           );
         }
         if (!foreground && userInteraction) {
-          console.log(
-            'App in background and user interacted with notification',
-          );
           this.loadScreenFromMessage(
             notificationRouteType
               ? notificationRouteType
@@ -344,7 +330,6 @@ class Timeline extends PureComponent {
 
     messaging().onNotificationOpenedApp(async remoteMessage => {
       if (remoteMessage) {
-        console.log('Notification opened from background:', remoteMessage);
         await this.loadScreenFromMessage(
           remoteMessage?.data?.type || remoteMessage?.data?.notification_type,
           remoteMessage,
@@ -353,20 +338,15 @@ class Timeline extends PureComponent {
     });
 
     messaging().onMessage(async remoteMessage => {
-      console.log('New foreground notification received:', remoteMessage);
-      console.log('messaging().onMessage....');
-      console.log('remoteMessage ->', remoteMessage);
       if (Platform.OS === 'ios') {
         PushNotificationIOS.getApplicationIconBadgeNumber(badge => {
           PushNotificationIOS.setApplicationIconBadgeNumber(badge + 1);
         });
       }
-      console.log('showNotification OUTSIDE.....');
       this.showNotification(remoteMessage);
     });
 
     messaging().setBackgroundMessageHandler(async remoteMessage => {
-      console.log('Background message received:', remoteMessage);
       if (Platform.OS === 'ios') {
         PushNotificationIOS.getApplicationIconBadgeNumber(async badge => {
           PushNotificationIOS.setApplicationIconBadgeNumber(badge + 1);
@@ -402,8 +382,6 @@ class Timeline extends PureComponent {
   };
 
   showNotification = remoteMessage => {
-    console.log('showNotification....');
-    console.log('remoteMessage ->', remoteMessage);
 
     PushNotification.getChannels(function (channel_ids) {});
     PushNotification.checkPermissions(function (permissions) {});
@@ -432,21 +410,6 @@ class Timeline extends PureComponent {
         }
       },
     );
-    console.log(
-      'remoteMessage?.data?.notification_type ->',
-      remoteMessage?.data?.notification_type,
-    );
-    console.log(
-      'notificationTypes.newMessageInPersonalChatroom ->',
-      notificationTypes.newMessageInPersonalChatroom,
-    );
-    console.log(
-      'remoteMessage?.data?.notification_type === notificationTypes.newMessageInPersonalChatroom ->',
-      remoteMessage?.data?.notification_type ===
-        notificationTypes.newMessageInPersonalChatroom,
-    );
-
-    console.log('setNotificationBellIcon....');
 
     // this.props.setNotificationBellIcon(
     //   remoteMessage?.data?.notification_type ===
@@ -462,12 +425,6 @@ class Timeline extends PureComponent {
       remoteMessage?.data?.notification_type ===
       notificationTypes.newMessageInPersonalChatroom
     ) {
-      console.log(
-        'remoteMessage?.data?.notification_type === notificationTypes.newMessageInPersonalChatroom',
-        remoteMessage?.data?.notification_type ===
-          notificationTypes.newMessageInPersonalChatroom,
-      );
-
       this.props.setNewChatBadge(true);
     }
   };
@@ -636,7 +593,6 @@ class Timeline extends PureComponent {
   _keyboardDidHide() {}
 
   setEmoji = emoji => {
-    console.log('emoji', emoji);
     const key = this.state.isEmojiKeyboard ? 'postText' : 'commonText';
     if (this.state.isEmojiKeyboard) {
       this.setState({[key]: this.state[key] + emoji.emoji});
@@ -806,6 +762,7 @@ class Timeline extends PureComponent {
             loadMoreData = false;
           },
         );
+        this.props.getPostLocally(data);
       } else {
         this.setState({loadMore: false});
       }
@@ -1094,7 +1051,6 @@ class Timeline extends PureComponent {
           // this.closePerfectModel();
           // setTimeout(() => {
           //   this.closePerfectModel();
-          //   console.log('4 4 4 4 4====>');
           // }, 500);
         }
       } catch (error) {
@@ -1134,17 +1090,22 @@ class Timeline extends PureComponent {
       params.append('author_confirm', type);
       params.append('sponsor_id', sponsorAlertList.sponsor_user.id);
       let response = await postAPICall(API.sponsorPostStatus, params);
-      if (!response.error) {
+
+      if (response.success) {
         var allPostDetail = allData;
         const postIndex = allPostDetail?.data.findIndex(
-          d => d.id === sponsorAlertList?.post?.id,
+          (d) => {return d.id === sponsorAlertList?.post?.id}
         );
-        allPostDetail.data[postIndex].is_sponsored = 1;
-        this.props.getPostLocally(allPostDetail);
+
+        if(postIndex !== -1){
+          allPostDetail.data[postIndex].is_sponsored = 1;
+          this.props.getPostLocally(allPostDetail);
+          this.setState({
+            userPost: allPostDetail?.data,
+          });
+        }
+
         this.props.isPostLoading(false);
-        this.setState({
-          userPost: allPostDetail?.data,
-        });
         this.props.navigation.navigate('ActiveSponsorPost', {
           title: getLocalText('Settings.mySponsor'),
         });
@@ -2123,9 +2084,7 @@ class Timeline extends PureComponent {
                       this.openVideoPicker();
                     }, 500);
                   }}
-                  onPressFile={() => {
-                    this.openFile();
-                  }}
+                  onPressFile={() => this.openFile()}
                   close={() => {
                     this.handleMediaOptions();
                   }}

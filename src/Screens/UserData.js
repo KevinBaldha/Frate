@@ -12,6 +12,7 @@ import {
   RefreshControl,
   TouchableNativeFeedback,
   TextInput,
+  Image,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import {isIphoneX} from 'react-native-iphone-x-helper';
@@ -848,10 +849,10 @@ class UserData extends Component {
                   <View style={styles.cardView}>
                     {counts?.totalPoints !== '' && (
                       <>
-                        <FastImage
+                        <Image
                           source={{uri: userInfo.rank?.image}}
                           style={styles.imageView}
-                          resizeMode={FastImage.resizeMode.cover}
+                          resizeMode={FastImage.resizeMode.contain}
                         />
                         <View style={styles.rankView}>
                           <View style={styles.rank}>
@@ -1308,10 +1309,12 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   imageView: {
-    height: scale(35),
+    height: scale(40),
     width: scale(40),
     alignItems: 'center',
+    justifyContent:'center',
     borderRadius: scale(20),
+    aspectRatio: 0.92 / 1,
   },
   circle: {
     borderWidth: 5,

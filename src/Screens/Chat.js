@@ -967,14 +967,18 @@ class Chat extends Component {
   };
 
   openFile = async () => {
+    console.log('openFile.....');
+
     try {
       const res = await DocumentPicker.pick({
         type: [DocumentPicker.types.pdf],
         // presentationStyle: 'fullScreen',
         allowMultiSelection: true,
       });
+      console.log('res ->',res);
 
-      const resp = Platform.OS === 'ios' ? res : res[0];
+      const resp = Platform.OS === 'ios' ? res : res?.[0];
+      console.log('resp ->',resp);
       var fileObj = {
         name: resp.name,
         type: resp.type,
@@ -992,13 +996,18 @@ class Chat extends Component {
       body.append('user_id', this.state.loginUserData?.id);
       body.append('name', this.state.loginUserData?.first_name);
       body.append('user_pic', this.state.loginUserData?.user_pic?.small); //singleChatId === '1' ? 'conversation-upload-file' :
-      const endPoint = 'https://frate.eugeniuses.com:3030/upload-file';
-      const singleChatPoint =
+      console.log('body ->',body);
+
+      const uploadFile = 'https://frate.eugeniuses.com:3030/upload-file';
+      const conversationUploadFile =
         'https://frate.eugeniuses.com:3030/conversation-upload-file';
       this.setState({loading: true});
+      console.log('this.state.singleChatId === "1" ->',this.state.singleChatId === '1');
+
+      const endpoint = this.state.singleChatId === '1' ? conversationUploadFile : uploadFile;
       axios
         .post(
-          this.state.singleChatId === '1' ? singleChatPoint : endPoint,
+          endpoint,
           body,
           {
             headers: {
@@ -1018,6 +1027,8 @@ class Chat extends Component {
         )
         .then(response => {
           openAttachment = false;
+          console.log('response ->',response);
+          console.log('response.status ->',response.status);
           switch (response.status) {
             case 200:
               this.setState({
@@ -1033,8 +1044,10 @@ class Chat extends Component {
           }
         })
         .catch(error => {
+          console.log('error.response ->', error);
           openAttachment = false;
           if (error.response) {
+
             if ([400, 404, 415, 500, 501].includes(error.response.status)) {
               // unlink(file.path);
               this.setState({loading: false});
@@ -1059,6 +1072,7 @@ class Chat extends Component {
       }
     }
     this.setState({mediaOption: !this.state.mediaOption});
+    // this.setState((prevState) => ({ mediaOption: !prevState.mediaOption }));
   };
 
   //upload in server
@@ -1103,6 +1117,8 @@ class Chat extends Component {
         },
       )
       .then(response => {
+        console.log('Upload Response -->', response);
+        
         openAttachment = false;
         switch (response.status) {
           case 200:
@@ -1385,6 +1401,8 @@ class Chat extends Component {
   //render chat data
   renderItem = ({item, index}) => {
     //"message_type": "pdf"
+    // console.log('item?.message_type === "pdf"---->',item?.message_type === 'pdf');
+    
     const {userReciverData, singleChatId} = this.state;
     if (item?.message !== null) {
       if (item?.newjoin) {
@@ -1874,9 +1892,7 @@ class Chat extends Component {
                       marginBottom: scale(5),
                       backgroundColor: theme.colors.blue,
                     }}
-                    onPress={() => {
-                      this.checkPermission(item?.attachment);
-                    }}>
+                    onPress={() => this.checkPermission(item?.attachment)}>
                     <View style={styles.rowCenter}>
                       <View
                         style={[
