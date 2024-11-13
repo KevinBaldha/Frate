@@ -1,3 +1,4 @@
+import Toast from 'react-native-simple-toast';
 import {API, getAPICall, postAPICall} from '../../Utils/appApi';
 // import {getJoinGroupCount} from './userDetails';
 import * as types from './ActionsTypes';
@@ -36,9 +37,12 @@ export const getGroups = (
 };
 
 export const categoryFilterGroups = payload => {
+  console.log('categoryFilterGroups......');
   let categoryFillter =
     payload !== undefined ? '?category_id=' + payload : null;
   return async dispatch => {
+    console.log('dispatch ----->');
+
     try {
       let success = await getAPICall(API.groupCreate + categoryFillter);
       if (success.error) {
@@ -52,20 +56,28 @@ export const categoryFilterGroups = payload => {
 };
 //exit from group
 export const exitGroup = payload => {
+  console.log('exitGroup INSIDE....');
+
   return async dispatch => {
     try {
       let formdata = new FormData();
       formdata.append('group_id', payload);
+      console.log('formdata -->',formdata);
       let success = await postAPICall(API.leftGroup, formdata);
+      console.log('success -->',success);
+      console.log('success -->',success.success);
+      console.log('success -->',success.message);
       if (success.error) {
-      } else {
+      }else{
+        console.log('success -->',success.message);
         // getJoinGroupCount(success.data.join_count);
-        getJoinedGroups();
+        getJoinedGroups(1);
         dispatch({type: types.LEFTGROUP, payload: success.data});
         dispatch({
           type: types.JOINGROUPCOUNT,
           payload: success.data.join_count,
         });
+        Toast.show(success?.message,Toast.BOTTOM);
       }
     } catch (error) {
       console.log('exitGroup API catchError', error);
@@ -93,17 +105,33 @@ export const manageNotification = payload => {
 };
 
 //get joined groups
-export const getJoinedGroups = payload => {
-  return async dispatch => {
+export const getJoinedGroups = (payload) => {
+  console.log('getJoinedGroups ....>>>>');
+  console.log('getJoinedGroups ->', payload);
+
+ return async (dispatch) => {
+    console.log('Dispatch starting.....');
     try {
+      // Log before calling the API
+      console.log('Calling getAPICall with endpoint...');
+
       let success = await getAPICall(API.getJoinGroups + '?page=' + payload);
-      if (success.error) {
+      console.log('getJoinedGroups success ->', success);
+
+      if (success && success.error) {
+        console.error('API responded with an error:', success.error);
+      } else if (success) {
+        console.log('Dispatching action JOINGROUPS with payload:', success);
+        dispatch({ type: types.JOINGROUPS, payload: success });
       } else {
-        dispatch({type: types.JOINGROUPS, payload: success});
+        console.warn('Success response is empty or undefined');
       }
+
       return success;
     } catch (error) {
-      console.log('getJoinedGroups API catchError', error);
+      console.error('getJoinedGroups API catchError:', error);
+    } finally {
+      console.log('Dispatch function completed.');
     }
   };
 };

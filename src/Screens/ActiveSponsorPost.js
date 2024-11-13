@@ -129,7 +129,12 @@ class ActiveSponsorPost extends Component {
 
   //post save
   handleSavePost = async item => {
+    console.log('handleSavePost....');
+    
     let postIndex = this.state.postOptionIndex;
+    console.log('item ->',item);
+    console.log('postIndex ->',postIndex);
+    
     try {
       await this.props.postLikeShareSave(item, 'save');
       if (this.props.isPostLike) {
@@ -137,7 +142,10 @@ class ActiveSponsorPost extends Component {
           !this.state.postData[postIndex].is_save;
         this.setState({postData: this.state.postData});
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log('handleSavePost error >',error);
+      
+    }
   };
 
   handleOptions = async (index, item, data) => {
@@ -156,6 +164,8 @@ class ActiveSponsorPost extends Component {
       this.props.susPendNotification(data.group?.id, data?.user_id);
     } else if (index === 3) {
       //exit group model
+      console.log('exitGroup....');
+      
       this.props.exitGroup(data.group?.id);
     } else if (index === 2) {
       //post hide

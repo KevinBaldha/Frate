@@ -20,10 +20,6 @@ import externalStyle from '../Css';
 import {Label} from './index';
 
 const AudioMsg = props => {
-  const [play, setPlay] = useState(true);
-  const [loadAudio, setLoadAudio] = useState(false);
-  // const [saveDuration, setSaveDuration] = useState();
-  const saveDuration = useRef(null);
   const {
     url,
     item,
@@ -37,9 +33,23 @@ const AudioMsg = props => {
     handlePreviousIndex,
     created_at,
   } = props;
-  const {position, duration} = useProgress();
+
   const [value, setvalue] = useState(0);
-  // const [currentplay, setCurrentplay] = useState(null);
+  const [play, setPlay] = useState(true);
+  const [loadAudio, setLoadAudio] = useState(false);
+
+  const saveDurationRef = useRef([]);
+
+  const {position, duration} = useProgress();
+
+  const saveDurationAtIndex = (index, position) => {
+    saveDurationRef.current[index] = position;
+  };
+
+  const getDurationAtIndex = index => {
+    return saveDurationRef.current[index] || 0; // default to 0 if not set
+  };
+
   useEffect(() => {
     init();
 
@@ -48,6 +58,8 @@ const AudioMsg = props => {
       async state => {
         if (state?.state === State.Paused || state?.state === State.Stopped) {
           setPlay(true);
+          // saveDurationRef.current = position;
+          saveDurationAtIndex(audioindex, await TrackPlayer.getPosition());
         }
       },
     );
@@ -56,26 +68,24 @@ const AudioMsg = props => {
       playbackListener.remove();
       TrackPlayer.reset();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const init = async () => {
-    await TrackPlayer.setupPlayer();
-  };
+  const init = async () => await TrackPlayer.setupPlayer();
 
-  const handlePlay = async duration => {
+  const handlePlay = async () => {
     if (play) {
       setLoadAudio(true);
     }
-    console.log('duration --->', duration);
-    console.log('saveDuration.current --->', saveDuration.current);
 
+    const savedDuration = getDurationAtIndex(audioindex);
     // Reset the player before adding the new track
-    if (saveDuration.current === 0) {
+    if (savedDuration === 0 && audioindex === previousIndex) {
       await TrackPlayer.reset();
     }
 
     // Create a track object with the necessary metadata
-    var track1 = {
+    var track = {
       url: url, // Load media from the network
       title: 'Avaritia',
       artist: 'deadmau5',
@@ -87,19 +97,19 @@ const AudioMsg = props => {
     };
 
     // Add the track to TrackPlayer
-    await TrackPlayer.add(track1);
+    await TrackPlayer.add(track);
 
     await TrackPlayer.setRepeatMode(RepeatMode.Off);
 
     // If the duration is greater than 0, seek to that position
-    if (duration > 0) {
-      await TrackPlayer.seekTo(duration); // Seek to the specific duration
+    if (savedDuration > 0) {
+      await TrackPlayer.seekTo(savedDuration); // Seek to the specific duration
     }
 
     // Start playing the track or pause it based on the play state
     if (play) {
       await TrackPlayer.play();
-      await TrackPlayer.setVolume(1);
+      // await TrackPlayer.setVolume(1);
     } else {
       await TrackPlayer.pause();
     }
@@ -109,17 +119,34 @@ const AudioMsg = props => {
 
     // Set loading to false once the audio is ready to play
     setLoadAudio(false);
+
+    saveDurationAtIndex(audioindex, await TrackPlayer.getPosition());
   };
 
   const changeTime = async seconds => {
     const reminaTime = duration > 0 ? duration - seconds : 0;
     setvalue(reminaTime);
+    // saveDurationRef.current = reminaTime;
+    saveDurationAtIndex(audioindex, reminaTime);
+  };
+  
+  const onDropProgress = value => {
+    TrackPlayer.seekTo(value);
+    // saveDurationRef.current = value;
+    saveDurationAtIndex(audioindex, value);
   };
 
-  const onDropProgress = time => {
-    TrackPlayer.seekTo(time);
-  };
   const time = item?.audio_duration?.split(':');
+
+  const handlePlayPause = async () => {
+    handlePreviousIndex();
+    // if (position !== saveDuration.current) {
+    // saveDurationRef.current = position;
+    saveDurationAtIndex(audioindex, await TrackPlayer.getPosition());
+    // }
+    handlePlay(); // Play from the saved position
+  };
+
   return (
     <View
       style={[
@@ -172,20 +199,7 @@ const AudioMsg = props => {
           />
         ) : (
           <TouchableOpacity
-            onPress={() => {
-              console.log('duration in progress======>', position);
-              handlePreviousIndex();
-              if (position !== saveDuration.current) {
-                saveDuration.current = position;
-              }
-              console.log(
-                'saveDuration?.current in progress======>',
-                saveDuration?.current,
-              );
-
-              handlePlay(saveDuration.current); // Play from the saved position
-              // setPlay(!play); // Toggle play state (optional depending on your state setup)
-            }}
+            onPress={() => handlePlayPause()}
             style={{paddingLeft: scale(10)}}>
             <Icon
               name={play || audioindex !== previousIndex ? 'play' : 'pause'}
@@ -195,19 +209,19 @@ const AudioMsg = props => {
             />
           </TouchableOpacity>
         )}
-        {console.log('saveDuration.current......', saveDuration.current)}
         <Slider
           minimumValue={0}
           maximumValue={duration}
-          value={
-            saveDuration.current === 0
-              ? audioindex !== previousIndex
-                ? 0
-                : saveDuration.current > 0
-                ? saveDuration.current
-                : position
-              : saveDuration.current
-          }
+          // value={
+          //   saveDuration.current === 0
+          //     ? audioindex !== previousIndex
+          //       ? 0
+          //       : !play
+          //       ? position
+          //       : saveDuration.current
+          //     : saveDuration.current
+          // }
+          value={audioindex !== previousIndex ? 0 : position}
           style={styles.slider}
           thumbTintColor={iconColor ? theme.colors.white : theme.colors.blue}
           maximumTrackTintColor={
@@ -217,12 +231,8 @@ const AudioMsg = props => {
             iconColor ? theme.colors.white : theme.colors.blue
           }
           thumbTouchSize={{width: 10, height: 10}}
-          onSlidingComplete={data => {
-            onDropProgress(data); // Update progress when slider is released
-          }}
-          onValueChange={seconds => {
-            changeTime(seconds); // Update time as slider moves
-          }}
+          onSlidingComplete={data => onDropProgress(data)}
+          onValueChange={seconds => changeTime(seconds)}
         />
       </View>
 

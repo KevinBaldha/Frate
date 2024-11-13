@@ -1063,7 +1063,6 @@ class Timeline extends PureComponent {
   getSponsorAlert = async () => {
     try {
       this.props.isPostLoading(true);
-
       let response = await getAPICall(API.getSponsorAlert);
       this.props.isPostLoading(false);
       if (response.success) {
@@ -1090,13 +1089,11 @@ class Timeline extends PureComponent {
       params.append('author_confirm', type);
       params.append('sponsor_id', sponsorAlertList.sponsor_user.id);
       let response = await postAPICall(API.sponsorPostStatus, params);
-
       if (response.success) {
         var allPostDetail = allData;
         const postIndex = allPostDetail?.data.findIndex(
           (d) => {return d.id === sponsorAlertList?.post?.id}
         );
-
         if(postIndex !== -1){
           allPostDetail.data[postIndex].is_sponsored = 1;
           this.props.getPostLocally(allPostDetail);
@@ -1109,6 +1106,9 @@ class Timeline extends PureComponent {
         this.props.navigation.navigate('ActiveSponsorPost', {
           title: getLocalText('Settings.mySponsor'),
         });
+      }else{
+        this.setState({loading: false});
+        this.props.isPostLoading(false);
       }
     } catch (error) {
       this.setState({loading: false});

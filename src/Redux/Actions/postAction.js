@@ -122,7 +122,10 @@ export const getPostLoadding = (payload) => {
 
 //post like,share,hide,save
 export const postLikeShareSave = (postId, type, emojiValue) => {
+  console.log('postLikeShareSave...');
+  
   return async (dispatch) => {
+    console.log('postLikeShareSave...',dispatch);
     // dispatch(isPostLoading(true));
     let postLikesharesaveData = new FormData();
     postLikesharesaveData.append('post_id', postId);
@@ -130,7 +133,9 @@ export const postLikeShareSave = (postId, type, emojiValue) => {
     if (emojiValue !== undefined) {
       postLikesharesaveData.append('emoji', emojiValue);
     }
+    console.log('postLikesharesaveData ->',postLikesharesaveData);
     let response = await postAPICall(API.userPost, postLikesharesaveData);
+    console.log('postLikesharesave response ->',response);
     dispatch(isPostLoading(false));
     if (!response.error) {
       dispatch({type: types.POSTLIKE, payload: response.success});

@@ -64,6 +64,8 @@ class SavePost extends Component {
     try {
       this.setState({loadding: true});
       let response = await getAPICall(API.getSavePost);
+      console.log('getSavedPost response ->',response);
+      
       this.setState({loadding: false});
       if (response.success) {
         this.setState({
