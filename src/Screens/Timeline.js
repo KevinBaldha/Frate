@@ -1807,21 +1807,17 @@ class Timeline extends PureComponent {
   };
 
   onViewableItemsChanged = async ({viewableItems, changed}) => {
-    console.log('viewableItems...', viewableItems);
-
     try {
       if (viewableItems.length !== 0) {
         let frmData = new FormData();
         viewableItems.forEach(element => {
           frmData.append('post_id[]', element?.item?.id);
         });
-        console.log('frmData...', frmData);
 
-        const res = await postAPICall(API.getStoreUserLog, frmData);
-        console.log('res->', res);
+        await postAPICall(API.getStoreUserLog, frmData);
       }
     } catch (error) {
-      console.log('error --->', error);
+      console.error('error --->', error);
     }
   };
 

@@ -1044,14 +1044,13 @@ class Chat extends Component {
           }
         })
         .catch(error => {
-          console.log('error.response ->', error);
           openAttachment = false;
-          if (error.response) {
+          if (error?.response) {
 
-            if ([400, 404, 415, 500, 501].includes(error.response.status)) {
+            if ([400, 404, 415, 500, 501].includes(error?.response?.status)) {
               // unlink(file.path);
               this.setState({loading: false});
-            } else if (error.response.status === 422) {
+            } else if (error?.response?.status === 422) {
               // unlink(file.path);
               this.setState({loading: false});
             } else {

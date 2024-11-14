@@ -37,11 +37,9 @@ export const getGroups = (
 };
 
 export const categoryFilterGroups = payload => {
-  console.log('categoryFilterGroups......');
   let categoryFillter =
     payload !== undefined ? '?category_id=' + payload : null;
   return async dispatch => {
-    console.log('dispatch ----->');
 
     try {
       let success = await getAPICall(API.groupCreate + categoryFillter);
@@ -54,22 +52,39 @@ export const categoryFilterGroups = payload => {
     }
   };
 };
+
+//get joined groups
+export const getJoinedGroups = payload => {
+
+  return async dispatch => {
+     try {
+       // Log before calling the API
+       let success = await getAPICall(API.getJoinGroups + '?page=' + payload);
+ 
+       if (success && success.error) {
+       } else if (success) {
+         dispatch({ type: types.JOINGROUPS, payload: success });
+       } else {
+         console.warn('Success response is empty or undefined');
+       }
+ 
+       return success;
+     } catch (error) {
+       console.error('getJoinedGroups API catchError:', error);
+     } finally {}
+   };
+ };
+
 //exit from group
 export const exitGroup = payload => {
-  console.log('exitGroup INSIDE....');
 
   return async dispatch => {
     try {
       let formdata = new FormData();
       formdata.append('group_id', payload);
-      console.log('formdata -->',formdata);
       let success = await postAPICall(API.leftGroup, formdata);
-      console.log('success -->',success);
-      console.log('success -->',success.success);
-      console.log('success -->',success.message);
       if (success.error) {
       }else{
-        console.log('success -->',success.message);
         // getJoinGroupCount(success.data.join_count);
         getJoinedGroups(1);
         dispatch({type: types.LEFTGROUP, payload: success.data});
@@ -100,38 +115,6 @@ export const manageNotification = payload => {
       }
     } catch (error) {
       console.log('manageNotification API catchError', error);
-    }
-  };
-};
-
-//get joined groups
-export const getJoinedGroups = (payload) => {
-  console.log('getJoinedGroups ....>>>>');
-  console.log('getJoinedGroups ->', payload);
-
- return async (dispatch) => {
-    console.log('Dispatch starting.....');
-    try {
-      // Log before calling the API
-      console.log('Calling getAPICall with endpoint...');
-
-      let success = await getAPICall(API.getJoinGroups + '?page=' + payload);
-      console.log('getJoinedGroups success ->', success);
-
-      if (success && success.error) {
-        console.error('API responded with an error:', success.error);
-      } else if (success) {
-        console.log('Dispatching action JOINGROUPS with payload:', success);
-        dispatch({ type: types.JOINGROUPS, payload: success });
-      } else {
-        console.warn('Success response is empty or undefined');
-      }
-
-      return success;
-    } catch (error) {
-      console.error('getJoinedGroups API catchError:', error);
-    } finally {
-      console.log('Dispatch function completed.');
     }
   };
 };
