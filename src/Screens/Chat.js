@@ -800,15 +800,22 @@ class Chat extends Component {
 
   onStartPlay = async () => {
     const {audioPlayDisableButton, duration} = this.state;
-    this.setState({
+
+    this.setState(prevState => ({
       audioPlayButton: audioPlayDisableButton
-        ? !this.state.audioPlayButton
-        : this.state.audioPlayButton,
-      audioPlayDisableButton: false,
-    });
-    this.setState({
+        ? !prevState.audioPlayButton
+        : prevState.audioPlayButton,
       audioPlayDisableButton: true,
-    });
+    }));
+  // this.setState({
+  //   audioPlayButton: isAudioPlayButton,
+  //   // audioPlayDisableButton: false,
+  //   audioPlayDisableButton: true,
+  // });
+
+    // this.setState({
+    //   audioPlayDisableButton: true,
+    // });
     const path_file = this.state.newFilePath;
     await this.audioRecorderPlayer.startPlayer(path_file);
     this.audioRecorderPlayer.setVolume(5.0);
@@ -843,15 +850,21 @@ class Chat extends Component {
 
   onPausePlay = async e => {
     const {audioPlayDisableButton} = this.state;
-    this.setState({
+    // this.setState({
+    //   audioPlayButton: audioPlayDisableButton
+    //     ? !this.state.audioPlayButton
+    //     : this.state.audioPlayButton,
+    //   audioPlayDisableButton: false,
+    // });
+    this.setState(prevState => ({
       audioPlayButton: audioPlayDisableButton
-        ? !this.state.audioPlayButton
-        : this.state.audioPlayButton,
-      audioPlayDisableButton: false,
-    });
-    this.setState({
+        ? !prevState.audioPlayButton
+        : prevState.audioPlayButton,
       audioPlayDisableButton: true,
-    });
+    }));
+    // this.setState({
+    //   audioPlayDisableButton: true,
+    // });
     await this.audioRecorderPlayer.pausePlayer();
     if (this.state.currentPositionSec !== this.state.currentDurationSec) {
       this.setState({isAudioResume: true});
@@ -860,15 +873,21 @@ class Chat extends Component {
 
   onResumelay = async () => {
     const {audioPlayDisableButton} = this.state;
-    this.setState({
+    // this.setState({
+    //   audioPlayButton: audioPlayDisableButton
+    //     ? !this.state.audioPlayButton
+    //     : this.state.audioPlayButton,
+    //   audioPlayDisableButton: false,
+    // });
+    // this.setState({
+    //   audioPlayDisableButton: true,
+    // });
+    this.setState(prevState => ({
       audioPlayButton: audioPlayDisableButton
-        ? !this.state.audioPlayButton
-        : this.state.audioPlayButton,
-      audioPlayDisableButton: false,
-    });
-    this.setState({
+        ? !prevState.audioPlayButton
+        : prevState.audioPlayButton,
       audioPlayDisableButton: true,
-    });
+    }));
     await this.audioRecorderPlayer.resumePlayer();
     if (this.state.currentPositionSec !== this.state.currentDurationSec) {
       this.setState({isAudioResume: false});
@@ -975,60 +994,66 @@ class Chat extends Component {
         // presentationStyle: 'fullScreen',
         allowMultiSelection: true,
       });
-      console.log('res ->',res);
+      console.log('res ->', res);
 
       const resp = Platform.OS === 'ios' ? res : res?.[0];
-      console.log('resp ->',resp);
+      console.log('resp ->', resp);
       var fileObj = {
         name: resp.name,
         type: resp.type,
         uri: resp.uri,
       };
 
+      const idKey = this.state.singleChatId === '1' ? 'chat_id' : 'room_id';
+      console.log('idKey =>',idKey);
+
+      const idValue = this.state.singleChatId === '1'
+      ? this?.props?.route?.params?.data?.id
+      : this.props.route.params?.roomId;
+      console.log('idValue =>',idValue);
+
       const body = new FormData();
       body.append('file', fileObj); // param name  //chat_id
-      body.append(
-        this.state.singleChatId === '1' ? 'chat_id' : 'room_id',
-        this.state.singleChatId === '1'
-          ? this?.props?.route?.params?.data?.id
-          : this.props.route.params?.roomId,
-      );
+      body.append(idKey, idValue);
       body.append('user_id', this.state.loginUserData?.id);
       body.append('name', this.state.loginUserData?.first_name);
       body.append('user_pic', this.state.loginUserData?.user_pic?.small); //singleChatId === '1' ? 'conversation-upload-file' :
-      console.log('body ->',body);
+      console.log('body ->', body);
+      console.log('body ->', body.getParts());
 
       const uploadFile = 'https://frate.eugeniuses.com:3030/upload-file';
       const conversationUploadFile =
         'https://frate.eugeniuses.com:3030/conversation-upload-file';
       this.setState({loading: true});
-      console.log('this.state.singleChatId === "1" ->',this.state.singleChatId === '1');
+      console.log(
+        'this.state.singleChatId === "1" ->',
+        this.state.singleChatId === '1',
+      );
 
-      const endpoint = this.state.singleChatId === '1' ? conversationUploadFile : uploadFile;
+      const endpoint =
+        this.state.singleChatId === '1' ? conversationUploadFile : uploadFile;
+        console.log('endpoint ->', endpoint);
+        
       axios
-        .post(
-          endpoint,
-          body,
-          {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              // Accept: 'application/json',
-              // ...file.headers,
-              'x-chunk-number': 1,
-              'x-chunk-total-number': 1,
-              // 'x-chunk-size': res.size,
-              'x-file-name': resp.name,
-              'x-file-size': resp.size,
-              'x-file-identity': new Date().getTime(),
-              'x-file-audio_duration': '',
-              'x-file-type': resp.type,
-            },
+        .post(endpoint, body, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            // Accept: 'application/json',
+            // ...file.headers,
+            'x-chunk-number': 1,
+            'x-chunk-total-number': 1,
+            // 'x-chunk-size': res.size,
+            'x-file-name': resp.name,
+            'x-file-size': resp.size,
+            'x-file-identity': new Date().getTime(),
+            'x-file-audio_duration': '',
+            'x-file-type': resp.type,
           },
-        )
+        })
         .then(response => {
           openAttachment = false;
-          console.log('response ->',response);
-          console.log('response.status ->',response.status);
+          console.log('response ->', response);
+          console.log('response.status ->', response.status);
           switch (response.status) {
             case 200:
               this.setState({
@@ -1045,8 +1070,9 @@ class Chat extends Component {
         })
         .catch(error => {
           openAttachment = false;
+          console.log('error ->',error);
+          
           if (error?.response) {
-
             if ([400, 404, 415, 500, 501].includes(error?.response?.status)) {
               // unlink(file.path);
               this.setState({loading: false});
@@ -1058,15 +1084,19 @@ class Chat extends Component {
               this.setState({loading: false});
             }
           } else {
+            console.log('error retry ->',error);
             // retry();
             this.setState({loading: false});
           }
         });
     } catch (err) {
+      console.log('Catch error ->',err);
+      
       if (DocumentPicker.isCancel(err)) {
         openAttachment = false;
         // User cancelled the picker, exit any dialogs or menus and move on
       } else {
+        console.log('throw error ->',err);
         throw err;
       }
     }
@@ -1117,7 +1147,7 @@ class Chat extends Component {
       )
       .then(response => {
         console.log('Upload Response -->', response);
-        
+
         openAttachment = false;
         switch (response.status) {
           case 200:
@@ -1125,6 +1155,7 @@ class Chat extends Component {
               loading: false,
               newFilePath: '',
               stopRecording: false,
+              audioPlayButton: true
             });
             break;
           case 201:
@@ -1307,16 +1338,16 @@ class Chat extends Component {
               this.downloadFile(filePath);
             } else {
               Alert.alert(
-              'Error',
-              getLocalText('Settings.needstorage') +
-                '\nPlease enable it from settings.',
-              [
-                {
-                  text: 'Go to Settings',
-                  onPress: () => Linking.openSettings(),
-                },
-              ]
-            );
+                'Error',
+                getLocalText('Settings.needstorage') +
+                  '\nPlease enable it from settings.',
+                [
+                  {
+                    text: 'Go to Settings',
+                    onPress: () => Linking.openSettings(),
+                  },
+                ],
+              );
             }
           } else {
             Alert.alert('Error', getLocalText('Settings.needstorage'));
@@ -1401,7 +1432,7 @@ class Chat extends Component {
   renderItem = ({item, index}) => {
     //"message_type": "pdf"
     // console.log('item?.message_type === "pdf"---->',item?.message_type === 'pdf');
-    
+
     const {userReciverData, singleChatId} = this.state;
     if (item?.message !== null) {
       if (item?.newjoin) {
@@ -2367,6 +2398,7 @@ class Chat extends Component {
                       }
                     }
                   }}>
+                  {console.log('audioPlayButton ->', audioPlayButton)}
                   <Icon
                     name={audioPlayButton ? 'play' : 'pause'}
                     size={scale(23)}
