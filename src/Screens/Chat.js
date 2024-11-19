@@ -1186,7 +1186,7 @@ class Chat extends Component {
         })
         .catch(error => {
           openAttachment = false;
-          const errorMessage = error?.message || 'Unable to process your request.';
+          const errorMessage = error?.message + '!' || 'Unable to process your request.';
           if (error?.response) {
             if ([400, 404, 415, 500, 501].includes(error?.response?.status)) {
               // unlink(file.path);
@@ -1201,12 +1201,7 @@ class Chat extends Component {
           } else {
             // retry();
             this.setState({loading: false});
-            SimpleToast.show(errorMessage + 'Please try again.', SimpleToast.BOTTOM, {
-              duration: SimpleToast.LONG,
-              shadow: true,
-              textColor: theme.colors.white,
-              backgroundColor: theme.colors.blue,
-            });
+            SimpleToast.show(errorMessage + ' Please try again.', SimpleToast.SHORT);
           }
         });
     } catch (err) {
@@ -1283,7 +1278,7 @@ class Chat extends Component {
         }
       })
       .catch(error => {
-        const errorMessage = error?.message || 'Unable to process your request.';
+        const errorMessage = error?.message + '!' || 'Unable to process your request.';
         openAttachment = false;
         if (error.response) {
           if ([400, 404, 415, 500, 501].includes(error.response.status)) {
@@ -1299,12 +1294,7 @@ class Chat extends Component {
         } else {
           retry();
           this.setState({loading: false});
-          SimpleToast.show(errorMessage + 'Please try again.', SimpleToast.BOTTOM, {
-            duration: SimpleToast.LONG,
-            shadow: true,
-            textColor: theme.colors.white,
-            backgroundColor: theme.colors.blue,
-          });
+          SimpleToast.show(errorMessage + ' Please try again.', SimpleToast.SHORT);
         }
       });
   }
