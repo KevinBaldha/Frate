@@ -51,7 +51,6 @@ import ProgressBar from 'react-native-progress/Bar';
 import TrackPlayer from 'react-native-track-player';
 import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
-import Toast from 'react-native-simple-toast';
 // import EmojiBoard from 'react-native-emoji-board';
 import {
   ScreenContainer,
@@ -985,6 +984,125 @@ class Chat extends Component {
       });
   };
 
+  // openFile = async () => {
+  //   console.log('openFile.....');
+
+  //   try {
+  //     const res = await DocumentPicker.pick({
+  //       type: [DocumentPicker.types.pdf],
+  //       // presentationStyle: 'fullScreen',
+  //       allowMultiSelection: true,
+  //     });
+  //     console.log('res ->', res);
+
+  //     const resp = Platform.OS === 'ios' ? res : res?.[0];
+  //     console.log('resp ->', resp);
+  //     var fileObj = {
+  //       name: resp.name,
+  //       type: resp.type,
+  //       uri: resp.uri,
+  //     };
+
+  //     const idKey = this.state.singleChatId === '1' ? 'chat_id' : 'room_id';
+  //     console.log('idKey =>',idKey);
+
+  //     const idValue = this.state.singleChatId === '1'
+  //     ? this?.props?.route?.params?.data?.id
+  //     : this.props.route.params?.roomId;
+  //     console.log('idValue =>',idValue);
+
+  //     const body = new FormData();
+  //     body.append('file', fileObj); // param name  //chat_id
+  //     body.append(idKey, idValue);
+  //     body.append('user_id', this.state.loginUserData?.id);
+  //     body.append('name', this.state.loginUserData?.first_name);
+  //     body.append('user_pic', this.state.loginUserData?.user_pic?.small); //singleChatId === '1' ? 'conversation-upload-file' :
+  //     console.log('body ->', body);
+  //     console.log('body ->', body.getParts());
+
+  //     const uploadFile = 'https://frate.eugeniuses.com:3030/upload-file';
+  //     const conversationUploadFile =
+  //       'https://frate.eugeniuses.com:3030/conversation-upload-file';
+  //     this.setState({loading: true});
+  //     console.log(
+  //       'this.state.singleChatId === "1" ->',
+  //       this.state.singleChatId === '1',
+  //     );
+
+  //     const endpoint =
+  //       this.state.singleChatId === '1' ? conversationUploadFile : uploadFile;
+  //       console.log('endpoint ->', endpoint);
+
+  //     axios
+  //       .post(endpoint, body, {
+  //         headers: {
+  //           'Content-Type': 'multipart/form-data',
+  //           // Accept: 'application/json',
+  //           // ...file.headers,
+  //           'x-chunk-number': 1,
+  //           'x-chunk-total-number': 1,
+  //           // 'x-chunk-size': res.size,
+  //           'x-file-name': resp.name,
+  //           'x-file-size': resp.size,
+  //           'x-file-identity': new Date().getTime(),
+  //           'x-file-audio_duration': '',
+  //           'x-file-type': resp.type,
+  //         },
+  //       })
+  //       .then(response => {
+  //         openAttachment = false;
+  //         console.log('response ->', response);
+  //         console.log('response.status ->', response.status);
+  //         switch (response.status) {
+  //           case 200:
+  //             this.setState({
+  //               loading: false,
+  //               newFilePath: '',
+  //               stopRecording: false,
+  //               isMediaOption: false,
+  //             });
+  //             break;
+  //           case 201:
+  //             // next();
+  //             break;
+  //         }
+  //       })
+  //       .catch(error => {
+  //         openAttachment = false;
+  //         console.log('error ->',error);
+
+  //         if (error?.response) {
+  //           if ([400, 404, 415, 500, 501].includes(error?.response?.status)) {
+  //             // unlink(file.path);
+  //             this.setState({loading: false});
+  //           } else if (error?.response?.status === 422) {
+  //             // unlink(file.path);
+  //             this.setState({loading: false});
+  //           } else {
+  //             // retry();
+  //             this.setState({loading: false});
+  //           }
+  //         } else {
+  //           console.log('error retry ->',error);
+  //           // retry();
+  //           this.setState({loading: false});
+  //         }
+  //       });
+  //   } catch (err) {
+  //     console.log('Catch error ->',err);
+
+  //     if (DocumentPicker.isCancel(err)) {
+  //       openAttachment = false;
+  //       // User cancelled the picker, exit any dialogs or menus and move on
+  //     } else {
+  //       console.log('throw error ->',err);
+  //       throw err;
+  //     }
+  //   }
+  //   this.setState({mediaOption: !this.state.mediaOption});
+  //   // this.setState((prevState) => ({ mediaOption: !prevState.mediaOption }));
+  // };
+
   openFile = async () => {
     console.log('openFile.....');
 
@@ -994,10 +1112,8 @@ class Chat extends Component {
         // presentationStyle: 'fullScreen',
         allowMultiSelection: true,
       });
-      console.log('res ->', res);
 
       const resp = Platform.OS === 'ios' ? res : res?.[0];
-      console.log('resp ->', resp);
       var fileObj = {
         name: resp.name,
         type: resp.type,
@@ -1005,12 +1121,21 @@ class Chat extends Component {
       };
 
       const idKey = this.state.singleChatId === '1' ? 'chat_id' : 'room_id';
-      console.log('idKey =>',idKey);
 
-      const idValue = this.state.singleChatId === '1'
-      ? this?.props?.route?.params?.data?.id
-      : this.props.route.params?.roomId;
-      console.log('idValue =>',idValue);
+      const idValue =
+        this.state.singleChatId === '1'
+          ? this?.props?.route?.params?.data?.id
+          : this.props.route.params?.roomId;
+
+      const myHeaders = new Headers();
+      myHeaders.append('Content-Type', 'multipart/form-data');
+      myHeaders.append('x-file-identity', new Date().getTime());
+      myHeaders.append('x-chunk-total-number', 1);
+      myHeaders.append('x-chunk-number', 1);
+      myHeaders.append('x-file-audio_duration', '');
+      myHeaders.append('x-file-name', resp.name);
+      myHeaders.append('x-file-size', resp.size);
+      myHeaders.append('x-file-type', resp.type);
 
       const body = new FormData();
       body.append('file', fileObj); // param name  //chat_id
@@ -1032,28 +1157,18 @@ class Chat extends Component {
 
       const endpoint =
         this.state.singleChatId === '1' ? conversationUploadFile : uploadFile;
-        console.log('endpoint ->', endpoint);
-        
-      axios
-        .post(endpoint, body, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            // Accept: 'application/json',
-            // ...file.headers,
-            'x-chunk-number': 1,
-            'x-chunk-total-number': 1,
-            // 'x-chunk-size': res.size,
-            'x-file-name': resp.name,
-            'x-file-size': resp.size,
-            'x-file-identity': new Date().getTime(),
-            'x-file-audio_duration': '',
-            'x-file-type': resp.type,
-          },
-        })
+
+      const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: body,
+        redirect: 'follow',
+      };
+
+      fetch(endpoint, requestOptions)
+      // .then((response) => response.json())
         .then(response => {
           openAttachment = false;
-          console.log('response ->', response);
-          console.log('response.status ->', response.status);
           switch (response.status) {
             case 200:
               this.setState({
@@ -1064,14 +1179,14 @@ class Chat extends Component {
               });
               break;
             case 201:
+              this.setState({loading: false});
               // next();
               break;
           }
         })
         .catch(error => {
           openAttachment = false;
-          console.log('error ->',error);
-          
+          const errorMessage = error?.message || 'Unable to process your request.';
           if (error?.response) {
             if ([400, 404, 415, 500, 501].includes(error?.response?.status)) {
               // unlink(file.path);
@@ -1084,19 +1199,21 @@ class Chat extends Component {
               this.setState({loading: false});
             }
           } else {
-            console.log('error retry ->',error);
             // retry();
             this.setState({loading: false});
+            SimpleToast.show(errorMessage + 'Please try again.', SimpleToast.BOTTOM, {
+              duration: SimpleToast.LONG,
+              shadow: true,
+              textColor: theme.colors.white,
+              backgroundColor: theme.colors.blue,
+            });
           }
         });
     } catch (err) {
-      console.log('Catch error ->',err);
-      
       if (DocumentPicker.isCancel(err)) {
         openAttachment = false;
         // User cancelled the picker, exit any dialogs or menus and move on
       } else {
-        console.log('throw error ->',err);
         throw err;
       }
     }
@@ -1117,14 +1234,18 @@ class Chat extends Component {
     body.append('user_id', this.state.loginUserData?.id);
     body.append('name', this.state.loginUserData?.first_name);
     body.append('user_pic', this.state.loginUserData?.user_pic?.small); //singleChatId === '1' ? 'conversation-upload-file' :
-    const endPoint = 'https://frate.eugeniuses.com:3030/upload-file';
-    const singleChatPoint =
-      'https://frate.eugeniuses.com:3030/conversation-upload-file';
+
+    const uploadFile = 'https://frate.eugeniuses.com:3030/upload-file';
+      const conversationUploadFile =
+        'https://frate.eugeniuses.com:3030/conversation-upload-file';
+      this.setState({loading: true});
+
+      const endpoint = this.state.singleChatId === '1' ? conversationUploadFile : uploadFile;
 
     this.setState({loading: true});
     axios
       .post(
-        this.state.singleChatId === '1' ? singleChatPoint : endPoint,
+        endpoint,
         body,
         {
           headers: {
@@ -1146,8 +1267,6 @@ class Chat extends Component {
         },
       )
       .then(response => {
-        console.log('Upload Response -->', response);
-
         openAttachment = false;
         switch (response.status) {
           case 200:
@@ -1155,7 +1274,7 @@ class Chat extends Component {
               loading: false,
               newFilePath: '',
               stopRecording: false,
-              audioPlayButton: true
+              audioPlayButton: true,
             });
             break;
           case 201:
@@ -1164,6 +1283,7 @@ class Chat extends Component {
         }
       })
       .catch(error => {
+        const errorMessage = error?.message || 'Unable to process your request.';
         openAttachment = false;
         if (error.response) {
           if ([400, 404, 415, 500, 501].includes(error.response.status)) {
@@ -1179,6 +1299,12 @@ class Chat extends Component {
         } else {
           retry();
           this.setState({loading: false});
+          SimpleToast.show(errorMessage + 'Please try again.', SimpleToast.BOTTOM, {
+            duration: SimpleToast.LONG,
+            shadow: true,
+            textColor: theme.colors.white,
+            backgroundColor: theme.colors.blue,
+          });
         }
       });
   }
@@ -1196,7 +1322,7 @@ class Chat extends Component {
     }).then(async video => {
       openAttachment = false;
       video.map(item => {
-        if (item?.mime.slice(0, 5) === 'video') {
+        if (item?.mime.slice?.(0, 5) === 'video') {
           let imagedata = imageData(item.path);
           var file_path = item.path;
           if (Platform.OS === 'ios') {
@@ -1364,7 +1490,7 @@ class Chat extends Component {
   };
 
   downloadFile = filePath => {
-    Toast.show('Download start', Toast.SHORT);
+    SimpleToast.show('Download start', SimpleToast.SHORT);
     // Get today's date to add the time suffix in filename
     let date = new Date();
     // File URL which we want to download
@@ -1394,7 +1520,7 @@ class Chat extends Component {
       .fetch('GET', FILE_URL)
       .then(res => {
         // Alert after successful downloading
-        Toast.show('File Downloaded Successfully.', Toast.SHORT);
+        SimpleToast.show('File Downloaded Successfully.', SimpleToast.SHORT);
       });
   };
 
