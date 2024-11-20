@@ -285,7 +285,7 @@ class UserData extends Component {
     } catch (error) {}
   };
 
-  handleTabButton = (index) => {
+  handleTabButton = index => {
     this.setState({editMode: false});
     this.setState({isProfileActive: index});
   };
@@ -342,7 +342,7 @@ class UserData extends Component {
         isShowTime={true}
         options
         notificatoionIconShow={true}
-        onPressOptions={(evt) => this.handleMoreVerticalGroup(evt, item, index)}
+        onPressOptions={evt => this.handleMoreVerticalGroup(evt, item, index)}
       />
     );
   };
@@ -386,7 +386,7 @@ class UserData extends Component {
       Alert.alert(getLocalText('ErrorMsgs.Unable_to_Reach'));
     }
   };
-  handleMenus = (index) => {
+  handleMenus = index => {
     this.setState({toggleMenu: !this.state.toggleMenu});
     setTimeout(() => {
       if (index === 0) {
@@ -434,7 +434,7 @@ class UserData extends Component {
     }, 700);
   };
 
-  exitHandleGroup = (action) => {
+  exitHandleGroup = action => {
     this.setState({leaveGroup: false});
     let groupId = this.state.selectedGroup.id;
     if (action === 1) {
@@ -499,7 +499,7 @@ class UserData extends Component {
                 numberOfLines={5}
                 value={this.state.aboutUser}
                 textAlignVertical={'top'}
-                onChangeText={(text) => {
+                onChangeText={text => {
                   this.setState({aboutUser: text});
                 }}
               />
@@ -628,7 +628,7 @@ class UserData extends Component {
       refreshing: false,
     });
   };
-  handleCloseGallrayView = (index) => {
+  handleCloseGallrayView = index => {
     this.setState({gallrayView: !this.state.gallrayView, gallrayindex: index});
   };
 
@@ -651,7 +651,7 @@ class UserData extends Component {
     });
   };
 
-  onPresstoChat = async (item) => {
+  onPresstoChat = async item => {
     var userID = '';
     if (this.props.userDetails?.id === item?.recipient_id) {
       userID = item?.sender_id;
@@ -679,8 +679,7 @@ class UserData extends Component {
             source={{
               uri:
                 item?.recipient_id === this.props.userDetails?.id
-                  ? item?.sender_image?.small ||
-                    item?.sender_image?.optimize
+                  ? item?.sender_image?.small || item?.sender_image?.optimize
                   : item?.recipient_image?.small ||
                     item?.recipient_image?.optimize, //optimize
             }}
@@ -709,7 +708,7 @@ class UserData extends Component {
   };
 
   //delete group
-  deleteGroup = async (data) => {
+  deleteGroup = async data => {
     this.setState({deleteModel: false});
     if (data === 1) {
       let groupId = this.state.selectedGroup?.id;
@@ -767,13 +766,13 @@ class UserData extends Component {
               />
             </TouchableOpacity>
           </View>
-          {checkValidUrl(userInfo?.cover_pic?.medium) ? (
+          {checkValidUrl(userInfo?.cover_pic?.optimize) ? (
             <FastImage
               // blurRadius={0.5}
               source={
-                !checkValidUrl(userInfo?.cover_pic?.medium)
+                !checkValidUrl(userInfo?.cover_pic?.optimize)
                   ? ''
-                  : {uri: userInfo?.cover_pic?.medium}
+                  : {uri: userInfo?.cover_pic?.optimize}
               }
               style={styles.headerImage}
               // resizeMode={FastImage.resizeMode.cover}
@@ -792,7 +791,7 @@ class UserData extends Component {
                 : {uri: userInfo.user_pic?.original}
             }
             style={[styles.userImage, {zIndex: 111}]}
-            onError={(e) => {
+            onError={e => {
               e.target.onerror = null;
               e.target.source = images.user1;
             }}
