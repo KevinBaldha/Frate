@@ -66,6 +66,7 @@ const optionsData1 = [
 ];
 
 let loadMoreJoinedGroup = false;
+
 class UserData extends Component {
   constructor(props) {
     super(props);
@@ -766,12 +767,14 @@ class UserData extends Component {
               />
             </TouchableOpacity>
           </View>
-          {checkValidUrl(userInfo?.cover_pic?.optimize) ? (
+          {checkValidUrl(
+            userInfo?.cover_pic?.medium || userInfo?.cover_pic?.optimize,
+          ) ? (
             <FastImage
               // blurRadius={0.5}
               source={
-                !checkValidUrl(userInfo?.cover_pic?.optimize)
-                  ? ''
+                checkValidUrl(userInfo?.cover_pic?.medium)
+                  ? {uri: userInfo?.cover_pic?.medium}
                   : {uri: userInfo?.cover_pic?.optimize}
               }
               style={styles.headerImage}
