@@ -377,7 +377,7 @@ class Signup4 extends Component {
           <FastImage
             source={checkValidUrl(TeamBack) ? {uri: TeamBack} : images.no_image}
             style={styles.cardImage}
-            resizeMode="center"
+            resizeMode={FastImage.resizeMode.contain}
           />
           {this.state.activeItem === index && (
             <Icon
@@ -592,15 +592,15 @@ const styles = StyleSheet.create({
     height: theme.SCREENWIDTH / 2 - scale(37),
     width: theme.SCREENWIDTH / 2 - scale(37),
     justifyContent: 'center',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     overflow: 'hidden',
     marginVertical: scale(7),
   },
   cardImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'contain',
     opacity: 0.8,
+    aspectRatio: 6.9 / 8,
   },
   topImage: {
     position: 'absolute',
