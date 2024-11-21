@@ -767,9 +767,7 @@ class UserData extends Component {
               />
             </TouchableOpacity>
           </View>
-          {checkValidUrl(
-            userInfo?.cover_pic?.medium || userInfo?.cover_pic?.optimize,
-          ) ? (
+          {checkValidUrl(userInfo?.cover_pic?.medium || userInfo?.cover_pic?.optimize) ? (
             <FastImage
               // blurRadius={0.5}
               source={

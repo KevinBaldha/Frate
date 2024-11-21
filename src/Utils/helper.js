@@ -146,6 +146,7 @@ export const checkValidUrl = url => {
       'JPG',
       'PNG',
       'JPEG',
+      'webp',
     ];
 
     //split the url into parts that has dots before them

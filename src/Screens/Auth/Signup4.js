@@ -227,7 +227,6 @@ class Signup4 extends Component {
           userFormData.append('country_code', RNLocalize.getCountry());
 
           console.log('userFormData ->',userFormData);
-          
 
           let response = await this.postAPICall(API.signUp, userFormData);
           console.log('SIGNUP RESPONSE ->', response);
@@ -376,7 +375,7 @@ class Signup4 extends Component {
             this.setState({cityName: item?.city?.name});
           }}>
           <FastImage
-            source={checkValidUrl(TeamBack) ? {uri: TeamBack} : images.team4}
+            source={checkValidUrl(TeamBack) ? {uri: TeamBack} : images.no_image}
             style={styles.cardImage}
             resizeMode="center"
           />
