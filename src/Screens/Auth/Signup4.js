@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable no-sequences */
 import React, {Component} from 'react';
 import {
   StyleSheet,
@@ -183,9 +183,7 @@ class Signup4 extends Component {
   };
 
   //team selection
-  handleClick = async item => {
-    this.setState({selectedId: item});
-  };
+  handleClick = async item => this.setState({selectedId: item});
 
   //Signup User
   handleSignup = async () => {
@@ -226,10 +224,7 @@ class Signup4 extends Component {
           userFormData.append('country', this.state.cityName);
           userFormData.append('country_code', RNLocalize.getCountry());
 
-          console.log('userFormData ->',userFormData);
-
           let response = await this.postAPICall(API.signUp, userFormData);
-          console.log('SIGNUP RESPONSE ->', response);
 
           if (response.message) {
             if (this.state.loadding) {
@@ -459,7 +454,7 @@ class Signup4 extends Component {
           }}
           value={getSelectedContinet}
           iconColor={theme.colors.blue}
-          itemTextStyle={{color: theme.colors.grey2}}
+          itemTextStyle={styles.itemTextStyle}
           containerStyle={{borderRadius: scale(10)}}
           labelField="label"
           valueField="value"
@@ -486,7 +481,7 @@ class Signup4 extends Component {
           iconColor={
             getSelectedCountry === '' ? theme.colors.grey : theme.colors.blue
           }
-          itemTextStyle={{color: theme.colors.grey2}}
+          itemTextStyle={styles.itemTextStyle}
           containerStyle={{borderRadius: scale(10)}}
           disable={countryDisable}
           labelField="label"
@@ -507,13 +502,14 @@ class Signup4 extends Component {
           onChange={item => {
             this.setState({getSelectedCities: item});
             this.getTeams(item?.value);
+            this.setState({activeItem: null});
           }}
           value={getSelectedCities}
           iconColor={
             getSelectedCities === '' ? theme.colors.grey : theme.colors.blue
           }
           disable={cityDisable}
-          itemTextStyle={{color: theme.colors.grey2}}
+          itemTextStyle={styles.itemTextStyle}
           containerStyle={{borderRadius: scale(10)}}
           labelField="label"
           valueField="value"
@@ -635,7 +631,9 @@ const styles = StyleSheet.create({
   selectedTextStyle: {
     fontSize: scale(13),
     color: theme.colors.blue,
+    textTransform: 'capitalize',
   },
+  itemTextStyle: {color: theme.colors.grey2, textTransform: 'capitalize'},
   checkImage: {
     position: 'absolute',
     alignItems: 'center',
