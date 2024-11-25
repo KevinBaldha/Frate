@@ -226,28 +226,28 @@ class Signup4 extends Component {
 
           let response = await this.postAPICall(API.signUp, userFormData);
 
-          if (response.message) {
+          if (response?.message) {
             if (this.state.loadding) {
               this.setState({loadding: false});
             }
           }
-          if (response.success) {
-            this.props.userData(response.data.user);
+          if (response?.success) {
+            this.props.userData(response?.data?.user);
             this.props.userPreferences(response?.data?.user?.user_meta);
-            appAPI.defaults.headers.common.Authorization = `Bearer ${response.data.accessToken}`;
+            appAPI.defaults.headers.common.Authorization = `Bearer ${response?.data?.accessToken}`;
             AsyncStorage.setItem(
               '@loginToken',
-              ` Bearer ${response.data.accessToken}`,
+              ` Bearer ${response?.data?.accessToken}`,
             );
             AsyncStorage.setItem(
               '@userTeamData',
-              response.data.teams.team_image?.original,
+              response?.data?.teams?.team_image?.original,
             );
-            this.props.totalGroupJoin(response.data.group_count);
-            this.props.CreatedGroupCount(response.data.created_group_count);
-            this.props.setCoverImage(response.data?.teams?.background_image);
+            this.props.totalGroupJoin(response?.data?.group_count);
+            this.props.CreatedGroupCount(response?.data?.created_group_count);
+            this.props.setCoverImage(response?.data?.teams?.background_image);
 
-            this.apiService.setToken(response.data.accessToken);
+            this.apiService.setToken(response?.data?.accessToken);
             this.setState({loadding: false});
             setTimeout(() => {
               this.props.isLogin(true);
@@ -262,14 +262,14 @@ class Signup4 extends Component {
             }, 500);
           } else {
             this.setState({loadding: false});
-            if (response.error) {
+            if (response?.error) {
               // this.handleAlert(response.data.email[0]);
-              this.handleAlert(response.errorMsg);
-            } else if (response.message === 'Validation Error.') {
-              this.handleAlert(response.data.email[0]);
+              this.handleAlert(response?.errorMsg);
+            } else if (response?.message === 'Validation Error.') {
+              this.handleAlert(response?.data?.email?.[0]);
             } else {
               this.setState({loadding: false});
-              this.handleAlert(response.message);
+              this.handleAlert(response?.message);
             }
           }
         }
@@ -289,21 +289,21 @@ class Signup4 extends Component {
             API.updateProfile + this.state.userDetail.userId,
             socialSignup,
           );
-          if (success.message) {
+          if (success?.message) {
             if (this.state.loadding) {
               this.setState({loadding: false});
             }
           }
-          if (success.success) {
-            this.props.userData(success.data.user);
+          if (success?.success) {
+            this.props.userData(success?.data?.user);
 
             this.props.totalGroupJoin(
-              success.data.group_count === undefined
+              success?.data?.group_count === undefined
                 ? 0
-                : success.data.group_count,
+                : success?.data?.group_count,
             );
-            this.props.CreatedGroupCount(success.data?.created_group_count);
-            this.props.setCoverImage(success.data?.teams?.background_image);
+            this.props.CreatedGroupCount(success?.data?.created_group_count);
+            this.props.setCoverImage(success?.data?.teams?.background_image);
 
             this.setState({loadding: false});
             setTimeout(() => {
@@ -314,13 +314,13 @@ class Signup4 extends Component {
             }, 500);
           } else {
             this.setState({loadding: false});
-            if (success.error) {
-              this.handleAlert(success.errorMsg);
+            if (success?.error) {
+              this.handleAlert(success?.errorMsg);
             } else if (success.message === 'Validation Error.') {
-              this.handleAlert(success.data.email[0]);
+              this.handleAlert(success?.data?.email?.[0]);
             } else {
               this.setState({loadding: false});
-              this.handleAlert(success.message);
+              this.handleAlert(success?.message);
             }
           }
         }
@@ -394,13 +394,13 @@ class Signup4 extends Component {
         return handleResponse(res);
       })
       .catch(e => {
-        if (e.response) {
-          if (e.response.data && e.response.data.errors.email) {
-            return handleError(e.response.data.errors.email);
+        if (e?.response) {
+          if (e?.response?.data && e?.response?.data?.errors?.email) {
+            return handleError(e?.response?.data?.errors?.email);
           }
-          return handleError(e.response.data.message);
+          return handleError(e?.response?.data?.message);
         } else {
-          return handleError(e.message);
+          return handleError(e?.message);
         }
       });
   };
