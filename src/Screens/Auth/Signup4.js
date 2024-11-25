@@ -88,7 +88,7 @@ class Signup4 extends Component {
       this.setState({loadding: true});
       let response = await getAPICall(API.apiteam + id);
       this.setState({
-        teamData: response.data,
+        teamData: response?.data,
         loadding: false,
         totalPage: response?.total_page,
       });
@@ -104,7 +104,7 @@ class Signup4 extends Component {
       this.setState({loadding: true});
       let response = await getAPICall(API.getContinents);
       this.setState({
-        getContinentData: response.data,
+        getContinentData: response?.data,
         loadding: false,
       });
     } catch (error) {
@@ -119,7 +119,7 @@ class Signup4 extends Component {
       this.setState({loadding: true});
       let response = await getAPICall(API.getCountries + id);
       this.setState({
-        getCountryData: response.data,
+        getCountryData: response?.data,
         loadding: false,
       });
     } catch (error) {
@@ -134,7 +134,7 @@ class Signup4 extends Component {
       this.setState({loadding: true});
       let response = await getAPICall(API.getCities + id);
       this.setState({
-        getCityData: response.data,
+        getCityData: response?.data,
         loadding: false,
       });
     } catch (error) {
@@ -165,7 +165,7 @@ class Signup4 extends Component {
         this.setState({loadmore: true});
         loadMoreData = true;
         let response = await getAPICall(API.apiteam + '&page=' + page);
-        let data = [...this.state.teamData, ...response.data];
+        let data = [...this.state?.teamData, ...response?.data];
         this.setState({
           teamData: data,
           loadmore: false,
