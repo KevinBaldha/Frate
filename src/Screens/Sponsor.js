@@ -20,7 +20,7 @@ class Sponsor extends Component {
       options: [
         {title: 'Settings.mySponsor', icon: 'user'},
         {title: 'Settings.iSpnsor', icon: 'dollar-sign'},
-        {title: 'Settings.paymentMethod', icon: 'credit-card'},
+        // {title: 'Settings.paymentMethod', icon: 'credit-card'},
       ],
     };
   }
@@ -34,9 +34,10 @@ class Sponsor extends Component {
       this.props.navigation.navigate('ActiveSponsorPost', {
         title: getLocalText(item?.title),
       });
-    } else {
-      this.props.navigation.navigate('PaymentMethod');
     }
+    //  else {
+    //   this.props.navigation.navigate('PaymentMethod');
+    // }
   };
 
   render() {
