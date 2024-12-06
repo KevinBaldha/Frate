@@ -102,7 +102,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Give $(PRODUCT_NAME) permission to use your microphone. Your record wont be shared without your permission.</string>
+	<string>This app requires microphone access to allow you to send voice messages to your friends.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>This app would like to access camera to take pictures for post</string>
 	<key>NSPhotoLibraryUsageDescription</key>

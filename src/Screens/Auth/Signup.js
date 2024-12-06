@@ -230,11 +230,14 @@ class Singup extends Component {
       // if (this.state.selectedCountry === '') {
       //   this.setState({countryError: getLocalText('ErrorMsgs.selectCountry')});
       // } else
-      if (this.state.checked && this.state.selectedGender !== '') {
+      if (this.state.checked) {
+        // && this.state.selectedGender !== ''
         this.props.navigation.navigate('Signup1', {userDetail: obj});
-      } else if (this.state.selectedGender === '') {
-        this.setState({genderError: getLocalText('ErrorMsgs.gender')});
-      } else {
+      }
+      // else if (this.state.selectedGender === '') {
+      //   this.setState({genderError: getLocalText('ErrorMsgs.gender')});
+      // }
+      else {
         this.setState({checkErr: Validation.MSG_VALID.terms});
       }
       // if (this.state.checked && this.state.selectedGender !== '') {
