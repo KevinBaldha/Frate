@@ -97,6 +97,7 @@ class Chat extends Component {
         {icon: 'info', name: getLocalText('Chat.groupinfo')},
         {icon: 'bell', name: getLocalText('Chat.notification')},
         {icon: 'alert-triangle', name: getLocalText('Report.reporttxt')},
+        {icon: 'block-helper', name: getLocalText('Report.block')},
         {icon: 'log-out', name: getLocalText('GroupInfo.leaveRoom')},
       ],
       chatOption: [
@@ -115,6 +116,7 @@ class Chat extends Component {
             : getLocalText('Chat.notification'),
         },
         {icon: 'alert-triangle', name: getLocalText('Report.reporttxt')},
+        {icon: 'block-helper', name: getLocalText('Report.block')},
         {icon: 'image', name: `${getLocalText('GroupInfo.media')}`},
       ],
       msg: '',
@@ -133,6 +135,9 @@ class Chat extends Component {
       isStartRecord: false,
       reportModel: false,
       reportDetails: false,
+      blockModel: false,
+      blockDetailsModel: false,
+      postPoneBlock: false,
       postPone: false,
       isEmojiKeyboard: false,
       keybordStatus: false,
@@ -629,6 +634,8 @@ class Chat extends Component {
       } else if (index === 2) {
         this.setState({reportModel: !this.state.reportModel});
       } else if (index === 3) {
+        this.setState({blockModel: !this.state.blockModel});
+      } else if (index === 4) {
         if (singleChatId === '1') {
           this.props.navigation.navigate('GroupInformation', {
             singleChatId: '1',
@@ -653,7 +660,7 @@ class Chat extends Component {
           this.props.getChatReoomsLocally(newChatObj);
           this.props.navigation.goBack();
         }
-      } else if (index === 4) {
+      } else if (index === 5) {
         this.props.navigation.replace('Tabs');
       }
     }, 500);
@@ -2169,6 +2176,22 @@ class Chat extends Component {
       }, 700);
     }
   };
+  closeBlock = item => {
+    if (item === null) {
+      this.setState({
+        blockModel: !this.state.blockModel,
+      });
+    } else {
+      this.setState({
+        blockModel: !this.state.blockModel,
+      });
+      setTimeout(() => {
+        this.setState({
+          blockDetailsModel: !this.state.blockDetailsModel,
+        });
+      }, 700);
+    }
+  };
   closeReportDetails = async (details, reason) => {
     this.setState({
       reportDetails: !this.state.reportDetails,
@@ -2208,9 +2231,51 @@ class Chat extends Component {
       }
     }
   };
+  closeBlockDetails = async (details, reason) => {
+    this.setState({
+      blockDetailsModel: !this.state.blockDetailsModel,
+    });
+    let reportGroupForm = new FormData();
+    if (details || reason) {
+      if (this.state.singleChatId === '1') {
+        reportGroupForm.append('chat_id', this?.props?.route?.params?.data?.id);
+        reportGroupForm.append('user_id', this.state.loginUserData?.id);
+        reportGroupForm.append(
+          'blocked_user_id',
+          this.state.userReciverData?.id,
+        );
+        reportGroupForm.append('reason', reason);
+        reportGroupForm.append('report_detail', details);
+        reportGroupForm.append('status', 0);
+        await this.props.reportChat(reportGroupForm);
+      } else {
+        reportGroupForm.append('group_id', this.state.groupDetails?.group_id);
+        reportGroupForm.append('type', BLOCKTYPES.REPORT_GROUP);
+        reportGroupForm.append('details', details);
+        reportGroupForm.append('reason', reason);
+        reportGroupForm.append('is_blocked', 1);
+        await this.props.reportGroup(reportGroupForm);
+      }
+      const reportPayload =
+        this.state.singleChatId === '1'
+          ? this.props.reportChatPayload?.success
+          : this.props.reportGroupPayload?.success;
+
+      if (reportPayload) {
+        setTimeout(() => {
+          this.setState({
+            postPoneBlock: !this.state.postPoneBlock,
+          });
+        }, 700);
+      }
+    }
+  };
 
   closePostpone = () => {
     this.setState({postPone: false});
+  };
+  closePostponeBlock = () => {
+    this.setState({postPoneBlock: false});
   };
 
   setEmoji = emoji => this.setState({msg: this.state.msg + emoji.emoji});
@@ -2705,6 +2770,14 @@ class Chat extends Component {
           reportGroup={this.state.singleChatId !== '1'}
           reportPerson={this.state.singleChatId === '1'}
         />
+        <ReportModel
+          isVisible={this.state.blockModel}
+          toggleReportmodel={this.closeBlock}
+          data={this.props.route.params?.groupData || userReciverData}
+          reportGroup={this.state.singleChatId !== '1'}
+          reportPerson={this.state.singleChatId === '1'}
+          blockGroup={true}
+        />
         <ReportDetailsModel
           show={this.state.reportDetails}
           closeModal={this.closeReportDetails}
@@ -2715,10 +2788,27 @@ class Chat extends Component {
           }
           postData={true}
         />
+        <ReportDetailsModel
+          show={this.state.blockDetailsModel}
+          closeModal={this.closeBlockDetails}
+          reasonList={reportReasonList}
+          id={this.state.singleChatId}
+          reportType={
+            this.state.singleChatId !== '1' && BLOCKTYPES.REPORT_GROUP
+          }
+          postData={true}
+          blockGroup={true}
+        />
         <PostponedModel
           isVisible={this.state.postPone}
           close={this.closePostpone}
           id={this.state.singleChatId}
+        />
+        <PostponedModel
+          isVisible={this.state.postPoneBlock}
+          close={this.closePostponeBlock}
+          id={this.state.singleChatId}
+          isBlock={true}
         />
         <EmojiPicker
           onEmojiSelected={this.setEmoji}

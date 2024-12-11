@@ -172,18 +172,40 @@ export const commentLike = (commentId, userId) => {
 };
 
 //report post
-export const blockAction = (type, payload) => {
-  return async (dispatch) => {
-    let blockSuccess = await postAPICall(
-      type === 0 ? API.blockUser : API.reportGroup,
-      payload,
-    );
-    if (blockSuccess.success) {
-      dispatch({type: types.REPORT, payload: blockSuccess.success});
-    } else {
-      dispatch({type: types.REPORT, payload: blockSuccess.success});
-      Alert.alert(blockSuccess.errorMsg);
-    }
+export const blockAction = (type, payload, isBlockUser) => {
+  return async (dispatch, getState) => {
+    // const state = getState(); // Access the current Redux state
+    // const groupList = state.groupsReducer?.group_list; // Get group_list from groupsReducer
+    // {groupList?.data?.map((item,index)=> {
+    //   console.log('member_image ->',item?.member_images);
+    //   console.log('Item ->',item);
+    //   console.log('payload ->', payload);
+    //   console.log('member_id ->',item?.id);
+    //   if (payload instanceof FormData) {
+    //     console.log('payload instanceof FormData ->', payload instanceof FormData);
+    //     console.log('payload.get("blocked_user_id") ->', payload?.get?.('blocked_user_id'));
+    //     const blockedUserId = payload.get('blocked_user_id');
+    //     console.log('Blocked User ID ->', blockedUserId);
+    //   }
+    //   });
+    // }
+    // if(!isBlockUser){
+      let blockSuccess = await postAPICall(
+        type === 0 ? API.blockUser : API.reportGroup,
+        payload,
+      );
+      console.log('blockSuccess ->', blockSuccess);
+      if (blockSuccess.success) {
+        dispatch({type: types.REPORT, payload: blockSuccess.success});
+      } else {
+        dispatch({type: types.REPORT, payload: blockSuccess.success});
+        Alert.alert(blockSuccess.errorMsg);
+      }
+    // }else{
+    //   console.log('payload ->', payload);
+    //   // dispatch({type: types.GETGROUPS, payload: });
+    //   // dispatch({type: types.REPORT, payload: });
+    // }
   };
 };
 

@@ -47,12 +47,16 @@ class AudioCall extends Component {
         {icon: 'info', name: getLocalText('Chat.groupinfo')},
         {icon: 'bell', name: getLocalText('Chat.notification')},
         {icon: 'alert-triangle', name: getLocalText('Report.reporttxt')},
+        {icon: 'block-helper', name: getLocalText('Report.block')},
         {icon: 'log-out', name: getLocalText('GroupInfo.leavegroup')},
       ],
       userList: [],
       userMute: false,
       reportModel: false,
       reportDetails: false,
+      blockModel: false,
+      blockDetailsModel: false,
+      postPoneBlock: false,
       postPone: false,
       streamData: '',
       streamUrl: '',
@@ -69,6 +73,7 @@ class AudioCall extends Component {
       muteAll: false,
     };
   }
+  
 
   handleOptions = (index) => {
     this.setState({menu: !this.state.menu});
@@ -83,6 +88,8 @@ class AudioCall extends Component {
       } else if (index === 2) {
         this.setState({reportModel: true});
       } else if (index === 3) {
+        this.setState({blockModel: true});
+      }else if (index === 4) {
         this.props.navigation.replace('Tabs');
       }
     }, 700);
@@ -99,6 +106,24 @@ class AudioCall extends Component {
       setTimeout(() => {
         this.setState({
           reportDetails: !this.state.reportDetails,
+        });
+      }, 700);
+    }
+  };
+  closeBlock = (item) => {
+    console.log('item ->', item);
+    
+    if (item === null) {
+      this.setState({
+        blockModel: !this.state.blockModel,
+      });
+    } else {
+      this.setState({
+        blockModel: !this.state.blockModel,
+      });
+      setTimeout(() => {
+        this.setState({
+          blockDetailsModel: !this.state.blockDetailsModel,
         });
       }, 700);
     }
@@ -121,8 +146,33 @@ class AudioCall extends Component {
       }, 700);
     }
   };
+  closeBlockDetails = async (details, reason) => {
+    console.log('details ->', details);
+    console.log('reason ->', reason);
+    this.setState({
+      blockDetailsModel: !this.state.blockDetailsModel,
+    });
+    let reportGroupForm = new FormData();
+    reportGroupForm.append('group_id', this.state.groupData.id);
+    reportGroupForm.append('type', BLOCKTYPES.REPORT_GROUP);
+    reportGroupForm.append('details', details);
+    reportGroupForm.append('reason', reason);
+    reportGroupForm.append('is_blocked', 1);
+    console.log('reportGroupForm ->', reportGroupForm);
+    await this.props.reportGroup(reportGroupForm);
+    if (this.props.reportGroupPayload?.success) {
+      setTimeout(() => {
+        this.setState({
+          postPoneBlock: !this.state.postPoneBlock,
+        });
+      }, 700);
+    }
+  };
   closePostpone = () => {
     this.setState({postPone: false});
+  };
+  closePostponeBlock = () => {
+    this.setState({postPoneBlock: false});
   };
   componentDidMount() {
     this.initAudioCall();
@@ -367,6 +417,7 @@ class AudioCall extends Component {
       roomData,
     } = this.state;
     const {userData} = this.props;
+    const {reportReasonList} = this.props;
     return (
       <ScreenContainer>
         <BackgroundChunk style={styles.topImage} />
@@ -524,13 +575,35 @@ class AudioCall extends Component {
           data={this.state.groupData}
           reportGroup={true}
         />
+        <ReportModel
+          isVisible={this.state.blockModel}
+          toggleReportmodel={this.closeBlock}
+          data={this.state.groupData}
+          blockGroup={true}
+        />
         <ReportDetailsModel
           show={this.state.reportDetails}
           closeModal={this.closeReportDetails}
+          reasonList={reportReasonList}
+          reportType={BLOCKTYPES.REPORT_GROUP}
+          postData={true}
+        />
+        <ReportDetailsModel
+          show={this.state.blockDetailsModel}
+          closeModal={this.closeBlockDetails}
+          reasonList={reportReasonList}
+          reportType={BLOCKTYPES.REPORT_GROUP}
+          postData={true}
+          blockGroup={true}
         />
         <PostponedModel
           isVisible={this.state.postPone}
           close={this.closePostpone}
+        />
+        <PostponedModel
+          isVisible={this.state.postPoneBlock}
+          close={this.closePostponeBlock}
+          isBlock={true}
         />
         <Menus
           isMenu={this.state.menu}
@@ -670,7 +743,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state) => {
   const userData = state.UserInfo.data;
   const reportGroupPayload = state.groupsReducer.reportGroupPayload;
-  return {userData, reportGroupPayload};
+  const reportReasonList = state.PostReducer.reportReasonList;
+  return {userData, reportGroupPayload, reportReasonList};
 };
 export default connect(mapStateToProps, {
   reportGroup,

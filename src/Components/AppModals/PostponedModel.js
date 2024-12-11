@@ -8,7 +8,7 @@ import externalStyle from '../../Css';
 import {getLocalText} from '../../Locales/I18n';
 
 const PostponedModel = (props) => {
-  const {isVisible, close, id, postData} = props;
+  const {isVisible, close, id, postData, isBlock, isUserBlock} = props;
 
   return (
     <Modal
@@ -33,10 +33,14 @@ const PostponedModel = (props) => {
             title={
               id
                 ? getLocalText('Report.postponetitle')
+                : postData && isBlock
+                ? getLocalText('Report.postponeBlockTitle')
+                : postData && isUserBlock
+                ? getLocalText('Report.postponeUserTitle')
                 : postData
                 ? getLocalText('Report.postponetitle')
                 : getLocalText('Report.postponegrp')
-            }
+              }
           />
           <View style={styles.divider} />
           <TouchableOpacity

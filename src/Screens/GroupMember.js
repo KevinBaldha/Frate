@@ -79,7 +79,8 @@ class GroupMember extends Component {
         {title: 'Report.reporttxt', icon: 'alert-triangle'},
         {title: 'GroupInfo.leavegroup', icon: 'log-out'},
       ],
-      groupUserList: this.props?.route?.params?.userLists,
+      groupUserList: this.props?.route?.params?.groupData,
+      // groupUserList: this.props?.route?.params?.userLists,
       totalPage: 1,
       currentPage: 1,
       mediaItems: [
@@ -93,6 +94,9 @@ class GroupMember extends Component {
       reportModel: false,
       reportDetails: false,
       postPone: false,
+      blockModel: false,
+      blockDetailsModel: false,
+      postPoneBlock: false,
       fullScreenMedia: false,
       mediaData: [],
       groupsDetails: this.props?.route?.params?.groupData,
@@ -356,6 +360,10 @@ class GroupMember extends Component {
           Alert.alert(response.message);
         }
       }
+    } else if(item?.id === 5){
+      setTimeout(() => {
+        this.setState({blockModel: true});
+      }, 500);
     }
   };
 
@@ -383,6 +391,22 @@ class GroupMember extends Component {
       }, 700);
     }
   };
+  closeBlock = (item) => {
+    if (item === null) {
+      this.setState({
+        blockModel: !this.state.blockModel,
+      });
+    } else {
+      this.setState({
+        blockModel: !this.state.blockModel,
+      });
+      setTimeout(() => {
+        this.setState({
+          blockDetailsModel: !this.state.blockDetailsModel,
+        });
+      }, 700);
+    }
+  };
   closeReportDetails = (details, reason) => {
     if (details === undefined || reason === undefined) {
       this.setState({
@@ -398,6 +422,7 @@ class GroupMember extends Component {
       blockUser.append('type', BLOCKTYPES.REPORT_USER);
       blockUser.append('details', details);
       blockUser.append('reason', reason);
+      blockUser.append('is_blocked', 1);
 
       this.props.blockAction(0, blockUser);
 
@@ -408,8 +433,37 @@ class GroupMember extends Component {
       }, 700);
     }
   };
+  closeBlockDetails = (details, reason) => {
+    if (details === undefined || reason === undefined) {
+      this.setState({
+        blockDetailsModel: !this.state.blockDetailsModel,
+      });
+    } else {
+      this.setState({
+        blockDetailsModel: !this.state.blockDetailsModel,
+      });
+      let blockUser = new FormData();
+      blockUser.append('group_id', this.state.groupsDetails.id);
+      blockUser.append('blocked_user_id', this.state.selectedUser.member_id); //user id send karvanu thase
+      blockUser.append('type', BLOCKTYPES.REPORT_USER);
+      blockUser.append('details', details);
+      blockUser.append('reason', reason);
+
+      this.props.blockAction(0, blockUser);
+      // this.props.blockAction(0, blockUser);
+
+      setTimeout(() => {
+        this.setState({
+          postPoneBlock: !this.state.postPoneBlock,
+        });
+      }, 700);
+    }
+  };
   closePostpone = () => {
     this.setState({postPone: false});
+  };
+  closePostponeBlock = () => {
+    this.setState({postPoneBlock: false});
   };
 
   handleClose = () => {
@@ -656,10 +710,13 @@ class GroupMember extends Component {
             <View>
               {singleChatId !== '1' && (
                 <>
+                {console.log('groupsDetails?.total_members ->', groupsDetails?.total_members)}
                   <Label
-                    title={`${groupsDetails?.total_members}  ${
+                    title={`${groupsDetails?.total_members !== undefined ? groupsDetails?.total_members : ''}  ${
                       groupsDetails?.total_members > 1
                         ? getLocalText('GroupInfo.member')
+                        : groupsDetails?.total_members === undefined
+                        ? ''
                         : getLocalText('GroupInfo.singleMember')
                     }`}
                     style={styles.members}
@@ -784,15 +841,36 @@ class GroupMember extends Component {
           reportPerson={true}
           userdetails={this.state.userdetails}
         />
+        <ReportModel
+          isVisible={this.state.blockModel}
+          toggleReportmodel={this.closeBlock}
+          data={this.state.selectedUser}
+          reportGroup={false}
+          reportPerson={true}
+          blockUser={true}
+          userdetails={this.state.userdetails}
+        />
         <ReportDetailsModel
           show={this.state.reportDetails}
           closeModal={this.closeReportDetails}
           reasonList={reportReasonList}
         />
+        <ReportDetailsModel
+          show={this.state.blockDetailsModel}
+          closeModal={this.closeBlockDetails}
+          reasonList={reportReasonList}
+          blockUser={true}
+        />
         <PostponedModel
           isVisible={this.state.postPone}
           close={this.closePostpone}
           postData={true}
+        />
+        <PostponedModel
+          isVisible={this.state.postPoneBlock}
+          close={this.closePostponeBlock}
+          postData={true}
+          isUserBlock={true}
         />
         <GroupOptions
           isShow={this.state.userOptions}

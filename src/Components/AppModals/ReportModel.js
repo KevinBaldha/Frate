@@ -29,6 +29,8 @@ const ReportModel = (props) => {
     toggleReportmodel,
     data,
     reportGroup,
+    blockGroup,
+    blockUser,
     userdetails,
     reportPerson,
   } = props;
@@ -57,7 +59,7 @@ const ReportModel = (props) => {
               color={theme.colors.blue}
             />
             <Label
-              title={getLocalText('Report.title')}
+              title={blockGroup || blockUser ? getLocalText('Report.blockTitle') : getLocalText('Report.title')}
               style={{marginLeft: scale(10)}}
             />
 
@@ -70,7 +72,7 @@ const ReportModel = (props) => {
             </TouchableOpacity>
           </View>
           <Label
-            title={getLocalText('Report.postpone')}
+            title={blockGroup || blockUser ? getLocalText('Report.postponeBlock') : getLocalText('Report.postpone')}
             style={styles.subText}
           />
           {reportPerson && (
@@ -117,13 +119,13 @@ const ReportModel = (props) => {
                   });
                 }}>
                 <Label
-                  title={getLocalText('Report.reportadmin')}
+                  title={blockUser ? getLocalText('Report.blockUser') : getLocalText('Report.reportadmin')}
                   style={{color: theme.colors.blue}}
                 />
               </TouchableOpacity>
             </View>
           )}
-          {data !== undefined && reportGroup === undefined && (
+          {data !== undefined && reportGroup === undefined && !blockGroup && (
             <View
               style={[
                 styles.card,
@@ -213,7 +215,7 @@ const ReportModel = (props) => {
               </TouchableOpacity>
             </View>
           )}
-          {!reportPerson && (
+          {!reportPerson && !blockGroup && (
             <View
               style={[
                 styles.card,
@@ -261,6 +263,59 @@ const ReportModel = (props) => {
                 style={styles.button}>
                 <Label
                   title={getLocalText('Report.reportbtn')}
+                  style={{color: theme.colors.blue}}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+          {!reportPerson && blockGroup && (
+            <View
+              style={[
+                styles.card,
+                externalStyle.shadow,
+                {
+                  borderWidth: scale(1),
+                  shadowRadius: scale(9),
+                  marginVertical: scale(7),
+                  elevation: scale(2),
+                  borderColor:
+                    selectIndex === 1 ? theme.colors.blue : theme.colors.white,
+                },
+              ]}>
+              <View style={[styles.cardCon, {marginVertical: scale(0)}]}>
+                <FastImage
+                  source={
+                    data?.group?.image?.small === null
+                      ? images.groupDefault
+                      : {
+                          uri:
+                            data && blockGroup
+                              ? data?.image?.small || data?.creator_image?.small
+                              : data?.group?.image?.small,
+                        }
+                  }
+                  style={styles.userImg}
+                />
+                <Label
+                  title={
+                    data && blockGroup
+                      ? data.name || data?.room_title
+                      : data?.group?.name
+                  }
+                  style={{lineHeight: scale(18), marginLeft: scale(3)}}
+                />
+              </View>
+              <Dash />
+              <TouchableOpacity
+                onPress={() => {
+                  setSelectIndex(1);
+                  setTimeout(() => {
+                    hadndleReport(1);
+                  });
+                }}
+                style={styles.button}>
+                <Label
+                  title={getLocalText('Report.blockGroupBtn')}
                   style={{color: theme.colors.blue}}
                 />
               </TouchableOpacity>

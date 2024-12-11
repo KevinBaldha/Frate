@@ -119,6 +119,7 @@ class GroupDetails extends Component {
         {icon: 'info', name: getLocalText('Chat.groupinfo')},
         {icon: 'bell', name: getLocalText('Chat.notification')},
         {icon: 'alert-triangle', name: getLocalText('Report.reporttxt')},
+        {icon: 'block-helper', name: getLocalText('Report.block')},
         // {icon: 'log-out', name: getLocalText('GroupInfo.leavegroup')},
       ],
       options2: [
@@ -160,6 +161,9 @@ class GroupDetails extends Component {
       reportModel: false,
       reportDetails: false,
       postPone: false,
+      blockModel: false,
+      blockDetailsModel: false,
+      postPoneBlock: false,
       time: '',
       postOption: '',
       mediaOption: false,
@@ -488,10 +492,15 @@ class GroupDetails extends Component {
       } else if (index === 2) {
         this.setState({reportModel: !this.state.reportModel});
       } else if (index === 3) {
-        if (this.props.userData.id == groupDetailsData?.group_admin_id) {
+        if (this.props.userData.id === groupDetailsData?.group_admin_id) {
           this.setState({deleteModel: true});
         } else {
-          this.setState({exitGroupModel: true});
+          //  Block Group
+          this.setState({blockModel: !this.state.blockModel});
+
+          //  Leave Group
+          // this.setState({exitGroupModel: true});
+
           // this.props.exitGroup(groupDetailsData?.id);
           // this.props.navigation.goBack();
         }
@@ -1051,6 +1060,22 @@ class GroupDetails extends Component {
       }, 500);
     }
   };
+  closeBlock = item => {
+    if (item === null) {
+      this.setState({
+        blockModel: !this.state.blockModel,
+      });
+    } else {
+      this.setState({
+        blockModel: !this.state.blockModel,
+      });
+      setTimeout(() => {
+        this.setState({
+          blockDetailsModel: !this.state.blockDetailsModel,
+        });
+      }, 500);
+    }
+  };
   closeReportDetails = async (details, reason) => {
     const {groupDetailsData} = this.state;
     if (details === undefined || reason === undefined) {
@@ -1076,9 +1101,38 @@ class GroupDetails extends Component {
       }
     }
   };
+  closeBlockDetails = async (details, reason) => {
+    const {groupDetailsData} = this.state;
+    if (details === undefined || reason === undefined) {
+      this.setState({
+        blockDetailsModel: !this.state.blockDetailsModel,
+      });
+    } else {
+      this.setState({
+        blockDetailsModel: !this.state.blockDetailsModel,
+      });
+      let reportGroupForm = new FormData();
+      reportGroupForm.append('group_id', groupDetailsData?.id);
+      reportGroupForm.append('type', BLOCKTYPES.REPORT_GROUP);
+      reportGroupForm.append('details', details);
+      reportGroupForm.append('reason', reason);
+      reportGroupForm.append('is_blocked', 1);
+      await this.props.reportGroup(reportGroupForm);
+      if (this.props.reportGroupPayload?.success) {
+        setTimeout(() => {
+          this.setState({
+            postPoneBlock: !this.state.postPoneBlock,
+          });
+        }, 700);
+      }
+    }
+  };
 
   closePostpone = () => {
     this.setState({postPone: false});
+  };
+  closePostponeBlock = () => {
+    this.setState({postPoneBlock: false});
   };
 
   handleMediaOptions = () => {
@@ -1511,6 +1565,9 @@ class GroupDetails extends Component {
       reportDetails,
       deleteModel,
       reportModel,
+      blockModel,
+      blockDetailsModel,
+      postPoneBlock,
       options2,
       groupOptions,
       options1,
@@ -2041,6 +2098,13 @@ class GroupDetails extends Component {
           data={route.params.item?.groupData}
           reportGroup={true}
         />
+        <ReportModel
+          isVisible={blockModel}
+          toggleReportmodel={this.closeBlock}
+          data={route.params.item?.groupData}
+          reportGroup={true}
+          blockGroup={true}
+        />
         <ConfirmationModel isVisible={deleteModel} close={this.deleteGroup} />
         <SearchModel isVisible={searchModel} closeSearch={this.searchClose} />
         <ReportDetailsModel
@@ -2049,6 +2113,14 @@ class GroupDetails extends Component {
           reasonList={reportReasonList}
           reportType={BLOCKTYPES.REPORT_GROUP}
           postData={true}
+        />
+        <ReportDetailsModel
+          show={blockDetailsModel}
+          closeModal={this.closeBlockDetails}
+          reasonList={reportReasonList}
+          reportType={BLOCKTYPES.REPORT_GROUP}
+          postData={true}
+          blockGroup={true}
         />
         <Sponsor
           isVisible={sponsorModel}
@@ -2068,6 +2140,7 @@ class GroupDetails extends Component {
           }}
         />
         <PostponedModel isVisible={postPone} close={this.closePostpone} />
+        <PostponedModel isVisible={postPoneBlock} close={this.closePostponeBlock} isBlock={true} />
         <CameraVideoPhoto
           isVisible={cameraModel}
           onPressCamera={() => {

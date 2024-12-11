@@ -328,7 +328,16 @@
     "falseinfo": "False information",
     "itspam": "It's spam",
     "cancel": "Cancel",
-    "reportgroupselection": "Please select atleast one option"
+    "reportgroupselection": "Please select atleast one option",
+    "block":"Block",
+    "blockGroupBtn":"Block the group",
+    "blockUser":"Block the user",
+    "blockTitle": "Block the activity",
+    "postponeBlock": "What do you want to Block?",
+    "blockgrp": "I would like to block this group",
+    "blockUserText": "I would like to block this user",
+    "postponeBlockTitle": "The group has been blocked.",
+    "postponeUserTitle": "The user has been blocked."
   },
   "Group": {
     "fanatics": "Fanatics",

@@ -123,11 +123,12 @@ export const manageNotification = payload => {
 export const reportGroup = payload => {
   return async dispatch => {
     let groupReport = await postAPICall(API.reportGroup, payload);
+    console.log('groupReport ->', groupReport);
     if (groupReport.success) {
       dispatch({type: types.REPORT_GROUP, payload: groupReport});
     } else {
       dispatch({type: types.REPORT_GROUP, payload: null});
-      Alert.alert(groupReport?.errorMsg?.message?groupReport?.errorMsg?.message:groupReport?.errorMsg);
+      Alert.alert(groupReport?.errorMsg?.message ? groupReport?.errorMsg?.message : groupReport?.errorMsg);
     }
   };
 };

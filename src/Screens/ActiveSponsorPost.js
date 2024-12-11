@@ -370,7 +370,7 @@ class ActiveSponsorPost extends Component {
     this.redirectToUserDetails(item, item?.user_id);
   };
 
-  //repot post >>>
+  //report post >>>
   closeReport = type => {
     if (type === null) {
       this.setState({

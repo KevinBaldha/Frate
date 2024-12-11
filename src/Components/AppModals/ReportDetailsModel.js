@@ -18,7 +18,7 @@ import {getLocalText} from '../../Locales/I18n';
 import {BLOCKTYPES} from '../../Utils/StaticData';
 
 const ReportDetailsModel = (props) => {
-  const {show, closeModal, postData, reasonList, id, reportType} = props;
+  const {show, closeModal, postData, reasonList, id, reportType, blockGroup, blockUser} = props;
   const [selectedId, setSelectedId] = useState('');
   const [selectResion, setSelectResion] = useState(
     getLocalText('Report.selectreason'),
@@ -64,7 +64,7 @@ const ReportDetailsModel = (props) => {
                 color={theme.colors.blue}
               />
               <Label
-                title={getLocalText('Report.reporttitle')}
+                title={blockGroup || blockUser ? getLocalText('Report.blockTitle') : getLocalText('Report.reporttitle')}
                 style={{marginLeft: scale(10)}}
               />
 
@@ -77,10 +77,21 @@ const ReportDetailsModel = (props) => {
               </TouchableOpacity>
             </View>
             <Text style={styles.subtitle}>
-              {id
+              {/* {id
                 ? getLocalText('Report.report')
                 : postData && reportType === BLOCKTYPES.REPORT_GROUP
                 ? getLocalText('Report.reportgrp')
+                : postData && reportType === BLOCKTYPES.REPORT_GROUP && blockGroup
+                ? getLocalText('Report.blockgrp')
+                : getLocalText('Report.report')} */}
+                {id
+                ? getLocalText('Report.report')
+                : postData && reportType === BLOCKTYPES.REPORT_GROUP
+                ? blockGroup
+                  ? getLocalText('Report.blockgrp')
+                  : getLocalText('Report.reportgrp')
+                : blockUser
+                ? getLocalText('Report.blockUserText')
                 : getLocalText('Report.report')}
               {postData && (
                 <Text style={styles.nametxt}>
@@ -136,7 +147,7 @@ const ReportDetailsModel = (props) => {
                   Alert.alert(getLocalText('Report.reportgroupselection'));
                 }
               }}
-              title={getLocalText('Report.reporttxt')}
+              title={blockGroup || blockUser ? getLocalText('Report.block') : getLocalText('Report.reporttxt')}
               style={styles.reportBtn}
             />
           </View>

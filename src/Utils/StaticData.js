@@ -232,6 +232,7 @@ const groupOptionData = [
 const groupOptionData1 = [
   {id: 0, title: getLocalText('Groups.seeProfile')},
   {id: 2, title: getLocalText('Report.reporttxt')},
+  {id: 5, title: getLocalText('Report.block')},
   {id: 4, title: getLocalText('Group.messagebtn'), icon: 'message-square'},
 ];
 

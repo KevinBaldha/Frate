@@ -13,6 +13,7 @@ import {Switch} from 'react-native-switch';
 import FastImage from 'react-native-fast-image';
 import {connect} from 'react-redux';
 import Icon from 'react-native-vector-icons/Feather';
+import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Label,
   ScreenContainer,
@@ -60,6 +61,7 @@ class GroupInformation extends Component {
       options: [
         {title: 'GroupInfo.stopnotification', icon: 'bell', status: false},
         {title: 'Report.reporttxt', icon: 'alert-triangle'},
+        {title: 'Report.block', icon: 'block-helper'},
         {title: 'GroupInfo.leavegroup', icon: 'log-out'},
 
         // {title: 'GroupInfo.media', icon: 'image'},
@@ -76,6 +78,9 @@ class GroupInformation extends Component {
       reportModel: false,
       reportDetails: false,
       postPone: false,
+      blockModel: false,
+      blockDetailsModel: false,
+      postPoneBlock: false,
       fullScreenMedia: false,
       mediaData: '',
       groupsDetails: this.props?.route?.params?.groupData,
@@ -296,6 +301,8 @@ class GroupInformation extends Component {
     if (index === 1) {
       this.setState({reportModel: true});
     } else if (index === 2) {
+      this.setState({blockModel: true});
+    } else if (index === 3) {
       this.setState({exitGroupModel: true});
     }
   };
@@ -338,6 +345,22 @@ class GroupInformation extends Component {
       }, 700);
     }
   };
+  closeBlock = item => {
+    if (item === null) {
+      this.setState({
+        blockModel: !this.state.blockModel,
+      });
+    } else {
+      this.setState({
+        blockModel: !this.state.blockModel,
+      });
+      setTimeout(() => {
+        this.setState({
+          blockDetailsModel: !this.state.blockDetailsModel,
+        });
+      }, 700);
+    }
+  };
   closeReportDetails = async (details, reason) => {
     if (details === undefined || reason === undefined) {
       this.setState({
@@ -362,9 +385,37 @@ class GroupInformation extends Component {
       }
     }
   };
+  closeBlockDetails = async (details, reason) => {
+    if (details === undefined || reason === undefined) {
+      this.setState({
+        blockDetailsModel: !this.state.blockDetailsModel,
+      });
+    } else {
+      this.setState({
+        blockDetailsModel: !this.state.blockDetailsModel,
+      });
+      let reportGroupForm = new FormData();
+      reportGroupForm.append('group_id', this.state.groupsDetails.id);
+      reportGroupForm.append('type', BLOCKTYPES.REPORT_GROUP);
+      reportGroupForm.append('details', details);
+      reportGroupForm.append('reason', reason);
+      reportGroupForm.append('is_blocked', 1);
+      await this.props.reportGroup(reportGroupForm);
+      if (this.props.reportGroupPayload?.success) {
+        setTimeout(() => {
+          this.setState({
+            postPoneBlock: !this.state.postPoneBlock,
+          });
+        }, 700);
+      }
+    }
+  };
 
   closePostpone = () => {
     this.setState({postPone: false});
+  };
+  closePostponeBlock = () => {
+    this.setState({postPoneBlock: false});
   };
 
   handleClose = () => {
@@ -625,11 +676,19 @@ class GroupInformation extends Component {
                         key={index.toString()}
                         onPress={() => this.handleMenus(index)}
                         style={styles.container}>
+                        {item?.icon === 'block-helper' ?
+                        <Icon1
+                        name={item?.icon}
+                        size={scale(20)}
+                        color={theme.colors.grey10}
+                        />
+                        :
                         <Icon
                           name={item?.icon}
                           size={scale(20)}
                           color={theme.colors.grey10}
                         />
+                        }
                         <Label
                           title={getLocalText(item?.title)}
                           style={{marginLeft: scale(10)}}
@@ -843,6 +902,13 @@ class GroupInformation extends Component {
           data={this.state.groupsDetails}
           reportGroup={true}
         />
+        <ReportModel
+          isVisible={this.state.blockModel}
+          toggleReportmodel={this.closeBlock}
+          data={this.state.groupsDetails}
+          reportGroup={true}
+          blockGroup={true}
+        />
         <ReportDetailsModel
           show={this.state.reportDetails}
           closeModal={this.closeReportDetails}
@@ -850,9 +916,22 @@ class GroupInformation extends Component {
           reportType={singleChatId !== '1' && BLOCKTYPES.REPORT_GROUP}
           postData={singleChatId !== '1' && true}
         />
+        <ReportDetailsModel
+          show={this.state.blockDetailsModel}
+          closeModal={this.closeBlockDetails}
+          reasonList={reportReasonList}
+          reportType={singleChatId !== '1' && BLOCKTYPES.REPORT_GROUP}
+          postData={singleChatId !== '1' && true}
+          blockGroup={true}
+        />
         <PostponedModel
           isVisible={this.state.postPone}
           close={this.closePostpone}
+        />
+        <PostponedModel
+          isVisible={this.state.postPoneBlock}
+          close={this.closePostponeBlock}
+          isBlock={true}
         />
         {/* <GroupOptions
           isShow={this.state.userOptions}

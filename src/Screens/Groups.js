@@ -230,6 +230,8 @@ class Groups extends Component {
     });
   };
   onPressImage = (item, index) => {
+    console.log('item ->', item);
+    
     this.props.navigation.navigate('GroupMember', {groupData: item});
   };
   handleNotification = async ({item, index}) => {
