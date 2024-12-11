@@ -423,7 +423,6 @@ class GroupMember extends Component {
       blockUser.append('details', details);
       blockUser.append('reason', reason);
       blockUser.append('is_blocked', 1);
-
       this.props.blockAction(0, blockUser);
 
       setTimeout(() => {
@@ -448,7 +447,7 @@ class GroupMember extends Component {
       blockUser.append('type', BLOCKTYPES.REPORT_USER);
       blockUser.append('details', details);
       blockUser.append('reason', reason);
-
+      blockUser.append('is_blocked', 1);
       this.props.blockAction(0, blockUser);
       // this.props.blockAction(0, blockUser);
 
