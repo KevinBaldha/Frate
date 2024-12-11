@@ -710,7 +710,6 @@ class GroupMember extends Component {
             <View>
               {singleChatId !== '1' && (
                 <>
-                {console.log('groupsDetails?.total_members ->', groupsDetails?.total_members)}
                   <Label
                     title={`${groupsDetails?.total_members !== undefined ? groupsDetails?.total_members : ''}  ${
                       groupsDetails?.total_members > 1

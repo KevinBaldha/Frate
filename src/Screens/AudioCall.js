@@ -111,8 +111,6 @@ class AudioCall extends Component {
     }
   };
   closeBlock = (item) => {
-    console.log('item ->', item);
-    
     if (item === null) {
       this.setState({
         blockModel: !this.state.blockModel,
@@ -147,8 +145,6 @@ class AudioCall extends Component {
     }
   };
   closeBlockDetails = async (details, reason) => {
-    console.log('details ->', details);
-    console.log('reason ->', reason);
     this.setState({
       blockDetailsModel: !this.state.blockDetailsModel,
     });
@@ -158,7 +154,6 @@ class AudioCall extends Component {
     reportGroupForm.append('details', details);
     reportGroupForm.append('reason', reason);
     reportGroupForm.append('is_blocked', 1);
-    console.log('reportGroupForm ->', reportGroupForm);
     await this.props.reportGroup(reportGroupForm);
     if (this.props.reportGroupPayload?.success) {
       setTimeout(() => {
