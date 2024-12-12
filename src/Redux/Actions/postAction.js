@@ -173,7 +173,8 @@ export const commentLike = (commentId, userId) => {
 
 //report post
 export const blockAction = (type, payload) => {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
+    try {
       let blockSuccess = await postAPICall(
         type === 0 ? API.blockUser : API.reportGroup,
         payload,
@@ -184,6 +185,10 @@ export const blockAction = (type, payload) => {
         dispatch({type: types.REPORT, payload: blockSuccess.success});
         Alert.alert(blockSuccess.errorMsg);
       }
+      return blockSuccess;
+    } catch (error) {
+      console.log('blockAction API catchError', error);
+    }
   };
 };
 

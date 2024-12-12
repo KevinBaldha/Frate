@@ -422,7 +422,7 @@ class GroupMember extends Component {
       blockUser.append('type', BLOCKTYPES.REPORT_USER);
       blockUser.append('details', details);
       blockUser.append('reason', reason);
-      blockUser.append('is_blocked', 1);
+
       this.props.blockAction(0, blockUser);
 
       setTimeout(() => {
@@ -432,7 +432,7 @@ class GroupMember extends Component {
       }, 700);
     }
   };
-  closeBlockDetails = (details, reason) => {
+  closeBlockDetails = async (details, reason) => {
     if (details === undefined || reason === undefined) {
       this.setState({
         blockDetailsModel: !this.state.blockDetailsModel,
@@ -441,21 +441,26 @@ class GroupMember extends Component {
       this.setState({
         blockDetailsModel: !this.state.blockDetailsModel,
       });
+
+      const groupId =
+        this.state.groupsDetails?.id ||
+        this.props?.route?.params?.groupData?.id;
+
       let blockUser = new FormData();
-      blockUser.append('group_id', this.state.groupsDetails.id);
-      blockUser.append('blocked_user_id', this.state.selectedUser.member_id); //user id send karvanu thase
+      blockUser.append('group_id', groupId);
+      blockUser.append('blocked_user_id', this.state.selectedUser?.member_id); //user id send karvanu thase
       blockUser.append('type', BLOCKTYPES.REPORT_USER);
       blockUser.append('details', details);
       blockUser.append('reason', reason);
       blockUser.append('is_blocked', 1);
-      this.props.blockAction(0, blockUser);
-      // this.props.blockAction(0, blockUser);
-
-      setTimeout(() => {
-        this.setState({
-          postPoneBlock: !this.state.postPoneBlock,
-        });
-      }, 700);
+      const response = await this.props.blockAction(0, blockUser);
+      if (response?.success) {
+        setTimeout(() => {
+          this.setState({
+            postPoneBlock: !this.state.postPoneBlock,
+          });
+        }, 700);
+      }
     }
   };
   closePostpone = () => {
@@ -677,12 +682,13 @@ class GroupMember extends Component {
     } = this.state;
 
     const {reportReasonList} = this.props;
+    const paramGroupData = this.props?.route?.params?.groupData;
     return (
       <ScreenContainer>
         <HeaderView
           title={
             singleChatId !== '1'
-              ? groupsDetails?.name
+              ? groupsDetails?.name || paramGroupData?.name
               : recieverData?.first_name
           }
           titleStyleMain={singleChatId === '1' ? styles.headerContainer : {}}
@@ -691,7 +697,7 @@ class GroupMember extends Component {
             singleChatId !== '1' && (
               <GroupImages
                 groupImagesView={{marginLeft: scale(55), marginTop: scale(2)}}
-                members={groupsDetails}
+                members={paramGroupData || groupsDetails}
               />
             )
           }
@@ -709,13 +715,21 @@ class GroupMember extends Component {
             <View>
               {singleChatId !== '1' && (
                 <>
-                  <Label
-                    title={`${groupsDetails?.total_members !== undefined ? groupsDetails?.total_members : ''}  ${
-                      groupsDetails?.total_members > 1
-                        ? getLocalText('GroupInfo.member')
-                        : groupsDetails?.total_members === undefined
-                        ? ''
-                        : getLocalText('GroupInfo.singleMember')
+                 <Label
+                    title={`${
+                      groupsDetails?.total_members !== undefined ||
+                      paramGroupData?.total_members
+                        ? groupsDetails?.total_members ||
+                          paramGroupData?.total_members
+                        : ''
+                    }  ${
+                      groupsDetails?.total_members !== undefined ||
+                      paramGroupData?.total_members
+                        ? groupsDetails?.total_members > 1 ||
+                          paramGroupData?.total_members > 1
+                          ? getLocalText('GroupInfo.member')
+                          : getLocalText('GroupInfo.singleMember')
+                        : ''
                     }`}
                     style={styles.members}
                   />
@@ -724,9 +738,9 @@ class GroupMember extends Component {
                   ) : (
                     <FlatList
                       // scrollEnabled={false}
-                      data={groupUserList === undefined ? '' : groupUserList}
-                      extraData={this.state}
-                      keyExtractor={(_, index) => index.toString()}
+                      data={groupUserList === undefined ? [] : groupUserList}
+                      extraData={this.state?.groupUserList}
+                      keyExtractor={(_, index) => index?.toString()}
                       renderItem={this.renderPeoples}
                       contentContainerStyle={{
                         paddingHorizontal: scale(23),

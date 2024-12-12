@@ -33,7 +33,7 @@ const PostponedModel = (props) => {
             title={
               id
                 ? getLocalText('Report.postponetitle')
-                : postData && isBlock
+                : isBlock
                 ? getLocalText('Report.postponeBlockTitle')
                 : postData && isUserBlock
                 ? getLocalText('Report.postponeUserTitle')

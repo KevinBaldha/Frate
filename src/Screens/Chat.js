@@ -116,7 +116,6 @@ class Chat extends Component {
             : getLocalText('Chat.notification'),
         },
         {icon: 'alert-triangle', name: getLocalText('Report.reporttxt')},
-        {icon: 'block-helper', name: getLocalText('Report.block')},
         {icon: 'image', name: `${getLocalText('GroupInfo.media')}`},
       ],
       msg: '',

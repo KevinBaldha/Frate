@@ -126,6 +126,7 @@ class GroupDetails extends Component {
         {icon: 'info', name: getLocalText('Chat.groupinfo')},
         {icon: 'bell', name: getLocalText('Chat.notification')},
         {icon: 'alert-triangle', name: getLocalText('Report.reporttxt')},
+        {icon: 'block-helper', name: getLocalText('Report.block')},
         // {icon: 'log-out', name: getLocalText('GroupInfo.leavegroup')},
         {icon: 'delete-outline', name: getLocalText('GroupInfo.delete')},
       ],
@@ -475,7 +476,7 @@ class GroupDetails extends Component {
     this.setState({popUpModel: !this.state.popUpModel, tabId: id});
   };
 
-  handleMenus = index => {
+  handleMenus = (index) => {
     const {groupDetailsData} = this.state;
     this.setState({menu: !this.state.menu});
     setTimeout(() => {
@@ -492,19 +493,31 @@ class GroupDetails extends Component {
       } else if (index === 2) {
         this.setState({reportModel: !this.state.reportModel});
       } else if (index === 3) {
-        if (this.props.userData.id === groupDetailsData?.group_admin_id) {
-          this.setState({deleteModel: true});
-        } else {
-          //  Block Group
-          this.setState({blockModel: !this.state.blockModel});
+        //  Block Group
+        this.setState({blockModel: !this.state.blockModel});
+      } else if (this.props.userData.id === groupDetailsData?.group_admin_id) {
+        this.setState({deleteModel: true});
 
-          //  Leave Group
-          // this.setState({exitGroupModel: true});
+        //  Leave Group
+        // this.setState({exitGroupModel: true});
 
-          // this.props.exitGroup(groupDetailsData?.id);
-          // this.props.navigation.goBack();
-        }
+        // this.props.exitGroup(groupDetailsData?.id);
+        // this.props.navigation.goBack();
       }
+      // else if (index === 3) {
+      //   if (this.props.userData.id === groupDetailsData?.group_admin_id) {
+      //     this.setState({deleteModel: true});
+      //   } else {
+      //     //  Block Group
+      //     this.setState({blockModel: !this.state.blockModel});
+
+      //     //  Leave Group
+      //     // this.setState({exitGroupModel: true});
+
+      //     // this.props.exitGroup(groupDetailsData?.id);
+      //     // this.props.navigation.goBack();
+      //   }
+      // }
     }, 500);
   };
 
