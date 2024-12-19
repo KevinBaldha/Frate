@@ -207,6 +207,11 @@ class Groups extends Component {
   };
   //display groups
   renderGroups = ({item, index}) => {
+    if(item?.name === 'LP'){
+      console.log('item ->', item);
+      console.log('item member_images ->', item.member_images);
+    }
+    
     return (
       <GroupCard
         item={item}

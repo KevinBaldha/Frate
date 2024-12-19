@@ -25,6 +25,8 @@ export const getGroups = (
         categoryFilter +
         pageNumber +
         showOnlyFriendGroups;
+        console.log('url ->', url);
+        
       let success = await getAPICall(url);
       if (success.error) {
       } else {

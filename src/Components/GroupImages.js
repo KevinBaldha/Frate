@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Image} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {getLocalText} from '../Locales/I18n';
 import {scale, theme, images} from '../Utils';
+import { checkImageExists } from '../Utils/helper';
 
 const GroupImages = (props) => {
   const {members, groupImagesView, InteractionsDetails} = props;
@@ -13,22 +14,29 @@ const GroupImages = (props) => {
       InteractionsDetails ? members : members?.member_images || members?.users,
     );
   }, [userImages]);
+  if(members?.name === 'LP'){
+  console.log('members ->', members);
+  console.log('userImages ->', userImages);
+  }
 
   return (
     <View style={[styles.subView, groupImagesView]}>
       <View style={styles.subView}>
         {userImages !== undefined &&
-          userImages?.slice(0, 3).map((d, i) => {
-            // console.log('d?.user_pic?.original ->',d?.user_pic?.original);
-  // console.log('d?.image?.optimize ->',d?.image?.optimize );
-  // console.log('d?.user_pic?.optimize ->',d?.user_pic?.optimize);
+          userImages?.slice(0, 3).map(async(d, i) => {
+            const isExists = await checkImageExists(d?.image?.original).then((exists) => {
+              return exists ? true : false;
+            });
+            // console.log('isExists ->',  isExists);
+            
             return (
-              <FastImage
+              <Image
                 key={i.toString()}
                 source={
-                  d?.original
-                    ? {uri: d?.optimize}
+                  d?.image?.original
+                    ? {uri: d?.image?.original}
                     : d?.image?.length !== 0
+                    // : Object.keys(d?.image).length
                     ? {
                         uri: InteractionsDetails
                           ? d?.user_pic?.original

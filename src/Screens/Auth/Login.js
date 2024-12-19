@@ -367,6 +367,7 @@ class Login extends Component {
       this.setState({loadding: false});
     }
   };
+
   handleInput = (text, key, keyErr) => {
     this.setState({
       [key]: text,

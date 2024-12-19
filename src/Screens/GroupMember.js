@@ -241,7 +241,7 @@ class GroupMember extends Component {
     //     ? item?.gradient_color
     //     : ['#2a2a72', '#3eadcf', '#2a2a72', '#009ffd'];
     return (
-      <View style={[styles.userView, {marginBottom: scale(10)}]} key={index}>
+      <View style={[styles.userView, {marginBottom: scale(10)}]} key={index?.toString?.()}>
         <TouchableOpacity
           style={styles.userView}
           disabled={item?.is_reported}
@@ -368,11 +368,11 @@ class GroupMember extends Component {
   };
 
   renderLinks = ({item, index}) => {
-    return <Links item={item} index={index} />;
+    return (<View key={index?.toString?.()}><Links item={item} index={index} /></View>);
   };
 
   renderDoc = ({item, index}) => {
-    return <DocumentsFile item={item} index={index} />;
+    return (<View key={index?.toString?.()}><DocumentsFile item={item} index={index} /></View>);
   };
 
   closeReport = (item) => {
@@ -480,7 +480,8 @@ class GroupMember extends Component {
         numColumns={3}
         extraData={this.state}
         renderItem={this._renderItem}
-        keyExtractor={this._keyExtractor}
+        keyExtractor={(flatItem, index) => `flatlist-${flatItem?.id ?? index}`}
+        // keyExtractor={this._keyExtractor}
       />
     );
   };
@@ -508,7 +509,7 @@ class GroupMember extends Component {
 
   renderDocument = ({item}) => (
     <FlatList
-      keyExtractor={(_, index) => index.toString()}
+      keyExtractor={(_, index) => index?.toString?.()}
       data={item}
       extraData={this.state}
       renderItem={this.renderDoc}
@@ -525,7 +526,7 @@ class GroupMember extends Component {
       <FlatList
         data={item}
         extraData={this.state}
-        keyExtractor={(_, index) => index.toString()}
+        keyExtractor={(_, index) => index?.toString?.()}
         renderItem={this.renderLinks}
         showsVerticalScrollIndicator={false}
         style={{
@@ -619,7 +620,9 @@ class GroupMember extends Component {
         this.setState({loadding: false});
         Alert.alert(getLocalText('ErrorMsgs.Unable_to_Reach'));
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log('handleNotification Error ->', error);
+    }
   };
   handleOptions = () => {
     this.setState({showOptions: !this.state.showOptions});
@@ -738,9 +741,9 @@ class GroupMember extends Component {
                   ) : (
                     <FlatList
                       // scrollEnabled={false}
-                      data={groupUserList === undefined ? [] : groupUserList}
+                      data={groupUserList || []}
                       extraData={this.state?.groupUserList}
-                      keyExtractor={(_, index) => index?.toString()}
+                      keyExtractor={(_, index) => index?.toString?.()}
                       renderItem={this.renderPeoples}
                       contentContainerStyle={{
                         paddingHorizontal: scale(23),
@@ -823,7 +826,8 @@ class GroupMember extends Component {
                   ) : (
                     <SectionList
                       key={'#'}
-                      keyExtractor={(item) => '#' + item?.id}
+                      // keyExtractor={(item) => '#' + item?.id}
+                      keyExtractor={(item, index) => `sectionlist-${item?.id ?? index}`}
                       renderItem={this._renderSectionListItem}
                       renderSectionHeader={this._renderSectionHeader}
                       numColumns={3}

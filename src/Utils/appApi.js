@@ -22,7 +22,7 @@ export const getBaseUrl = () => {
 // Axios instance creation with configuration
 export const appAPI = axios.create({
   baseURL: getBaseUrl(),
-  timeout: 10000, // 10 seconds timeout
+  timeout: 0, // 10 seconds timeout
   headers: {
     Accept: 'application/json',
     'Content-Type': 'multipart/form-data',
@@ -178,8 +178,11 @@ export const getAPICall = async (
 export const postAPICall = async (url, requestData) => {
   try {
     const res = await appAPI.post(url, requestData);
+    console.log('postAPICall res ::::->', res);
+    
     return handleResponse(res);
   } catch (e) {
+    console.log('postAPICall ERROR ::::->', e);
     return handleError(e.response ? e.response.data : e.message);
   }
 };

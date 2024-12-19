@@ -329,9 +329,10 @@ const styles = StyleSheet.create({
   },
   row: {flexDirection: 'row', alignItems: 'center'},
   userImage: {
-    width: scale(0),
+    width: scale(40),
     height: scale(40),
     borderRadius: scale(20),
+    resizeMode:'contain'
   },
   shadow: {
     shadowColor: theme.colors.black,

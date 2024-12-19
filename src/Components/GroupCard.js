@@ -17,6 +17,10 @@ const GroupCard = (props) => {
     options,
     notificatoionIconShow,
   } = props;
+
+  if(item?.name === 'LP'){
+    console.log('GroupCard item ->', item);
+  }
   return (
     <>
       <TouchableOpacity

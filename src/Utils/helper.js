@@ -8,6 +8,7 @@ const lngDetector = new LanguageDetect();
 import translate from 'translate';
 import {appStoreIds, DeepLink} from './StaticData';
 import {getLocalText} from '../Locales/I18n';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 translate.engine = 'google';
 translate.key = 'AIzaSyC30DEa_qqRLc9E56OnvpwqoWatMa3WzD0';
 
@@ -243,6 +244,34 @@ class NotificationsPermissions {
   }
 }
 
+const retrieveLoginToken = async () => {
+  try {
+    const loginToken = await AsyncStorage.getItem('@loginToken');
+    console.log('loginToken ->', loginToken);
+    
+    if (loginToken !== null) {
+      console.log('Retrieved Login Token:', loginToken);
+      return loginToken; // Returns the login token
+    } else {
+      console.log('Login Token not found');
+      return null; // Handle the case where the token doesn't exist
+    }
+  } catch (error) {
+    console.error('Error retrieving login token:', error);
+    return null; // Handle any errors that may occur
+  }
+};
+
+const checkImageExists = async (url) => {
+  try {
+    const response = await fetch(url, { method: 'HEAD' }); // 'HEAD' to avoid downloading the entire image
+    return response.status === 200; // Check if the status code is 200
+  } catch (error) {
+    console.error('Error checking image:', error);
+    return false;
+  }
+};
+
 export {
   imageData,
   imagesOptions,
@@ -256,4 +285,6 @@ export {
   ConvertInFranch,
   Con,
   NotificationsPermissions,
+  retrieveLoginToken,
+  checkImageExists,
 };

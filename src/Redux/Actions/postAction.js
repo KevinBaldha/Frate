@@ -1,7 +1,8 @@
 import * as types from './ActionsTypes';
-import {API, getAPICall, postAPICall} from '../../Utils/appApi';
+import {API, getAPICall, getBaseUrl, postAPICall} from '../../Utils/appApi';
 import {Alert} from 'react-native';
 import {getLocalText} from '../../Locales/I18n';
+import { retrieveLoginToken } from '../../Utils/helper';
 
 // all post show
 export const getPost = (page, lastId) => {
@@ -62,6 +63,7 @@ export const addPost = (details, attachment, is_sponsored, group_id) => {
       postData.append('details', details);
       postData.append('is_sponsored', is_sponsored);
       postData.append('group_id', group_id);
+      
       if (attachment !== undefined || !attachment) {
         attachment.forEach((item, i) => {
           if (item?.type === 'image/jpeg') {
@@ -87,9 +89,13 @@ export const addPost = (details, attachment, is_sponsored, group_id) => {
       } else {
         postData.append('attachment[]', '');
       }
+      console.log('postData ->', postData);
       let response = await postAPICall(API.post, postData);
+      console.log('response :::::::: --->', response);
+      
       dispatch(isPostLoading(false));
       if (response.error) {
+        console.log('response ERROR --->', response);
         Alert.alert(
           response?.errorMsg !== ''
             ? response?.errorMsg
@@ -104,6 +110,113 @@ export const addPost = (details, attachment, is_sponsored, group_id) => {
       dispatch(isPostLoading(false));
     }
   };
+};
+
+// add new post
+export const addPostFetch = (details, attachment, is_sponsored, group_id) =>
+  async (dispatch) => {
+     console.log('addPostFetch....');
+    try {
+      dispatch(isPostLoading(true));
+
+      const token = await retrieveLoginToken();
+      console.log('token ->', token);
+      
+      const myHeaders = new Headers();
+      myHeaders.append('Accept', 'application/json');
+      myHeaders.append('Authorization', `Bearer ${token}`);
+    
+
+      const formdata = new FormData();
+      formdata.append('details', details);
+      formdata.append('is_sponsored', is_sponsored);
+      formdata.append('group_id', group_id);
+      
+      if (attachment !== undefined || !attachment) {
+        attachment.forEach((item, i) => {
+          if (item?.type === 'image/jpeg') {
+            formdata.append('attachment[]', {
+              uri: item?.uri,
+              type: item?.type,
+              name: item?.name || `filename${i}.jpg`,
+            });
+          } else if (item?.type === 'application/pdf') {
+            formdata.append('attachment[]', {
+              uri: item?.pdf,
+              type: item?.type,
+              name: item?.name,
+            });
+          } else if (item?.video?.type && item?.video.type.slice(0, 5) === 'video') {
+            formdata.append('attachment[]', {
+              uri: item?.video.uri,
+              type: item?.video.type,
+              name: item?.video.name,
+            });
+          }
+        });
+      } else {
+        formdata.append('attachment[]', '');
+      }
+      console.log('formdata video ->', formdata.getParts());
+      console.log('formdata ->', formdata);
+      
+      const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: formdata,
+      };
+      console.log('Endpoint --->', `${getBaseUrl()}${API.post}`);
+      
+      
+    //   fetch(`${getBaseUrl()}${API.post}`, requestOptions)
+    //     .then((response) => response.json())
+    //     .then((result) => {
+    //       console.log('result <--------->',result);
+    //       dispatch(isPostLoading(false));
+    //   if (result.error) {
+    //     Alert.alert(
+    //       result?.errorMsg !== ''
+    //         ? result?.errorMsg
+    //         : getLocalText('ErrorMsgs.worng'),
+    //     );
+    //     dispatch({type: types.ERROR, payload: result});
+    //     // return { success: false, error: result.errorMsg || 'An error occurred' };
+    //   } else {
+    //     dispatch({type: types.ADDPOST, payload: result.success});
+    //     // return { success: true, data: result.success };
+    //   }
+    //   return result;
+    // })
+    // .catch((error) => {
+    //   console.error('.CATCH ERROR -->', error);
+    //   dispatch(isPostLoading(false));
+    //   return error;
+    // });
+
+    const response = await fetch(`${getBaseUrl()}${API.post}`, requestOptions);
+    const result = await response.json();
+
+    console.log('result <--------->', result);
+    dispatch(isPostLoading(false));
+
+    if (result.error) {
+      Alert.alert(
+        result?.errorMsg !== ''
+          ? result?.errorMsg
+          : getLocalText('ErrorMsgs.worng'),
+      );
+      dispatch({ type: types.ERROR, payload: result });
+      return { success: false, error: result.errorMsg || 'An error occurred' };
+    } else {
+      dispatch({ type: types.ADDPOST, payload: result.success });
+      return { success: true, data: result.success };
+    }
+    
+  } catch (error) {
+      console.error('ONLY CATCH ERROR -->', error);
+      dispatch(isPostLoading(false));
+      return { success: false, error: error.message || 'An error occurred' };
+    }
 };
 
 export const isPostLoading = (payload) => {

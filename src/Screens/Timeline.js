@@ -31,6 +31,7 @@ import {
   getPost,
   getPostLocally,
   addPost,
+  addPostFetch,
   isPostLoading,
   postLikeShareSave,
   commentLike,
@@ -1385,17 +1386,25 @@ class Timeline extends PureComponent {
 
   //timeline in add new post
   handleSendPost = async () => {
+    console.log('handleSendPost ....');
+    
     const {allData} = this.props;
     Keyboard.dismiss();
     if (!this.state.groupName) {
       Alert.alert(getLocalText('ErrorMsgs.selectgroup'));
     } else {
+      console.log('postText ->', this.state.postText);
+      console.log('attachImages ->', this.state.attachImages);
+      console.log('groupName.id ->', this.state.groupName.id);
+      
       const postRes = await this.props.addPost(
         this.state.postText,
         this.state.attachImages,
         1,
         this.state.groupName.id,
       );
+      console.log('postRes ->', postRes);
+      
 
       if (!postRes.error) {
         var allPostDetail = allData;
@@ -1813,6 +1822,7 @@ class Timeline extends PureComponent {
         viewableItems.forEach(element => {
           frmData.append('post_id[]', element?.item?.id);
         });
+        console.log('element?.item?.id frmData ->', frmData);
 
         await postAPICall(API.getStoreUserLog, frmData);
       }
@@ -2500,6 +2510,7 @@ export default connect(mapStateToProps, {
   getPost,
   getPostLocally,
   addPost,
+  addPostFetch,
   isPostLoading,
   postCommentSend,
   postLikeShareSave,
