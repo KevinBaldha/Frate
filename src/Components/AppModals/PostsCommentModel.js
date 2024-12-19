@@ -204,18 +204,22 @@ const PostsCommentModel = props => {
     if (commentText) {
       try {
         setLoadding(true);
-        const commentdata = await dispatch(
+        const commentData = await dispatch(
           postCommentSend(postId, commentText, index),
         );
-        let commentsData = [...comments, commentdata.data];
-        setCommens(commentsData);
-        setTotalPage(Math.ceil(commentdata.length / perPageData));
-        updateCommentCount(index);
-        // update redux post list
-        if (timeline) {
-          updatePostsList(postId, commentdata.data);
+        if (commentData?.data?.length) {
+          let commentsData = [...comments, commentData.data];
+          setCommens(commentsData);
+          setTotalPage(Math.ceil(commentData.length / perPageData));
+          updateCommentCount(index);
+          // update redux post list
+          if (timeline) {
+            updatePostsList(postId, commentData.data);
+          }
+        } else {
+          setLoadding(false);
+          alert(commentData.message);
         }
-        setLoadding(false);
       } catch (error) {
         setLoadding(false);
       }

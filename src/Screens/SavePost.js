@@ -64,8 +64,8 @@ class SavePost extends Component {
     try {
       this.setState({loadding: true});
       let response = await getAPICall(API.getSavePost);
-      console.log('getSavedPost response ->',response);
-      
+      console.log('getSavedPost response ->', response);
+
       this.setState({loadding: false});
       if (response.success) {
         this.setState({
@@ -163,10 +163,17 @@ class SavePost extends Component {
   //send comment on post
   sendComment = (item, index) => {
     try {
-      this.props.postCommentSend(item?.id, this.state.commenttxt);
-      setTimeout(() => {
-        this.getUpdateSavedPost();
-      }, 1100);
+      const commentData = this.props.postCommentSend(
+        item?.id,
+        this.state.commenttxt,
+      );
+      if (commentData?.data?.length) {
+        setTimeout(() => {
+          this.getUpdateSavedPost();
+        }, 1100);
+      } else {
+        alert(commentData.message);
+      }
     } catch (error) {
       this.setState({loadding: false});
     }

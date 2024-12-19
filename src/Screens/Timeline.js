@@ -187,7 +187,6 @@ class Timeline extends PureComponent {
 
   // Request notification permission on mount
   async requestNotificationPermission() {
-
     if (Platform.OS === 'android' && Platform.Version >= 33) {
       const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
       if (result === RESULTS.GRANTED) {
@@ -203,12 +202,10 @@ class Timeline extends PureComponent {
   componentDidMount = async () => {
     this.requestNotificationPermission();
     var fcm = await this.getFcmToken();
-    console.log('FCM ->', fcm);
 
     const {userData, getNewPostBadge, navigation} = this.props;
     AppState.addEventListener('change', this.handleAppStateChange);
     let token = await AsyncStorage.getItem('@loginToken');
-    console.log('access_token ->', token);
     if (token !== null) {
       appAPI.defaults.headers.common['Content-Type'] = 'application/json';
       appAPI.defaults.headers.common.Accept = 'application/json';
@@ -383,7 +380,6 @@ class Timeline extends PureComponent {
   };
 
   showNotification = remoteMessage => {
-
     PushNotification.getChannels(function (channel_ids) {});
     PushNotification.checkPermissions(function (permissions) {});
 
@@ -627,7 +623,6 @@ class Timeline extends PureComponent {
   handleCommentTxt = async (text, data, index) => {
     data.commentTxt = text;
     // this.setState({searchData: this.state.searchData, commentedIndex: index});
-
     const updatedSearchData = [...this.state.searchData];
 
     updatedSearchData[index] = {
@@ -1092,10 +1087,10 @@ class Timeline extends PureComponent {
       let response = await postAPICall(API.sponsorPostStatus, params);
       if (response.success) {
         var allPostDetail = allData;
-        const postIndex = allPostDetail?.data.findIndex(
-          (d) => {return d.id === sponsorAlertList?.post?.id}
-        );
-        if(postIndex !== -1){
+        const postIndex = allPostDetail?.data.findIndex(d => {
+          return d.id === sponsorAlertList?.post?.id;
+        });
+        if (postIndex !== -1) {
           allPostDetail.data[postIndex].is_sponsored = 1;
           this.props.getPostLocally(allPostDetail);
           this.setState({
@@ -1107,7 +1102,7 @@ class Timeline extends PureComponent {
         this.props.navigation.navigate('ActiveSponsorPost', {
           title: getLocalText('Settings.mySponsor'),
         });
-      }else{
+      } else {
         this.setState({loading: false});
         this.props.isPostLoading(false);
       }
@@ -1358,20 +1353,26 @@ class Timeline extends PureComponent {
         item?.id,
         item?.commentTxt,
       );
-      this.props.isPostLoading(false);
-      var allPostDetail = allData;
-      const postIndex = allPostDetail?.data.findIndex(d => d.id === item?.id);
-      allPostDetail.data[postIndex].comments = [
-        commentdata?.data,
-        ...allPostDetail?.data[postIndex].comments,
-      ];
-      allPostDetail.data[postIndex].total_comment =
-        allPostDetail?.data[postIndex].total_comment + 1;
-      this.props.getPostLocally(allPostDetail);
-      this.props.isPostLoading(false);
-      this.setState({
-        userPost: allPostDetail?.data,
-      });
+
+      if (commentdata?.data.length) {
+        var allPostDetail = allData;
+        const postIndex = allPostDetail?.data.findIndex(d => d.id === item?.id);
+        // console.log('allPostDetail.data', allPostDetail.data);
+        allPostDetail.data[postIndex].comments = [
+          commentdata?.data,
+          ...allPostDetail?.data[postIndex].comments,
+        ];
+        allPostDetail.data[postIndex].total_comment =
+          allPostDetail?.data[postIndex].total_comment + 1;
+        this.props.getPostLocally(allPostDetail);
+        this.props.isPostLoading(false);
+        this.setState({
+          userPost: allPostDetail?.data,
+        });
+      } else {
+        alert(commentdata.message);
+        this.props.isPostLoading(false);
+      }
     } catch (error) {
       this.props.isPostLoading(false);
       this.setState({loading: false});
@@ -1387,7 +1388,7 @@ class Timeline extends PureComponent {
   //timeline in add new post
   handleSendPost = async () => {
     console.log('handleSendPost ....');
-    
+
     const {allData} = this.props;
     Keyboard.dismiss();
     if (!this.state.groupName) {
@@ -1396,7 +1397,6 @@ class Timeline extends PureComponent {
       console.log('postText ->', this.state.postText);
       console.log('attachImages ->', this.state.attachImages);
       console.log('groupName.id ->', this.state.groupName.id);
-      
       const postRes = await this.props.addPost(
         this.state.postText,
         this.state.attachImages,
@@ -1404,7 +1404,6 @@ class Timeline extends PureComponent {
         this.state.groupName.id,
       );
       console.log('postRes ->', postRes);
-      
 
       if (!postRes.error) {
         var allPostDetail = allData;

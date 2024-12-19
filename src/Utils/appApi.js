@@ -178,11 +178,8 @@ export const getAPICall = async (
 export const postAPICall = async (url, requestData) => {
   try {
     const res = await appAPI.post(url, requestData);
-    console.log('postAPICall res ::::->', res);
-    
     return handleResponse(res);
   } catch (e) {
-    console.log('postAPICall ERROR ::::->', e);
     return handleError(e.response ? e.response.data : e.message);
   }
 };

@@ -179,10 +179,17 @@ class BlockedContent extends Component {
   //send comment on post
   sendComment = (item, index) => {
     try {
-      this.props.postCommentSend(item?.id, this.state.commenttxt);
-      setTimeout(() => {
-        this.getUpdateBlockPost();
-      }, 1100);
+      const commentData = this.props.postCommentSend(
+        item?.id,
+        this.state.commenttxt,
+      );
+      if (commentData?.data?.length) {
+        setTimeout(() => {
+          this.getUpdateBlockPost();
+        }, 1100);
+      } else {
+        alert(commentData.message);
+      }
     } catch (error) {
       this.setState({loadding: false});
     }

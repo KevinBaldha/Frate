@@ -117,14 +117,18 @@ class InteractionsDetails extends Component {
   //send comment on post
   sendComment = (item, index) => {
     try {
-      this.props.postCommentSend(
+      const commentData = this.props.postCommentSend(
         item?.id,
         this.state.commenttxt,
         this.props.userData.id,
       );
-      setTimeout(() => {
-        this.getinteractionDetail();
-      }, 1100);
+      if (commentData?.data?.length) {
+        setTimeout(() => {
+          this.getinteractionDetail();
+        }, 1100);
+      } else {
+        alert(commentData.message);
+      }
     } catch (error) {
       this.setState({loadding: false});
     }
