@@ -96,10 +96,14 @@ const ImagesViewModel = props => {
   //comment send
   const postComment = (commentpost, index) => {
     try {
-      dispatch(postCommentSend(commentpost.id, commenttxt));
-      setTimeout(() => {
-        handleRefresh();
-      }, 1500);
+      const commentData = dispatch(postCommentSend(commentpost.id, commenttxt));
+      if (commentData?.data?.length) {
+        setTimeout(() => {
+          handleRefresh();
+        }, 1500);
+      } else {
+        alert(commentData.message);
+      }
     } catch (error) {}
     setCommenttx('');
     setComment(false);
@@ -240,7 +244,6 @@ const ImagesViewModel = props => {
               );
             }}
           />
-
           {item?.comments?.length !== 0 && (
             <Comment
               comments={item?.comments}

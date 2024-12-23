@@ -207,11 +207,7 @@ class Groups extends Component {
   };
   //display groups
   renderGroups = ({item, index}) => {
-    if(item?.name === 'LP'){
-      console.log('item ->', item);
-      console.log('item member_images ->', item.member_images);
-    }
-    
+    console.log('item', item);
     return (
       <GroupCard
         item={item}
@@ -445,7 +441,7 @@ class Groups extends Component {
           ) : (
             <FlatList
               data={searchText.length ? searchData : groupsData}
-              extraData={(this.state, this.props)}
+              extraData={[this.state, this.props]}
               keyExtractor={(_, index) => index.toString()}
               renderItem={this.renderGroups}
               contentContainerStyle={styles.groupsData}

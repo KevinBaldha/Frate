@@ -116,6 +116,7 @@ class Chat extends Component {
             : getLocalText('Chat.notification'),
         },
         {icon: 'alert-triangle', name: getLocalText('Report.reporttxt')},
+        {icon: 'block-helper', name: getLocalText('Report.block')},
         {icon: 'image', name: `${getLocalText('GroupInfo.media')}`},
       ],
       msg: '',
@@ -191,6 +192,7 @@ class Chat extends Component {
       lastessageId: this.props.route?.params?.data?.last_message_id,
       lastGroupChatId: this.props.route?.params?.lastGroupChatId,
     };
+    this.messagesRef = [];
     this.onPressAnimation = this.onPressAnimation.bind(this);
     this.send = this.send.bind(this);
     this.FlatListRef = null;
@@ -201,6 +203,8 @@ class Chat extends Component {
   }
 
   componentDidMount() {
+    const {singleChatId} = this.state;
+
     this.callInitialize();
     AppState.addEventListener('change', this._handleAppStateChange);
 
@@ -212,6 +216,61 @@ class Chat extends Component {
       'keyboardDidHide',
       this._keyboardDidHide,
     );
+
+    this.socketConnect.on(
+      'newFileMessage',
+      async (fileInfo, file_user_id, userName, profilePic) => {
+        var imagePath = '';
+
+        if (fileInfo.type === 'Image' || fileInfo.type === 'Video') {
+          imagePath = await this.fileDownload({
+            url: fileInfo.video_thumb,
+            fileName: fileInfo.fileName,
+            type: fileInfo.type,
+          });
+        }
+
+        let new_msg = {
+          message_type: fileInfo?.type,
+          message: fileInfo.fileName,
+          attachment: fileInfo.fileUrl, //this.state.imageChatPath,
+          stream_start: fileInfo.createdAt,
+          user_name: userName,
+          user_id: Number(file_user_id),
+          color: theme.colors.black,
+          user_image: profilePic,
+          audio_duration: fileInfo.audio_duration,
+          video_thumb: fileInfo.video_thumb,
+          localFilePath: imagePath,
+        };
+
+        let messagesData = [new_msg, ...this.state.messages];
+        this.setState({
+          messages: messagesData,
+          totalPage: Math.ceil(messagesData.length / this.state.perPageData),
+        });
+      },
+    );
+
+    this.socketConnect.on(
+      singleChatId === '1' ? 'conversationCreateMessage' : 'createMessage',
+      (message, remoteUserId, remoteUserName, timeStamp, userProfilePic) => {
+        let newmessage = {
+          message: message,
+          stream_start: timeStamp,
+          user_name: remoteUserName,
+          user_id: remoteUserId,
+          color: theme.colors.black,
+          media: '',
+          user_image: userProfilePic,
+        };
+
+        this.setState(
+          {messages: [newmessage, ...this.state.messages]},
+          () => {},
+        );
+      },
+    );
   }
 
   callInitialize = () => {
@@ -220,18 +279,27 @@ class Chat extends Component {
     this.initSoket();
   };
 
+  componentDidUpdate(prevProps, prevState) {
+    // Sync the ref whenever the state changes
+    if (prevState.messages?.length !== this.state.messages.length) {
+      this.messagesRef = this.state.messages;
+    }
+  }
+
   _handleAppStateChange = nextAppState => {
     // We need to fix when app in background
+
     if (!this.state.isMediaOption && nextAppState !== this.appState.current) {
       if (nextAppState === 'active') {
         this.appState.current = AppState.currentState;
+        this.setState({lastessageId: 0});
         this.callInitialize();
-
         if (this.keyboardVisible) {
           this.setState({keybordStatus: true});
         }
       } else if (nextAppState === 'active' && !this.peer) {
         this.initSoket();
+        this.setState({lastessageId: 0});
       } else if (nextAppState === 'background') {
         this.appState.current = AppState.currentState;
         this.setState({keybordStatus: false});
@@ -358,6 +426,7 @@ class Chat extends Component {
       if (getSingleChatHistory.success) {
         const {data, total_page, per_page_data} = getSingleChatHistory;
         let messagesData = data;
+
         for (let index = 0; index < messagesData.length; index++) {
           const element = messagesData[index];
           if (
@@ -373,6 +442,7 @@ class Chat extends Component {
             messagesData[index].localFilePath = imagePath;
           }
         }
+
         this.setState(
           {
             messages: messagesData,
@@ -475,58 +545,58 @@ class Chat extends Component {
     );
     //conversation-upload-file
 
-    this.socketConnect.on(
-      'newFileMessage',
-      async (fileInfo, file_user_id, userName, profilePic) => {
-        var imagePath = '';
-        if (fileInfo.type === 'Image' || fileInfo.type === 'Video') {
-          imagePath = await this.fileDownload({
-            url: fileInfo.video_thumb,
-            fileName: fileInfo.fileName,
-            type: fileInfo.type,
-          });
-        }
-        let new_msg = {
-          message_type: fileInfo?.type,
-          message: fileInfo.fileName,
-          attachment: fileInfo.fileUrl, //this.state.imageChatPath,
-          stream_start: fileInfo.createdAt,
-          user_name: userName,
-          user_id: Number(file_user_id),
-          color: theme.colors.black,
-          user_image: profilePic,
-          audio_duration: fileInfo.audio_duration,
-          video_thumb: fileInfo.video_thumb,
-          localFilePath: imagePath,
-        };
+    // this.socketConnect.on(
+    //   'newFileMessage',
+    //   async (fileInfo, file_user_id, userName, profilePic) => {
+    //     var imagePath = '';
+    //     if (fileInfo.type === 'Image' || fileInfo.type === 'Video') {
+    //       imagePath = await this.fileDownload({
+    //         url: fileInfo.video_thumb,
+    //         fileName: fileInfo.fileName,
+    //         type: fileInfo.type,
+    //       });
+    //     }
+    //     let new_msg = {
+    //       message_type: fileInfo?.type,
+    //       message: fileInfo.fileName,
+    //       attachment: fileInfo.fileUrl, //this.state.imageChatPath,
+    //       stream_start: fileInfo.createdAt,
+    //       user_name: userName,
+    //       user_id: Number(file_user_id),
+    //       color: theme.colors.black,
+    //       user_image: profilePic,
+    //       audio_duration: fileInfo.audio_duration,
+    //       video_thumb: fileInfo.video_thumb,
+    //       localFilePath: imagePath,
+    //     };
 
-        let messagesData = [new_msg, ...this.state.messages];
-        this.setState({
-          messages: messagesData,
-          totalPage: Math.ceil(messagesData.length / this.state.perPageData),
-        });
-      },
-    );
+    //     let messagesData = [new_msg, ...this.state.messages];
+    //     this.setState({
+    //       messages: messagesData,
+    //       totalPage: Math.ceil(messagesData.length / this.state.perPageData),
+    //     });
+    //   },
+    // );
 
-    this.socketConnect.on(
-      singleChatId === '1' ? 'conversationCreateMessage' : 'createMessage',
-      (message, remoteUserId, remoteUserName, timeStamp, userProfilePic) => {
-        let newmessage = {
-          message: message,
-          stream_start: timeStamp,
-          user_name: remoteUserName,
-          user_id: remoteUserId,
-          color: theme.colors.black,
-          media: '',
-          user_image: userProfilePic,
-        };
+    // this.socketConnect.on(
+    //   singleChatId === '1' ? 'conversationCreateMessage' : 'createMessage',
+    //   (message, remoteUserId, remoteUserName, timeStamp, userProfilePic) => {
+    //     let newmessage = {
+    //       message: message,
+    //       stream_start: timeStamp,
+    //       user_name: remoteUserName,
+    //       user_id: remoteUserId,
+    //       color: theme.colors.black,
+    //       media: '',
+    //       user_image: userProfilePic,
+    //     };
 
-        this.setState(
-          {messages: [newmessage, ...this.state.messages]},
-          () => {},
-        );
-      },
-    );
+    //     this.setState(
+    //       {messages: [newmessage, ...this.state.messages]},
+    //       () => {},
+    //     );
+    //   },
+    // );
   };
 
   _keyboardDidShow = () => {
@@ -561,7 +631,6 @@ class Chat extends Component {
         // const permissionStatuses = {};
         // for (const permission of requiredPermissions) {
         //   const isGranted = await PermissionsAndroid.check(permission);
-        //   console.log('isGranted', isGranted);
         //   permissionStatuses[permission] = isGranted ? 'granted' : 'denied';
         // }
 
@@ -569,7 +638,6 @@ class Chat extends Component {
         // const permissionsToRequest = requiredPermissions.filter(
         //   permission => permissionStatuses[permission] !== 'granted',
         // );
-        // console.log('requiredPermissions', permissionsToRequest);
         const grants = await PermissionsAndroid.requestMultiple([
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
           PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
@@ -812,11 +880,11 @@ class Chat extends Component {
         : prevState.audioPlayButton,
       audioPlayDisableButton: true,
     }));
-  // this.setState({
-  //   audioPlayButton: isAudioPlayButton,
-  //   // audioPlayDisableButton: false,
-  //   audioPlayDisableButton: true,
-  // });
+    // this.setState({
+    //   audioPlayButton: isAudioPlayButton,
+    //   // audioPlayDisableButton: false,
+    //   audioPlayDisableButton: true,
+    // });
 
     // this.setState({
     //   audioPlayDisableButton: true,
@@ -991,18 +1059,13 @@ class Chat extends Component {
   };
 
   // openFile = async () => {
-  //   console.log('openFile.....');
-
   //   try {
   //     const res = await DocumentPicker.pick({
   //       type: [DocumentPicker.types.pdf],
   //       // presentationStyle: 'fullScreen',
   //       allowMultiSelection: true,
   //     });
-  //     console.log('res ->', res);
-
   //     const resp = Platform.OS === 'ios' ? res : res?.[0];
-  //     console.log('resp ->', resp);
   //     var fileObj = {
   //       name: resp.name,
   //       type: resp.type,
@@ -1010,12 +1073,10 @@ class Chat extends Component {
   //     };
 
   //     const idKey = this.state.singleChatId === '1' ? 'chat_id' : 'room_id';
-  //     console.log('idKey =>',idKey);
 
   //     const idValue = this.state.singleChatId === '1'
   //     ? this?.props?.route?.params?.data?.id
   //     : this.props.route.params?.roomId;
-  //     console.log('idValue =>',idValue);
 
   //     const body = new FormData();
   //     body.append('file', fileObj); // param name  //chat_id
@@ -1023,21 +1084,14 @@ class Chat extends Component {
   //     body.append('user_id', this.state.loginUserData?.id);
   //     body.append('name', this.state.loginUserData?.first_name);
   //     body.append('user_pic', this.state.loginUserData?.user_pic?.small); //singleChatId === '1' ? 'conversation-upload-file' :
-  //     console.log('body ->', body);
-  //     console.log('body ->', body.getParts());
 
   //     const uploadFile = 'https://frate.eugeniuses.com:3030/upload-file';
   //     const conversationUploadFile =
   //       'https://frate.eugeniuses.com:3030/conversation-upload-file';
   //     this.setState({loading: true});
-  //     console.log(
-  //       'this.state.singleChatId === "1" ->',
-  //       this.state.singleChatId === '1',
-  //     );
 
   //     const endpoint =
   //       this.state.singleChatId === '1' ? conversationUploadFile : uploadFile;
-  //       console.log('endpoint ->', endpoint);
 
   //     axios
   //       .post(endpoint, body, {
@@ -1057,8 +1111,6 @@ class Chat extends Component {
   //       })
   //       .then(response => {
   //         openAttachment = false;
-  //         console.log('response ->', response);
-  //         console.log('response.status ->', response.status);
   //         switch (response.status) {
   //           case 200:
   //             this.setState({
@@ -1110,8 +1162,6 @@ class Chat extends Component {
   // };
 
   openFile = async () => {
-    console.log('openFile.....');
-
     try {
       const res = await DocumentPicker.pick({
         type: [DocumentPicker.types.pdf],
@@ -1149,17 +1199,11 @@ class Chat extends Component {
       body.append('user_id', this.state.loginUserData?.id);
       body.append('name', this.state.loginUserData?.first_name);
       body.append('user_pic', this.state.loginUserData?.user_pic?.small); //singleChatId === '1' ? 'conversation-upload-file' :
-      console.log('body ->', body);
-      console.log('body ->', body.getParts());
 
       const uploadFile = 'https://frate.eugeniuses.com:3030/upload-file';
       const conversationUploadFile =
         'https://frate.eugeniuses.com:3030/conversation-upload-file';
       this.setState({loading: true});
-      console.log(
-        'this.state.singleChatId === "1" ->',
-        this.state.singleChatId === '1',
-      );
 
       const endpoint =
         this.state.singleChatId === '1' ? conversationUploadFile : uploadFile;
@@ -1172,7 +1216,7 @@ class Chat extends Component {
       };
 
       fetch(endpoint, requestOptions)
-      // .then((response) => response.json())
+        // .then((response) => response.json())
         .then(response => {
           openAttachment = false;
           switch (response.status) {
@@ -1192,7 +1236,8 @@ class Chat extends Component {
         })
         .catch(error => {
           openAttachment = false;
-          const errorMessage = error?.message + '!' || 'Unable to process your request.';
+          const errorMessage =
+            error?.message + '!' || 'Unable to process your request.';
           if (error?.response) {
             if ([400, 404, 415, 500, 501].includes(error?.response?.status)) {
               // unlink(file.path);
@@ -1207,7 +1252,10 @@ class Chat extends Component {
           } else {
             // retry();
             this.setState({loading: false});
-            SimpleToast.show(errorMessage + ' Please try again.', SimpleToast.SHORT);
+            SimpleToast.show(
+              errorMessage + ' Please try again.',
+              SimpleToast.SHORT,
+            );
           }
         });
     } catch (err) {
@@ -1237,36 +1285,32 @@ class Chat extends Component {
     body.append('user_pic', this.state.loginUserData?.user_pic?.small); //singleChatId === '1' ? 'conversation-upload-file' :
 
     const uploadFile = 'https://frate.eugeniuses.com:3030/upload-file';
-      const conversationUploadFile =
-        'https://frate.eugeniuses.com:3030/conversation-upload-file';
-      this.setState({loading: true});
+    const conversationUploadFile =
+      'https://frate.eugeniuses.com:3030/conversation-upload-file';
+    this.setState({loading: true});
 
-      const endpoint = this.state.singleChatId === '1' ? conversationUploadFile : uploadFile;
-
+    const endpoint =
+      this.state.singleChatId === '1' ? conversationUploadFile : uploadFile;
     this.setState({loading: true});
     axios
-      .post(
-        endpoint,
-        body,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            // Accept: 'application/json',
-            ...file.headers,
+      .post(endpoint, body, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          // Accept: 'application/json',
+          ...file.headers,
 
-            // 2️⃣ Customize the headers
-            'x-chunk-number': file.headers['x-chunk-number'],
-            'x-chunk-total-number': file.headers['x-chunk-total-number'],
-            'x-chunk-size': file.headers['x-chunk-size'],
-            'x-file-name': file.headers['x-file-name'],
-            'x-file-size': file.headers['x-file-size'],
-            'x-file-identity': file.headers['x-file-identity'],
-            'x-file-audio_duration':
-              this.state.recordTime === '00:00:00' ? '' : this.state.recordTime,
-            'x-file-type': this.state.stopRecording ? 'audio' : '',
-          },
+          // 2️⃣ Customize the headers
+          'x-chunk-number': file.headers['x-chunk-number'],
+          'x-chunk-total-number': file.headers['x-chunk-total-number'],
+          'x-chunk-size': file.headers['x-chunk-size'],
+          'x-file-name': file.headers['x-file-name'],
+          'x-file-size': file.headers['x-file-size'],
+          'x-file-identity': file.headers['x-file-identity'],
+          'x-file-audio_duration':
+            this.state.recordTime === '00:00:00' ? '' : this.state.recordTime,
+          'x-file-type': this.state.stopRecording ? 'audio' : '',
         },
-      )
+      })
       .then(response => {
         openAttachment = false;
         switch (response.status) {
@@ -1284,7 +1328,8 @@ class Chat extends Component {
         }
       })
       .catch(error => {
-        const errorMessage = error?.message + '!' || 'Unable to process your request.';
+        const errorMessage =
+          error?.message + '!' || 'Unable to process your request.';
         openAttachment = false;
         if (error.response) {
           if ([400, 404, 415, 500, 501].includes(error.response.status)) {
@@ -1300,7 +1345,10 @@ class Chat extends Component {
         } else {
           retry();
           this.setState({loading: false});
-          SimpleToast.show(errorMessage + ' Please try again.', SimpleToast.SHORT);
+          SimpleToast.show(
+            errorMessage + ' Please try again.',
+            SimpleToast.SHORT,
+          );
         }
       });
   }
@@ -1343,7 +1391,6 @@ class Chat extends Component {
           // let videoName = imageData(
           //   Platform.OS === 'ios' ? item?.sourceURL : item?.path,
           // );
-          // console.log('videoName', videoName, item);
           // this.setState({
           //   attachImages: [
           //     ...this.state.attachImages,
@@ -1553,7 +1600,6 @@ class Chat extends Component {
   //render chat data
   renderItem = ({item, index}) => {
     //"message_type": "pdf"
-    // console.log('item?.message_type === "pdf"---->',item?.message_type === 'pdf');
 
     const {userReciverData, singleChatId} = this.state;
     if (item?.message !== null) {
@@ -2578,7 +2624,6 @@ class Chat extends Component {
                       }
                     }
                   }}>
-                  {console.log('audioPlayButton ->', audioPlayButton)}
                   <Icon
                     name={audioPlayButton ? 'play' : 'pause'}
                     size={scale(23)}
