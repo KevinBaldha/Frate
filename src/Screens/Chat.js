@@ -51,6 +51,8 @@ import ProgressBar from 'react-native-progress/Bar';
 import TrackPlayer from 'react-native-track-player';
 import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
+import RNBlobUtil from 'react-native-blob-util';
+
 // import EmojiBoard from 'react-native-emoji-board';
 import {
   ScreenContainer,
@@ -1543,7 +1545,7 @@ class Chat extends Component {
     file_ext = '.' + file_ext[0];
     // config: To get response by passing the downloading related options
     // fs: Root directory path to download
-    const {config, fs} = RNFetchBlob;
+    const {config, fs} = RNBlobUtil;
     let RootDir = fs.dirs.PictureDir;
     let options = {
       fileCache: true,

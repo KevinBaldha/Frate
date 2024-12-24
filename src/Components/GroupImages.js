@@ -4,9 +4,9 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {getLocalText} from '../Locales/I18n';
 import {scale, theme, images} from '../Utils';
-import { checkImageExists } from '../Utils/helper';
+import {checkImageExists} from '../Utils/helper';
 
-const GroupImages = (props) => {
+const GroupImages = props => {
   const {members, groupImagesView, InteractionsDetails} = props;
   const [userImages, setUserImages] = React.useState([]);
   useEffect(() => {
@@ -14,21 +14,23 @@ const GroupImages = (props) => {
       InteractionsDetails ? members : members?.member_images || members?.users,
     );
   }, [userImages]);
-  if(members?.name === 'LP'){
-  console.log('members ->', members);
-  console.log('userImages ->', userImages);
+  if (members?.name === 'LP') {
+    console.log('members ->', members);
+    console.log('userImages ->', userImages);
   }
 
   return (
     <View style={[styles.subView, groupImagesView]}>
       <View style={styles.subView}>
         {userImages !== undefined &&
-          userImages?.slice(0, 3).map(async(d, i) => {
-            const isExists = await checkImageExists(d?.image?.original).then((exists) => {
-              return exists ? true : false;
-            });
+          userImages?.slice(0, 3).map(async (d, i) => {
+            const isExists = await checkImageExists(d?.image?.original).then(
+              exists => {
+                return exists ? true : false;
+              },
+            );
             // console.log('isExists ->',  isExists);
-            
+
             return (
               <Image
                 key={i.toString()}
@@ -36,8 +38,8 @@ const GroupImages = (props) => {
                   d?.image?.original
                     ? {uri: d?.image?.original}
                     : d?.image?.length !== 0
-                    // : Object.keys(d?.image).length
-                    ? {
+                    ? // : Object.keys(d?.image).length
+                      {
                         uri: InteractionsDetails
                           ? d?.user_pic?.original
                           : d?.image?.optimize || d?.user_pic?.optimize,
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop:scale(4)
+    marginTop: scale(4),
   },
   text: {
     fontFamily: theme.fonts.muktaRegular,
