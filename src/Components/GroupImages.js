@@ -14,10 +14,6 @@ const GroupImages = props => {
       InteractionsDetails ? members : members?.member_images || members?.users,
     );
   }, [userImages]);
-  if (members?.name === 'LP') {
-    console.log('members ->', members);
-    console.log('userImages ->', userImages);
-  }
 
   return (
     <View style={[styles.subView, groupImagesView]}>
@@ -35,8 +31,8 @@ const GroupImages = props => {
               <Image
                 key={i.toString()}
                 source={
-                  d?.image?.original
-                    ? {uri: d?.image?.original}
+                  d?.image?.original || d?.original
+                    ? {uri: d?.image?.original || d?.original}
                     : d?.image?.length !== 0
                     ? // : Object.keys(d?.image).length
                       {
