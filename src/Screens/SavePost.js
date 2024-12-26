@@ -167,7 +167,7 @@ class SavePost extends Component {
         item?.id,
         this.state.commenttxt,
       );
-      if (commentData?.data?.length) {
+      if (commentData?.data) {
         setTimeout(() => {
           this.getUpdateSavedPost();
         }, 1100);

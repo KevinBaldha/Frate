@@ -1349,17 +1349,17 @@ class Timeline extends PureComponent {
     this.postOptionClose();
     this.props.isPostLoading(true);
     try {
-      var commentdata = await this.props.postCommentSend(
+      var commentData = await this.props.postCommentSend(
         item?.id,
         item?.commentTxt,
       );
 
-      if (commentdata?.data.length) {
+      if (commentData?.data) {
         var allPostDetail = allData;
         const postIndex = allPostDetail?.data.findIndex(d => d.id === item?.id);
         // console.log('allPostDetail.data', allPostDetail.data);
         allPostDetail.data[postIndex].comments = [
-          commentdata?.data,
+          commentData?.data,
           ...allPostDetail?.data[postIndex].comments,
         ];
         allPostDetail.data[postIndex].total_comment =
@@ -1370,7 +1370,7 @@ class Timeline extends PureComponent {
           userPost: allPostDetail?.data,
         });
       } else {
-        alert(commentdata.message);
+        alert(commentData.message);
         this.props.isPostLoading(false);
       }
     } catch (error) {

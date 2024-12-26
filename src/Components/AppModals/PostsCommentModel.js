@@ -207,7 +207,7 @@ const PostsCommentModel = props => {
         const commentData = await dispatch(
           postCommentSend(postId, commentText, index),
         );
-        if (commentData?.data?.length) {
+        if (commentData?.data) {
           let commentsData = [...comments, commentData.data];
           setCommens(commentsData);
           setTotalPage(Math.ceil(commentData.length / perPageData));

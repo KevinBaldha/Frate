@@ -183,7 +183,7 @@ class BlockedContent extends Component {
         item?.id,
         this.state.commenttxt,
       );
-      if (commentData?.data?.length) {
+      if (commentData?.data) {
         setTimeout(() => {
           this.getUpdateBlockPost();
         }, 1100);
