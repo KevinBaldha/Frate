@@ -216,6 +216,7 @@ const PostsCommentModel = props => {
           if (timeline) {
             updatePostsList(postId, commentData.data);
           }
+          setLoadding(false);
         } else {
           setLoadding(false);
           alert(commentData.message);
