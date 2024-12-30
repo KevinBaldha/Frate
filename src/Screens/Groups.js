@@ -207,7 +207,6 @@ class Groups extends Component {
   };
   //display groups
   renderGroups = ({item, index}) => {
-    console.log('item', item);
     return (
       <GroupCard
         item={item}

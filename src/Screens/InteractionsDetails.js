@@ -122,7 +122,7 @@ class InteractionsDetails extends Component {
         this.state.commenttxt,
         this.props.userData.id,
       );
-      if (commentData?.data?.length) {
+      if (commentData?.data) {
         setTimeout(() => {
           this.getinteractionDetail();
         }, 1100);

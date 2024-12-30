@@ -49,6 +49,7 @@
     "react-native": "0.75.3",
     "react-native-audio": "^4.3.0",
     "react-native-audio-recorder-player": "^3.6.11",
+    "react-native-blob-util": "^0.21.2",
     "react-native-camera": "^4.2.1",
     "react-native-chunk-upload": "^2.0.3",
     "react-native-date-picker": "^5.0.7",

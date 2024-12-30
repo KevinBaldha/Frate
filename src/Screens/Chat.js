@@ -51,6 +51,8 @@ import ProgressBar from 'react-native-progress/Bar';
 import TrackPlayer from 'react-native-track-player';
 import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
+import RNBlobUtil from 'react-native-blob-util';
+
 // import EmojiBoard from 'react-native-emoji-board';
 import {
   ScreenContainer,
@@ -192,7 +194,6 @@ class Chat extends Component {
       lastessageId: this.props.route?.params?.data?.last_message_id,
       lastGroupChatId: this.props.route?.params?.lastGroupChatId,
     };
-    this.messagesRef = [];
     this.onPressAnimation = this.onPressAnimation.bind(this);
     this.send = this.send.bind(this);
     this.FlatListRef = null;
@@ -278,13 +279,6 @@ class Chat extends Component {
     // this.permission();
     this.initSoket();
   };
-
-  componentDidUpdate(prevProps, prevState) {
-    // Sync the ref whenever the state changes
-    if (prevState.messages?.length !== this.state.messages.length) {
-      this.messagesRef = this.state.messages;
-    }
-  }
 
   _handleAppStateChange = nextAppState => {
     // We need to fix when app in background
@@ -1543,7 +1537,7 @@ class Chat extends Component {
     file_ext = '.' + file_ext[0];
     // config: To get response by passing the downloading related options
     // fs: Root directory path to download
-    const {config, fs} = RNFetchBlob;
+    const {config, fs} = RNBlobUtil;
     let RootDir = fs.dirs.PictureDir;
     let options = {
       fileCache: true,
@@ -1976,7 +1970,7 @@ class Chat extends Component {
                     style={styles.imageView}>
                     <FastImage
                       source={{
-                        uri: item?.localFilePath || item.video_thumb,
+                        uri: item.video_thumb || item?.localFilePath,
                         priority: FastImage.priority.high,
                       }}
                       style={[styles.images]}

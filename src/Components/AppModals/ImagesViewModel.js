@@ -97,7 +97,7 @@ const ImagesViewModel = props => {
   const postComment = (commentpost, index) => {
     try {
       const commentData = dispatch(postCommentSend(commentpost.id, commenttxt));
-      if (commentData?.data?.length) {
+      if (commentData?.data) {
         setTimeout(() => {
           handleRefresh();
         }, 1500);
