@@ -13,7 +13,7 @@ const GroupImages = props => {
     setUserImages(
       InteractionsDetails ? members : members?.member_images || members?.users,
     );
-  }, [userImages]);
+  }, [userImages,members]);
 
   return (
     <View style={[styles.subView, groupImagesView]}>
@@ -54,7 +54,7 @@ const GroupImages = props => {
         {InteractionsDetails
           ? null
           : members &&
-            members?.total_members && (
+            members?.total_members > 0 && (
               <Text style={[styles.text, {marginLeft: scale(6)}]}>
                 {`${members?.total_members} ${
                   members?.total_members > 1

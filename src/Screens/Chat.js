@@ -1339,10 +1339,10 @@ class Chat extends Component {
         } else {
           retry();
           this.setState({loading: false});
-          SimpleToast.show(
-            errorMessage + ' Please try again.',
-            SimpleToast.SHORT,
-          );
+          // SimpleToast.show(
+          //   errorMessage + ' Please try again.',
+          //   SimpleToast.SHORT,
+          // );
         }
       });
   }

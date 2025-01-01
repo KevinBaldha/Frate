@@ -114,8 +114,8 @@ class Groups extends Component {
   getGroupsList = async () => {
     await this.props.getGroups('new', null, 1, false);
     this.setState({
-      groupsData: this.props.groupList.data,
-      totalPage: this.props.groupList.total_page,
+      groupsData: this.props.groupList?.data,
+      totalPage: this.props.groupList?.total_page,
       page: 1,
       groupdataloading: false,
     });
