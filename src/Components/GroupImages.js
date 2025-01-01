@@ -1,10 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
-import FastImage from 'react-native-fast-image';
 import {getLocalText} from '../Locales/I18n';
 import {scale, theme, images} from '../Utils';
-import {checkImageExists} from '../Utils/helper';
 
 const GroupImages = props => {
   const {members, groupImagesView, InteractionsDetails} = props;
@@ -20,27 +18,26 @@ const GroupImages = props => {
       <View style={styles.subView}>
         {userImages !== undefined &&
           userImages?.slice(0, 3).map(async (d, i) => {
-            const isExists = await checkImageExists(d?.image?.original).then(
-              exists => {
-                return exists ? true : false;
-              },
-            );
-            // console.log('isExists ->',  isExists);
+            // const isExists = await checkImageExists(d?.image?.original).then(
+            //   exists => {
+            //     return exists ? true : false;
+            //   },
+            // );
 
+            // Object.keys(d?.image).length // d?.image?.length !== 0
             return (
               <Image
                 key={i.toString()}
                 source={
                   d?.image?.original || d?.original
                     ? {uri: d?.image?.original || d?.original}
-                    : d?.image?.length !== 0
-                    ? // : Object.keys(d?.image).length
-                      {
+                    : Object.keys(d?.image).length > 0
+                    ? {
                         uri: InteractionsDetails
                           ? d?.user_pic?.original
                           : d?.image?.optimize || d?.user_pic?.optimize,
                       }
-                    : images.AppLogo
+                    : images.profilepick
                 }
                 style={[
                   styles.memberImage,
