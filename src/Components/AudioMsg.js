@@ -109,7 +109,7 @@ const AudioMsg = props => {
     // Start playing the track or pause it based on the play state
     if (play) {
       await TrackPlayer.play();
-      // await TrackPlayer.setVolume(1);
+      await TrackPlayer.setVolume(1);
     } else {
       await TrackPlayer.pause();
     }
