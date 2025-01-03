@@ -223,13 +223,14 @@ class Chat extends Component {
       async (fileInfo, file_user_id, userName, profilePic) => {
         var imagePath = '';
 
-        if (fileInfo.type === 'Image' || fileInfo.type === 'Video') {
-          imagePath = await this.fileDownload({
-            url: fileInfo.video_thumb,
-            fileName: fileInfo.fileName,
-            type: fileInfo.type,
-          });
-        }
+        // Temporary comment
+        // if (fileInfo.type === 'Image' || fileInfo.type === 'Video') {
+        //   imagePath = await this.fileDownload({
+        //     url: fileInfo.video_thumb,
+        //     fileName: fileInfo.fileName,
+        //     type: fileInfo.type,
+        //   });
+        // }
 
         let new_msg = {
           message_type: fileInfo?.type,
@@ -1968,7 +1969,7 @@ class Chat extends Component {
                       this.setState({fullScreenMedia: true});
                     }}
                     style={styles.imageView}>
-                    <FastImage
+                    <Image
                       source={{
                         uri: item.video_thumb || item?.localFilePath,
                         priority: FastImage.priority.high,
