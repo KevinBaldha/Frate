@@ -1969,7 +1969,7 @@ class Chat extends Component {
                       this.setState({fullScreenMedia: true});
                     }}
                     style={styles.imageView}>
-                    <FastImage
+                    <Image
                       source={{
                         uri: item.video_thumb || item?.localFilePath,
                         priority: FastImage.priority.high,
